@@ -106,7 +106,7 @@ class Quake2Engine
 {
 public:
     // ctors/dtor
-    Quake2Engine(HWND hwnd, int videoMode);
+    Quake2Engine(HWND hwnd, int videoMode, const wxString &game);
     ~Quake2Engine();
 
     // accessors
@@ -144,7 +144,7 @@ private:
 // Quake2Engine ctor/dtor
 // ----------------------------------------------------------------------------
 
-Quake2Engine::Quake2Engine(HWND hwnd, int videoMode)
+Quake2Engine::Quake2Engine(HWND hwnd, int videoMode, const wxString &game)
 {
     // Quake likes adding elements to argv so make sure the array has enough
     // space
@@ -167,12 +167,13 @@ Quake2Engine::Quake2Engine(HWND hwnd, int videoMode)
     argv[argc++] = "vid_fullscreen";
     argv[argc++] = "0";
 
-    // FIXME: for testing only
-#if 0
-    argv[argc++] = "+map";
-    argv[argc++] = "testy";
-#endif
-
+    // if a game mod was specified, load it
+	if (game != "")
+	{
+		argv[argc++] = "+set";
+		argv[argc++] = "gamedir";
+		argv[argc++] = const_cast<char *>(game.mb_str());
+	}
     argv[argc++] = NULL;
 
     // give Quake engine the instance and window to use
@@ -261,7 +262,8 @@ bool
 wxQuake2Window::Create(wxWindow *parent,
                        int id,
                        const wxPoint& pos,
-                       VideoMode mode)
+                       VideoMode mode,
+					   const wxString &game)
 {
     // create the window
     if ( !wxWindow::Create(parent,
@@ -281,7 +283,7 @@ wxQuake2Window::Create(wxWindow *parent,
         return FALSE;
     }
 
-    m_engine = new Quake2Engine(GetHwnd(), mode);
+    m_engine = new Quake2Engine(GetHwnd(), mode, game);
     if ( !m_engine->IsOk() )
     {
         delete m_engine;
