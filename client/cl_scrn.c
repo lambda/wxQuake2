@@ -39,6 +39,10 @@ float		scr_conlines;		// 0.0 to 1.0 lines of console to display
 
 qboolean	scr_initialized;		// ready to draw
 
+#ifdef __WXWINDOWS__
+qboolean    scr_is_loading_in_background;
+#endif // __WXWINDOWS__
+
 int			scr_draw_loading;
 
 vrect_t		scr_vrect;		// position of render window on screen
@@ -552,6 +556,28 @@ void SCR_DrawConsole (void)
 
 //=============================================================================
 
+#ifdef __WXWINDOWS__
+
+void SCR_BeginLoadingInBackground()
+{
+	scr_is_loading_in_background = true;
+	cls.disable_screen = Sys_Milliseconds ();
+}
+
+void SCR_EndLoadingInBackground()
+{
+	scr_is_loading_in_background = false;
+}
+
+qboolean SCR_IsLoadingInBackground()
+{
+	return scr_is_loading_in_background;
+}
+
+#endif // __WXWINDOWS__
+
+//=============================================================================
+
 /*
 ================
 SCR_BeginLoadingPlaque
@@ -588,6 +614,9 @@ void SCR_EndLoadingPlaque (void)
 {
 	cls.disable_screen = 0;
 	Con_ClearNotify ();
+#ifdef __WXWINDOWS__
+	SCR_EndLoadingInBackground();
+#endif __WXWINDOWS__
 }
 
 /*

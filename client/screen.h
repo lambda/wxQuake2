@@ -26,6 +26,17 @@ void	SCR_UpdateScreen (void);
 void	SCR_SizeUp (void);
 void	SCR_SizeDown (void);
 void	SCR_CenterPrint (char *str);
+
+#ifdef __WXWINDOWS__
+// This routines are are used to implement "background" level-loading in
+// wxQuake2.  As long as SCR_IsLoadingInBackground is true, Quake 2 will be
+// allowed to run, even if backgrounded.  SCR_EndLoadingInBackground is
+// automatically called by SCR_EndLoadingPlaque.
+void    SCR_BeginLoadingInBackground();
+void    SCR_EndLoadingInBackground();
+qboolean SCR_IsLoadingInBackground();
+#endif // __WXWINDOWS__
+
 void	SCR_BeginLoadingPlaque (void);
 void	SCR_EndLoadingPlaque (void);
 

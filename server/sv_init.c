@@ -300,8 +300,20 @@ void SV_InitGame (void)
 	else
 	{
 		// make sure the client is down
+#ifdef __WXWINDOWS__
+		qboolean is_loading_in_background;
+		is_loading_in_background = SCR_IsLoadingInBackground();
+#endif // __WXWINDOWS__
 		CL_Drop ();
 		SCR_BeginLoadingPlaque ();
+#ifdef __WXWINDOWS__
+		// XXX - CL_Drop calls SCR_EndLoadingPlaque, which is why
+		// we have an extra SCR_BeginLoadingPlaque above.  We also need
+		// to restore our background load status in the same fashion.
+		// Ick, ick, ick.
+		if (is_loading_in_background)
+			SCR_BeginLoadingInBackground();
+#endif // __WXWINDOWS__
 	}
 
 	// get any latched variable changes (maxclients, etc)

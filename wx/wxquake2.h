@@ -92,12 +92,18 @@ public:
     // are we currently shown in full screen mode?
     bool IsFullScreen() const;
 
+    // are we loading a level in the background?
+    bool IsLoadingInBackground();
 
     // operations
     // ----------
 
     // execute Quake console command non interactively
     void ExecCommand(const wxString& cmd);
+
+    // execute a loading-related command while Quake 2 is in the
+    // background--examples include 'map', 'newgame', etc.
+    void ExecBackgroundLoadCommand(const wxString& cmd);
 
     // print a message to the Quake 2 player
     void Print(const wxString& message);

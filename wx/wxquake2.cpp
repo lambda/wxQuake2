@@ -47,6 +47,10 @@ extern "C"
 	int Cmd_Argc (void);
 	char *Cmd_Argv (int arg);
 
+	void SCR_BeginLoadingInBackground();
+	void SCR_EndLoadingInBackground();
+	qboolean SCR_IsLoadingInBackground();
+
 	void Com_Printf (char *fmt, ...);
 
     qboolean VID_GetModeInfo(int *width, int *height, int mode);
@@ -348,6 +352,11 @@ bool wxQuake2Window::IsFullScreen() const
     return m_isFullScreen;
 }
 
+bool wxQuake2Window::IsLoadingInBackground()
+{
+	return (SCR_IsLoadingInBackground() == qTrue) ? true : false;
+}
+
 wxTopLevelWindow *wxQuake2Window::GetTopLevelParent() const
 {
     wxWindow *parent = GetParent();
@@ -368,6 +377,13 @@ void wxQuake2Window::ExecCommand(const wxString& cmd)
 
     Cbuf_AddText(const_cast<char *>(cmd.mb_str()));
     Cbuf_Execute();
+}
+
+void wxQuake2Window::ExecBackgroundLoadCommand(const wxString& cmd)
+{
+	// Handy for loading levels without displaying Quake 2.
+	SCR_BeginLoadingInBackground();
+	ExecCommand(cmd);
 }
 
 void wxQuake2Window::Print(const wxString& message)
@@ -576,8 +592,8 @@ void wxQuake2Window::OnIdle(wxIdleEvent& event)
 
     // Let Quake run now.  We used to check IsActive instead of IsRunning,
     // but that caused Quake to stop repainting the window when
-    // backgrounded.
-    if ( m_engine->IsRunning() && !IsSuspended() )
+    // our application wasn't the front application.
+    if ( m_engine->IsRunning() && (!IsSuspended() || IsLoadingInBackground()) )
     {
         m_engine->ShowNextFrame();
 
