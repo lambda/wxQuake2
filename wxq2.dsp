@@ -99,8 +99,8 @@ LINK32=link.exe
 # PROP Output_Dir "Release"
 # PROP Intermediate_Dir "wx\Release"
 # PROP Target_Dir ""
-LINK32=link.exe
 MTL=midl.exe
+LINK32=link.exe
 CPP=cl.exe
 # ADD BASE CPP /nologo /MD /W4 /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /YX /FD /c
 # ADD CPP /nologo /MT /GR /GX /Zi /Ot /Og /Oi /I "$(WXWIN)/include" /I "$(WXWIN)\lib\msw" /D "WIN32" /D "NDEBUG" /D WINVER=0x0400 /D "STRICT" /D "__WXWINDOWS__" /D "REF_HARD_LINKED" /D "IML_Q2_EXTENSIONS" /FD /c
@@ -127,8 +127,8 @@ LIB32=link.exe -lib
 # PROP Output_Dir "Debug"
 # PROP Intermediate_Dir "wx\Debug"
 # PROP Target_Dir ""
-LINK32=link.exe
 MTL=midl.exe
+LINK32=link.exe
 CPP=cl.exe
 # ADD BASE CPP /nologo /MDd /W4 /Zi /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /YX /FD /c
 # ADD CPP /nologo /MTd /GR /GX /Zi /Od /I "$(WXWIN)/include" /I "$(WXWIN)\lib\mswd" /D "WIN32" /D "_DEBUG" /D "__WXDEBUG__" /D WINVER=0x0400 /D "STRICT" /D "__WXWINDOWS__" /D "REF_HARD_LINKED" /D "IML_Q2_EXTENSIONS" /FD /c
@@ -156,6 +156,10 @@ LIB32=link.exe -lib
 # Begin Group "common"
 
 # PROP Default_Filter ""
+# Begin Source File
+
+SOURCE=.\game\binmsg.c
+# End Source File
 # Begin Source File
 
 SOURCE=.\qcommon\cmd.c
