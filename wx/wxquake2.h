@@ -141,6 +141,9 @@ protected:
     void OnIdle(wxIdleEvent& event);
     void OnKillFocus(wxFocusEvent& event);
 
+    // If Quake isn't iconized, deactivate it and release the mouse.
+    void DeactivateQuake();
+
     // override Windows messages handling
     virtual long MSWWindowProc(WXUINT nMsg, WXWPARAM wParam, WXLPARAM lParam);
 

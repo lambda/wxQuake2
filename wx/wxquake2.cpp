@@ -403,8 +403,7 @@ void wxQuake2Window::Suspend()
     ++m_nSuspend;
 
 	// Experimental code to release mouse when suspending.
-	// FIXME - Is the second parameter correct?
-	AppActivate(FALSE, FALSE);
+	DeactivateQuake();
 }
 
 void wxQuake2Window::Resume()
@@ -602,6 +601,12 @@ void wxQuake2Window::OnIdle(wxIdleEvent& event)
 
 void wxQuake2Window::OnKillFocus(wxFocusEvent& event)
 {
+	DeactivateQuake();
+    event.Skip();
+}
+
+void wxQuake2Window::DeactivateQuake()
+{
     if ( !m_isIconized )
     {
         // we lost focus, deactivate Quake
@@ -613,8 +618,6 @@ void wxQuake2Window::OnKillFocus(wxFocusEvent& event)
             m_engine->UpdateInput();
         }
     }
-
-    event.Skip();
 }
 
 long
