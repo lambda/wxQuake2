@@ -2,11 +2,11 @@
 // Name:        wxquake2.cpp
 // Purpose:     implementation of wxQuake2Window class
 // Author:      Vadim Zeitlin <vadim@tt-solutions.com>
-// Modified by:
+// Modified by: Eric Kidd <eric.kidd@pobox.com>
 // Created:     10.12.02
 // RCS-ID:      $Id$
-// Copyright:   (c) 2002 Dartmouth College (?)
-// Licence:     ???
+// Copyright:   Copyright 2002 Trustees of Dartmouth College
+// Licence:     wxWindows License
 /////////////////////////////////////////////////////////////////////////////
 
 // ============================================================================
@@ -140,7 +140,7 @@ Quake2Engine::Quake2Engine(HWND hwnd, int videoMode)
     argv[argc++] = "0";
 
     // FIXME: for testing only
-#if 1
+#if 0
     argv[argc++] = "+map";
     argv[argc++] = "testy";
 #endif
@@ -217,9 +217,11 @@ void wxQuake2Window::Init()
     m_engine = NULL;
     m_nSuspend = 0;
 
-    m_restoreSize =
-    m_isIconized =
+    m_restoreSize = FALSE;
+	m_isIconized = FALSE;
     m_isFullScreen = FALSE;
+
+    SetBackgroundColour(*wxBLACK);
 }
 
 bool
@@ -257,6 +259,11 @@ wxQuake2Window::Create(wxWindow *parent,
     // set the size to be equal to the full size of the Quake window
     AdjustSize(mode);
 
+	// FIXME - This doesn't seem to get called reliably, which means
+	// there's probably something wrong with our processing of
+	// WM_ACTIVATE events.
+	AppActivate(TRUE, FALSE);
+
     return TRUE;
 }
 
@@ -291,12 +298,9 @@ bool wxQuake2Window::IsFullScreen() const
 
 wxTopLevelWindow *wxQuake2Window::GetTopLevelParent() const
 {
-    wxWindow *parent;
-    do
-    {
-        parent = GetParent();
-    }
-    while ( parent && !parent->IsTopLevel() );
+    wxWindow *parent = GetParent();
+    while ( parent && !parent->IsTopLevel() )
+        parent = parent->GetParent();
 
     return wxDynamicCast(parent, wxTopLevelWindow);
 }
@@ -308,7 +312,7 @@ wxTopLevelWindow *wxQuake2Window::GetTopLevelParent() const
 void wxQuake2Window::ExecCommand(const wxString& cmd)
 {
     wxCHECK_RET( m_engine->IsRunning(),
-                    _T("can't exec commands without engine running") );
+				 _T("can't exec commands without engine running") );
 
     Cbuf_AddText(const_cast<char *>(cmd.mb_str()));
     Cbuf_Execute();
@@ -337,7 +341,7 @@ void wxQuake2Window::ShowFullScreen(bool fullScreen)
 
     // resize the parent frame
     wxTopLevelWindow *parentTop = GetTopLevelParent();
-    wxCHECK_RET( parentTop, _T("wxQuake2Window should be a child of a wxTLW") );
+    wxCHECK_RET(parentTop, _T("wxQuake2Window should be a child of a wxTLW"));
 
     parentTop->ShowFullScreen(fullScreen);
     if ( !fullScreen )
@@ -487,12 +491,14 @@ wxQuake2Window::MSWWindowProc(WXUINT nMsg, WXWPARAM wParam, WXLPARAM lParam)
             cl_hwnd = GetHwnd();
         }
 
-        // note that we could intercept some events here and/or modify Quake
-        // MainWndProc() to call us back instead of calling DefWindowProc() but
-        // for now this is apparently not needed
-        return MainWndProc(GetHwnd(), nMsg, (WPARAM)wParam, (LPARAM)lParam);
+        // Note that we could intercept some events here and/or modify Quake
+        // MainWndProc() to call us back instead of calling DefWindowProc().
+		// For now, we only intercept WM_ERASEBKGND, which wxWindows can
+		// handle in a far more intelligent fashion than Quake 2.
+		if ( nMsg != WM_ERASEBKGND )
+			return MainWndProc(GetHwnd(), nMsg,
+						       (WPARAM)wParam, (LPARAM)lParam);
     }
 
     return wxWindow::MSWWindowProc(nMsg, wParam, lParam);
 }
-

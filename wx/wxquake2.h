@@ -2,11 +2,11 @@
 // Name:        wxquake2.h
 // Purpose:     declaration of wxQuake2Window class
 // Author:      Vadim Zeitlin <vadim@tt-solutions.com>
-// Modified by:
+// Modified by: Eric Kidd <eric.kidd@pobox.com>
 // Created:     10.12.02
 // RCS-ID:      $Id$
-// Copyright:   (c) 2002 Dartmouth College (?)
-// Licence:     ???
+// Copyright:   Copyright 2002 Trustees of Dartmouth College
+// Licence:     wxWindows License
 /////////////////////////////////////////////////////////////////////////////
 
 #ifndef _WXQUAKE2_H_

@@ -97,7 +97,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W4 /O2 /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D WINVER=0x400 /YX /FD /c
-# ADD CPP /nologo /MD /W3 /O2 /I "$(WXWIN)/include" /I "$(WXWIN)\lib\msw" /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D WINVER=0x400 /D "_MT" /D wxUSE_GUI=1 /D "__WXWINDOWS__" /D "REF_HARD_LINKED" /YX /FD /c
+# ADD CPP /nologo /MT /W3 /GR /GX /O2 /I "$(WXWIN)/include" /I "$(WXWIN)\lib\msw" /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D WINVER=0x400 /D "_MT" /D wxUSE_GUI=1 /D "__WXWINDOWS__" /D "REF_HARD_LINKED" /YX /FD /c
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /o "NUL" /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /o "NUL" /win32
 # ADD BASE RSC /l 0x409 /i "$(WXWIN)/include" /d "NDEBUG"
@@ -107,7 +107,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib wsock32.lib /nologo /subsystem:windows /machine:I386
-# ADD LINK32 $(WXWIN)\lib\zlib.lib $(WXWIN)\lib\regex.lib $(WXWIN)\lib\png.lib $(WXWIN)\lib\jpeg.lib $(WXWIN)\lib\tiff.lib $(WXWIN)\lib\wxmsw.lib Release\wxq2.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib wsock32.lib winmm.lib /nologo /subsystem:windows /machine:I386
+# ADD LINK32 $(WXWIN)\lib\zlib.lib $(WXWIN)\lib\regex.lib $(WXWIN)\lib\png.lib $(WXWIN)\lib\jpeg.lib $(WXWIN)\lib\tiff.lib $(WXWIN)\lib\wxmsw.lib Release\wxq2.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib wsock32.lib winmm.lib /nologo /subsystem:windows /debug /machine:I386
 
 !ELSEIF  "$(CFG)" == "wxquake2 - Win32 Debug"
 
@@ -123,7 +123,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W4 /Zi /Od /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D WINVER=0x400 /YX /FD /c
-# ADD CPP /nologo /MDd /W3 /Zi /Od /I "$(WXWIN)/include" /I "$(WXWIN)\lib\mswd" /D "_DEBUG" /D "__WXDEBUG__" /D WXDEBUG=1 /D "WIN32" /D "_WINDOWS" /D WINVER=0x400 /D "_MT" /D wxUSE_GUI=1 /D "__WXWINDOWS__" /D "REF_HARD_LINKED" /YX /FD /c
+# ADD CPP /nologo /MTd /W3 /GR /GX /Zi /Od /I "$(WXWIN)/include" /I "$(WXWIN)\lib\mswd" /D "_DEBUG" /D "__WXDEBUG__" /D WXDEBUG=1 /D "WIN32" /D "_WINDOWS" /D WINVER=0x400 /D "_MT" /D wxUSE_GUI=1 /D "__WXWINDOWS__" /D "REF_HARD_LINKED" /YX /FD /c
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /o "NUL" /win32
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /o "NUL" /win32
 # ADD BASE RSC /l 0x409 /i "$(WXWIN)/include" /d "_DEBUG"

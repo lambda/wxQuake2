@@ -55,8 +55,8 @@ BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
 LINK32=link.exe
-# ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib winmm.lib /nologo /dll /machine:I386 /out:"ReleaseDll/wxq2.dll"
-# ADD LINK32 kernel32.lib user32.lib gdi32.lib advapi32.lib comdlg32.lib shell32.lib ole32.lib oleaut32.lib odbc32.lib uuid.lib rpcrt4.lib comctl32.lib wsock32.lib winmm.lib $(WXWIN)\lib\wxmsw250.lib /nologo /dll /machine:I386 /out:"ReleaseDll/wxq2.dll"
+# ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib winmm.lib /nologo /dll /machine:I386
+# ADD LINK32 kernel32.lib user32.lib gdi32.lib advapi32.lib comdlg32.lib shell32.lib ole32.lib oleaut32.lib odbc32.lib uuid.lib rpcrt4.lib comctl32.lib wsock32.lib winmm.lib $(WXWIN)\lib\wxmsw250.lib /nologo /dll /machine:I386
 
 !ELSEIF  "$(CFG)" == "wxq2 - Win32 Debug DLL"
 
@@ -101,7 +101,7 @@ LINK32=link.exe
 # PROP Target_Dir ""
 CPP=cl.exe
 # ADD BASE CPP /nologo /MD /W4 /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD CPP /nologo /MD /O2 /I "$(WXWIN)/include" /I "$(WXWIN)\lib\msw" /D "WIN32" /D "NDEBUG" /D WINVER=0x0400 /D "STRICT" /D "__WXWINDOWS__" /D "REF_HARD_LINKED" /FD /c
+# ADD CPP /nologo /MT /GR /GX /O2 /I "$(WXWIN)/include" /I "$(WXWIN)\lib\msw" /D "WIN32" /D "NDEBUG" /D WINVER=0x0400 /D "STRICT" /D "__WXWINDOWS__" /D "REF_HARD_LINKED" /FD /c
 RSC=rc.exe
 # ADD BASE RSC /l 0x409
 # ADD RSC /l 0x409
@@ -126,7 +126,7 @@ LIB32=link.exe -lib
 # PROP Target_Dir ""
 CPP=cl.exe
 # ADD BASE CPP /nologo /MDd /W4 /Zi /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD CPP /nologo /MDd /Zi /Od /I "$(WXWIN)/include" /I "$(WXWIN)\lib\mswd" /D "WIN32" /D "_DEBUG" /D "__WXDEBUG__" /D WINVER=0x0400 /D "STRICT" /D "__WXWINDOWS__" /D "REF_HARD_LINKED" /FD /c
+# ADD CPP /nologo /MTd /Zi /Od /I "$(WXWIN)/include" /I "$(WXWIN)\lib\mswd" /D "WIN32" /D "_DEBUG" /D "__WXDEBUG__" /D WINVER=0x0400 /D "STRICT" /D "__WXWINDOWS__" /D "REF_HARD_LINKED" /FD /c
 RSC=rc.exe
 # ADD BASE RSC /l 0x409
 # ADD RSC /l 0x409
@@ -330,11 +330,11 @@ SOURCE=.\ref_soft\r_aclipa.asm
 !IF  "$(CFG)" == "wxq2 - Win32 Release DLL"
 
 # Begin Custom Build
-OutDir=.\wx\ReleaseDll
+OutDir=.\ReleaseDll
 InputPath=.\ref_soft\r_aclipa.asm
 InputName=r_aclipa
 
-"$(OutDir)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OutDir)"
+"$(OutDir)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	"D:\Asm\Masm 6.15\ml.exe" /c /Cp /coff /Fo$(OutDir)\$(InputName).obj /Zm /Zi $(InputPath)
 
 # End Custom Build
@@ -342,11 +342,11 @@ InputName=r_aclipa
 !ELSEIF  "$(CFG)" == "wxq2 - Win32 Debug DLL"
 
 # Begin Custom Build
-OutDir=.\wx\DebugDll
+OutDir=.\DebugDll
 InputPath=.\ref_soft\r_aclipa.asm
 InputName=r_aclipa
 
-"$(OutDir)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OutDir)"
+"$(OutDir)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	"D:\Asm\Masm 6.15\ml.exe" /nologo /c /Cp /coff /Fo$(OutDir)\$(InputName).obj /Zm /Zi $(InputPath)
 
 # End Custom Build
@@ -354,24 +354,24 @@ InputName=r_aclipa
 !ELSEIF  "$(CFG)" == "wxq2 - Win32 Release"
 
 # Begin Custom Build
-OutDir=.\wx\Release
+OutDir=.\Release
 InputPath=.\ref_soft\r_aclipa.asm
 InputName=r_aclipa
 
-"$(OutDir)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OutDir)"
-	"D:\Asm\Masm 6.15\ml.exe" /nologo /c /Cp /coff /Fo$(OutDir)\$(InputName).obj /Zm /Zi $(InputPath)
+"$(OutDir)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	ml.exe /nologo /c /Cp /coff /Fo$(OutDir)\$(InputName).obj /Zm /Zi $(InputPath)
 
 # End Custom Build
 
 !ELSEIF  "$(CFG)" == "wxq2 - Win32 Debug"
 
 # Begin Custom Build
-OutDir=.\wx\Debug
+OutDir=.\Debug
 InputPath=.\ref_soft\r_aclipa.asm
 InputName=r_aclipa
 
-"$(OutDir)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OutDir)"
-	"D:\Asm\Masm 6.15\ml.exe" /nologo /c /Cp /coff /Fo$(OutDir)\$(InputName).obj /Zm /Zi $(InputPath)
+"$(OutDir)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	ml.exe /nologo /c /Cp /coff /Fo$(OutDir)\$(InputName).obj /Zm /Zi $(InputPath)
 
 # End Custom Build
 
@@ -397,11 +397,11 @@ SOURCE=.\ref_soft\r_draw16.asm
 !IF  "$(CFG)" == "wxq2 - Win32 Release DLL"
 
 # Begin Custom Build
-OutDir=.\wx\ReleaseDll
+OutDir=.\ReleaseDll
 InputPath=.\ref_soft\r_draw16.asm
 InputName=r_draw16
 
-"$(OutDir)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OutDir)"
+"$(OutDir)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	"D:\Asm\Masm 6.15\ml.exe" /nologo /c /Cp /coff /Fo$(OutDir)\$(InputName).obj /Zm /Zi $(InputPath)
 
 # End Custom Build
@@ -409,11 +409,11 @@ InputName=r_draw16
 !ELSEIF  "$(CFG)" == "wxq2 - Win32 Debug DLL"
 
 # Begin Custom Build
-OutDir=.\wx\DebugDll
+OutDir=.\DebugDll
 InputPath=.\ref_soft\r_draw16.asm
 InputName=r_draw16
 
-"$(OutDir)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OutDir)"
+"$(OutDir)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	"D:\Asm\Masm 6.15\ml.exe" /nologo /c /Cp /coff /Fo$(OutDir)\$(InputName).obj /Zm /Zi $(InputPath)
 
 # End Custom Build
@@ -421,24 +421,24 @@ InputName=r_draw16
 !ELSEIF  "$(CFG)" == "wxq2 - Win32 Release"
 
 # Begin Custom Build
-OutDir=.\wx\Release
+OutDir=.\Release
 InputPath=.\ref_soft\r_draw16.asm
 InputName=r_draw16
 
-"$(OutDir)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OutDir)"
-	"D:\Asm\Masm 6.15\ml.exe" /nologo /c /Cp /coff /Fo$(OutDir)\$(InputName).obj /Zm /Zi $(InputPath)
+"$(OutDir)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	ml.exe /nologo /c /Cp /coff /Fo$(OutDir)\$(InputName).obj /Zm /Zi $(InputPath)
 
 # End Custom Build
 
 !ELSEIF  "$(CFG)" == "wxq2 - Win32 Debug"
 
 # Begin Custom Build
-OutDir=.\wx\Debug
+OutDir=.\Debug
 InputPath=.\ref_soft\r_draw16.asm
 InputName=r_draw16
 
-"$(OutDir)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OutDir)"
-	"D:\Asm\Masm 6.15\ml.exe" /nologo /c /Cp /coff /Fo$(OutDir)\$(InputName).obj /Zm /Zi $(InputPath)
+"$(OutDir)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	ml.exe /nologo /c /Cp /coff /Fo$(OutDir)\$(InputName).obj /Zm /Zi $(InputPath)
 
 # End Custom Build
 
@@ -452,11 +452,11 @@ SOURCE=.\ref_soft\r_drawa.asm
 !IF  "$(CFG)" == "wxq2 - Win32 Release DLL"
 
 # Begin Custom Build
-OutDir=.\wx\ReleaseDll
+OutDir=.\ReleaseDll
 InputPath=.\ref_soft\r_drawa.asm
 InputName=r_drawa
 
-"$(OutDir)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OutDir)"
+"$(OutDir)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	"D:\Asm\Masm 6.15\ml.exe" /nologo /c /Cp /coff /Fo$(OutDir)\$(InputName).obj /Zm /Zi $(InputPath)
 
 # End Custom Build
@@ -464,11 +464,11 @@ InputName=r_drawa
 !ELSEIF  "$(CFG)" == "wxq2 - Win32 Debug DLL"
 
 # Begin Custom Build
-OutDir=.\wx\DebugDll
+OutDir=.\DebugDll
 InputPath=.\ref_soft\r_drawa.asm
 InputName=r_drawa
 
-"$(OutDir)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OutDir)"
+"$(OutDir)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	"D:\Asm\Masm 6.15\ml.exe" /nologo /c /Cp /coff /Fo$(OutDir)\$(InputName).obj /Zm /Zi $(InputPath)
 
 # End Custom Build
@@ -476,24 +476,24 @@ InputName=r_drawa
 !ELSEIF  "$(CFG)" == "wxq2 - Win32 Release"
 
 # Begin Custom Build
-OutDir=.\wx\Release
+OutDir=.\Release
 InputPath=.\ref_soft\r_drawa.asm
 InputName=r_drawa
 
-"$(OutDir)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OutDir)"
-	"D:\Asm\Masm 6.15\ml.exe" /nologo /c /Cp /coff /Fo$(OutDir)\$(InputName).obj /Zm /Zi $(InputPath)
+"$(OutDir)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	ml.exe /nologo /c /Cp /coff /Fo$(OutDir)\$(InputName).obj /Zm /Zi $(InputPath)
 
 # End Custom Build
 
 !ELSEIF  "$(CFG)" == "wxq2 - Win32 Debug"
 
 # Begin Custom Build
-OutDir=.\wx\Debug
+OutDir=.\Debug
 InputPath=.\ref_soft\r_drawa.asm
 InputName=r_drawa
 
-"$(OutDir)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OutDir)"
-	"D:\Asm\Masm 6.15\ml.exe" /nologo /c /Cp /coff /Fo$(OutDir)\$(InputName).obj /Zm /Zi $(InputPath)
+"$(OutDir)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	ml.exe /nologo /c /Cp /coff /Fo$(OutDir)\$(InputName).obj /Zm /Zi $(InputPath)
 
 # End Custom Build
 
@@ -511,11 +511,11 @@ SOURCE=.\ref_soft\r_edgea.asm
 !IF  "$(CFG)" == "wxq2 - Win32 Release DLL"
 
 # Begin Custom Build
-OutDir=.\wx\ReleaseDll
+OutDir=.\ReleaseDll
 InputPath=.\ref_soft\r_edgea.asm
 InputName=r_edgea
 
-"$(OutDir)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OutDir)"
+"$(OutDir)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	"D:\Asm\Masm 6.15\ml.exe" /nologo /c /Cp /coff /Fo$(OutDir)\$(InputName).obj /Zm /Zi $(InputPath)
 
 # End Custom Build
@@ -523,11 +523,11 @@ InputName=r_edgea
 !ELSEIF  "$(CFG)" == "wxq2 - Win32 Debug DLL"
 
 # Begin Custom Build
-OutDir=.\wx\DebugDll
+OutDir=.\DebugDll
 InputPath=.\ref_soft\r_edgea.asm
 InputName=r_edgea
 
-"$(OutDir)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OutDir)"
+"$(OutDir)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	"D:\Asm\Masm 6.15\ml.exe" /nologo /c /Cp /coff /Fo$(OutDir)\$(InputName).obj /Zm /Zi $(InputPath)
 
 # End Custom Build
@@ -535,24 +535,24 @@ InputName=r_edgea
 !ELSEIF  "$(CFG)" == "wxq2 - Win32 Release"
 
 # Begin Custom Build
-OutDir=.\wx\Release
+OutDir=.\Release
 InputPath=.\ref_soft\r_edgea.asm
 InputName=r_edgea
 
-"$(OutDir)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OutDir)"
-	"D:\Asm\Masm 6.15\ml.exe" /nologo /c /Cp /coff /Fo$(OutDir)\$(InputName).obj /Zm /Zi $(InputPath)
+"$(OutDir)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	ml.exe /nologo /c /Cp /coff /Fo$(OutDir)\$(InputName).obj /Zm /Zi $(InputPath)
 
 # End Custom Build
 
 !ELSEIF  "$(CFG)" == "wxq2 - Win32 Debug"
 
 # Begin Custom Build
-OutDir=.\wx\Debug
+OutDir=.\Debug
 InputPath=.\ref_soft\r_edgea.asm
 InputName=r_edgea
 
-"$(OutDir)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OutDir)"
-	"D:\Asm\Masm 6.15\ml.exe" /nologo /c /Cp /coff /Fo$(OutDir)\$(InputName).obj /Zm /Zi $(InputPath)
+"$(OutDir)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	ml.exe /nologo /c /Cp /coff /Fo$(OutDir)\$(InputName).obj /Zm /Zi $(InputPath)
 
 # End Custom Build
 
@@ -594,11 +594,11 @@ SOURCE=.\ref_soft\r_polysa.asm
 !IF  "$(CFG)" == "wxq2 - Win32 Release DLL"
 
 # Begin Custom Build
-OutDir=.\wx\ReleaseDll
+OutDir=.\ReleaseDll
 InputPath=.\ref_soft\r_polysa.asm
 InputName=r_polysa
 
-"$(OutDir)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OutDir)"
+"$(OutDir)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	"D:\Asm\Masm 6.15\ml.exe" /nologo /c /Cp /coff /Fo$(OutDir)\$(InputName).obj /Zm /Zi $(InputPath)
 
 # End Custom Build
@@ -606,11 +606,11 @@ InputName=r_polysa
 !ELSEIF  "$(CFG)" == "wxq2 - Win32 Debug DLL"
 
 # Begin Custom Build
-OutDir=.\wx\DebugDll
+OutDir=.\DebugDll
 InputPath=.\ref_soft\r_polysa.asm
 InputName=r_polysa
 
-"$(OutDir)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OutDir)"
+"$(OutDir)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	"D:\Asm\Masm 6.15\ml.exe" /nologo /c /Cp /coff /Fo$(OutDir)\$(InputName).obj /Zm /Zi $(InputPath)
 
 # End Custom Build
@@ -618,24 +618,24 @@ InputName=r_polysa
 !ELSEIF  "$(CFG)" == "wxq2 - Win32 Release"
 
 # Begin Custom Build
-OutDir=.\wx\Release
+OutDir=.\Release
 InputPath=.\ref_soft\r_polysa.asm
 InputName=r_polysa
 
-"$(OutDir)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OutDir)"
-	"D:\Asm\Masm 6.15\ml.exe" /nologo /c /Cp /coff /Fo$(OutDir)\$(InputName).obj /Zm /Zi $(InputPath)
+"$(OutDir)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	ml.exe /nologo /c /Cp /coff /Fo$(OutDir)\$(InputName).obj /Zm /Zi $(InputPath)
 
 # End Custom Build
 
 !ELSEIF  "$(CFG)" == "wxq2 - Win32 Debug"
 
 # Begin Custom Build
-OutDir=.\wx\Debug
+OutDir=.\Debug
 InputPath=.\ref_soft\r_polysa.asm
 InputName=r_polysa
 
-"$(OutDir)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OutDir)"
-	"D:\Asm\Masm 6.15\ml.exe" /nologo /c /Cp /coff /Fo$(OutDir)\$(InputName).obj /Zm /Zi $(InputPath)
+"$(OutDir)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	ml.exe /nologo /c /Cp /coff /Fo$(OutDir)\$(InputName).obj /Zm /Zi $(InputPath)
 
 # End Custom Build
 
@@ -661,11 +661,11 @@ SOURCE=.\ref_soft\r_scana.asm
 !IF  "$(CFG)" == "wxq2 - Win32 Release DLL"
 
 # Begin Custom Build
-OutDir=.\wx\ReleaseDll
+OutDir=.\ReleaseDll
 InputPath=.\ref_soft\r_scana.asm
 InputName=r_scana
 
-"$(OutDir)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OutDir)"
+"$(OutDir)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	"D:\Asm\Masm 6.15\ml.exe" /nologo /c /Cp /coff /Fo$(OutDir)\$(InputName).obj /Zm /Zi $(InputPath)
 
 # End Custom Build
@@ -673,11 +673,11 @@ InputName=r_scana
 !ELSEIF  "$(CFG)" == "wxq2 - Win32 Debug DLL"
 
 # Begin Custom Build
-OutDir=.\wx\DebugDll
+OutDir=.\DebugDll
 InputPath=.\ref_soft\r_scana.asm
 InputName=r_scana
 
-"$(OutDir)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OutDir)"
+"$(OutDir)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	"D:\Asm\Masm 6.15\ml.exe" /nologo /c /Cp /coff /Fo$(OutDir)\$(InputName).obj /Zm /Zi $(InputPath)
 
 # End Custom Build
@@ -685,24 +685,24 @@ InputName=r_scana
 !ELSEIF  "$(CFG)" == "wxq2 - Win32 Release"
 
 # Begin Custom Build
-OutDir=.\wx\Release
+OutDir=.\Release
 InputPath=.\ref_soft\r_scana.asm
 InputName=r_scana
 
-"$(OutDir)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OutDir)"
-	"D:\Asm\Masm 6.15\ml.exe" /nologo /c /Cp /coff /Fo$(OutDir)\$(InputName).obj /Zm /Zi $(InputPath)
+"$(OutDir)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	ml.exe /nologo /c /Cp /coff /Fo$(OutDir)\$(InputName).obj /Zm /Zi $(InputPath)
 
 # End Custom Build
 
 !ELSEIF  "$(CFG)" == "wxq2 - Win32 Debug"
 
 # Begin Custom Build
-OutDir=.\wx\Debug
+OutDir=.\Debug
 InputPath=.\ref_soft\r_scana.asm
 InputName=r_scana
 
-"$(OutDir)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OutDir)"
-	"D:\Asm\Masm 6.15\ml.exe" /nologo /c /Cp /coff /Fo$(OutDir)\$(InputName).obj /Zm /Zi $(InputPath)
+"$(OutDir)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	ml.exe /nologo /c /Cp /coff /Fo$(OutDir)\$(InputName).obj /Zm /Zi $(InputPath)
 
 # End Custom Build
 
@@ -716,11 +716,11 @@ SOURCE=.\ref_soft\r_spr8.asm
 !IF  "$(CFG)" == "wxq2 - Win32 Release DLL"
 
 # Begin Custom Build
-OutDir=.\wx\ReleaseDll
+OutDir=.\ReleaseDll
 InputPath=.\ref_soft\r_spr8.asm
 InputName=r_spr8
 
-"$(OutDir)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OutDir)"
+"$(OutDir)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	"D:\Asm\Masm 6.15\ml.exe" /nologo /c /Cp /coff /Fo$(OutDir)\$(InputName).obj /Zm /Zi $(InputPath)
 
 # End Custom Build
@@ -728,11 +728,11 @@ InputName=r_spr8
 !ELSEIF  "$(CFG)" == "wxq2 - Win32 Debug DLL"
 
 # Begin Custom Build
-OutDir=.\wx\DebugDll
+OutDir=.\DebugDll
 InputPath=.\ref_soft\r_spr8.asm
 InputName=r_spr8
 
-"$(OutDir)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OutDir)"
+"$(OutDir)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	"D:\Asm\Masm 6.15\ml.exe" /nologo /c /Cp /coff /Fo$(OutDir)\$(InputName).obj /Zm /Zi $(InputPath)
 
 # End Custom Build
@@ -740,24 +740,24 @@ InputName=r_spr8
 !ELSEIF  "$(CFG)" == "wxq2 - Win32 Release"
 
 # Begin Custom Build
-OutDir=.\wx\Release
+OutDir=.\Release
 InputPath=.\ref_soft\r_spr8.asm
 InputName=r_spr8
 
-"$(OutDir)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OutDir)"
-	"D:\Asm\Masm 6.15\ml.exe" /nologo /c /Cp /coff /Fo$(OutDir)\$(InputName).obj /Zm /Zi $(InputPath)
+"$(OutDir)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	ml.exe /nologo /c /Cp /coff /Fo$(OutDir)\$(InputName).obj /Zm /Zi $(InputPath)
 
 # End Custom Build
 
 !ELSEIF  "$(CFG)" == "wxq2 - Win32 Debug"
 
 # Begin Custom Build
-OutDir=.\wx\Debug
+OutDir=.\Debug
 InputPath=.\ref_soft\r_spr8.asm
 InputName=r_spr8
 
-"$(OutDir)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OutDir)"
-	"D:\Asm\Masm 6.15\ml.exe" /nologo /c /Cp /coff /Fo$(OutDir)\$(InputName).obj /Zm /Zi $(InputPath)
+"$(OutDir)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	ml.exe /nologo /c /Cp /coff /Fo$(OutDir)\$(InputName).obj /Zm /Zi $(InputPath)
 
 # End Custom Build
 
@@ -779,11 +779,11 @@ SOURCE=.\ref_soft\r_surf8.asm
 !IF  "$(CFG)" == "wxq2 - Win32 Release DLL"
 
 # Begin Custom Build
-OutDir=.\wx\ReleaseDll
+OutDir=.\ReleaseDll
 InputPath=.\ref_soft\r_surf8.asm
 InputName=r_surf8
 
-"$(OutDir)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OutDir)"
+"$(OutDir)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	"D:\Asm\Masm 6.15\ml.exe" /nologo /c /Cp /coff /Fo$(OutDir)\$(InputName).obj /Zm /Zi $(InputPath)
 
 # End Custom Build
@@ -791,11 +791,11 @@ InputName=r_surf8
 !ELSEIF  "$(CFG)" == "wxq2 - Win32 Debug DLL"
 
 # Begin Custom Build
-OutDir=.\wx\DebugDll
+OutDir=.\DebugDll
 InputPath=.\ref_soft\r_surf8.asm
 InputName=r_surf8
 
-"$(OutDir)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OutDir)"
+"$(OutDir)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	"D:\Asm\Masm 6.15\ml.exe" /nologo /c /Cp /coff /Fo$(OutDir)\$(InputName).obj /Zm /Zi $(InputPath)
 
 # End Custom Build
@@ -803,24 +803,24 @@ InputName=r_surf8
 !ELSEIF  "$(CFG)" == "wxq2 - Win32 Release"
 
 # Begin Custom Build
-OutDir=.\wx\Release
+OutDir=.\Release
 InputPath=.\ref_soft\r_surf8.asm
 InputName=r_surf8
 
-"$(OutDir)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OutDir)"
-	"D:\Asm\Masm 6.15\ml.exe" /nologo /c /Cp /coff /Fo$(OutDir)\$(InputName).obj /Zm /Zi $(InputPath)
+"$(OutDir)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	ml.exe /nologo /c /Cp /coff /Fo$(OutDir)\$(InputName).obj /Zm /Zi $(InputPath)
 
 # End Custom Build
 
 !ELSEIF  "$(CFG)" == "wxq2 - Win32 Debug"
 
 # Begin Custom Build
-OutDir=.\wx\Debug
+OutDir=.\Debug
 InputPath=.\ref_soft\r_surf8.asm
 InputName=r_surf8
 
-"$(OutDir)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OutDir)"
-	"D:\Asm\Masm 6.15\ml.exe" /nologo /c /Cp /coff /Fo$(OutDir)\$(InputName).obj /Zm /Zi $(InputPath)
+"$(OutDir)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	ml.exe /nologo /c /Cp /coff /Fo$(OutDir)\$(InputName).obj /Zm /Zi $(InputPath)
 
 # End Custom Build
 
@@ -834,11 +834,11 @@ SOURCE=.\ref_soft\r_varsa.asm
 !IF  "$(CFG)" == "wxq2 - Win32 Release DLL"
 
 # Begin Custom Build
-OutDir=.\wx\ReleaseDll
+OutDir=.\ReleaseDll
 InputPath=.\ref_soft\r_varsa.asm
 InputName=r_varsa
 
-"$(OutDir)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OutDir)"
+"$(OutDir)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	"D:\Asm\Masm 6.15\ml.exe" /nologo /c /Cp /coff /Fo$(OutDir)\$(InputName).obj /Zm /Zi $(InputPath)
 
 # End Custom Build
@@ -846,11 +846,11 @@ InputName=r_varsa
 !ELSEIF  "$(CFG)" == "wxq2 - Win32 Debug DLL"
 
 # Begin Custom Build
-OutDir=.\wx\DebugDll
+OutDir=.\DebugDll
 InputPath=.\ref_soft\r_varsa.asm
 InputName=r_varsa
 
-"$(OutDir)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OutDir)"
+"$(OutDir)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	"D:\Asm\Masm 6.15\ml.exe" /nologo /c /Cp /coff /Fo$(OutDir)\$(InputName).obj /Zm /Zi $(InputPath)
 
 # End Custom Build
@@ -858,24 +858,24 @@ InputName=r_varsa
 !ELSEIF  "$(CFG)" == "wxq2 - Win32 Release"
 
 # Begin Custom Build
-OutDir=.\wx\Release
+OutDir=.\Release
 InputPath=.\ref_soft\r_varsa.asm
 InputName=r_varsa
 
-"$(OutDir)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OutDir)"
-	"D:\Asm\Masm 6.15\ml.exe" /nologo /c /Cp /coff /Fo$(OutDir)\$(InputName).obj /Zm /Zi $(InputPath)
+"$(OutDir)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	ml.exe /nologo /c /Cp /coff /Fo$(OutDir)\$(InputName).obj /Zm /Zi $(InputPath)
 
 # End Custom Build
 
 !ELSEIF  "$(CFG)" == "wxq2 - Win32 Debug"
 
 # Begin Custom Build
-OutDir=.\wx\Debug
+OutDir=.\Debug
 InputPath=.\ref_soft\r_varsa.asm
 InputName=r_varsa
 
-"$(OutDir)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OutDir)"
-	"D:\Asm\Masm 6.15\ml.exe" /nologo /c /Cp /coff /Fo$(OutDir)\$(InputName).obj /Zm /Zi $(InputPath)
+"$(OutDir)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	ml.exe /nologo /c /Cp /coff /Fo$(OutDir)\$(InputName).obj /Zm /Zi $(InputPath)
 
 # End Custom Build
 
