@@ -1027,6 +1027,30 @@ void SCR_ExecuteLayoutString (char *s)
 			continue;
 		}
 
+#ifdef IML_Q2_EXTENSIONS
+		// These are good for moving around within the status area.  In
+		// particular, offset_st will offset the current drawing position
+		// by a value specified in stat variable (very useful for meters).
+		if (!strcmp(token, "offset"))
+		{
+			token = COM_Parse (&s);
+			x += atoi(token);
+			token = COM_Parse (&s);
+			y += atoi(token);
+		}
+		if (!strcmp(token, "offset_st"))
+		{
+			token = COM_Parse (&s);
+			value = atoi(token);
+			if (value)
+				x += cl.frame.playerstate.stats[value];
+			token = COM_Parse (&s);
+			value = atoi(token);
+			if (value)
+				y += cl.frame.playerstate.stats[value];
+		}
+#endif // IML_Q2_EXTENSIONS
+
 		if (!strcmp(token, "pic"))
 		{	// draw a pic from a stat number
 			token = COM_Parse (&s);
