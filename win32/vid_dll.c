@@ -558,6 +558,17 @@ void VID_FreeReflib (void)
 }
 
 /*
+** VID_GetWindowPtr
+*/
+#ifdef __WXWINDOWS__
+void *VID_GetWindowPtr (void)
+{
+	extern HWND g_hwndWxQuake;
+    return &g_hwndWxQuake;
+}
+#endif // __WXWINDOWS__
+
+/*
 ==============
 VID_LoadRefresh
 ==============
@@ -565,7 +576,7 @@ VID_LoadRefresh
 qboolean VID_LoadRefresh( char *name )
 {
 	refimport_t	ri;
-#ifdef __WXWINDOWS__
+#ifdef REF_HARD_LINKED
     extern refexport_t GetRefAPI (refimport_t rimp);
 #else
 	GetRefAPI_t	GetRefAPI;
@@ -579,7 +590,7 @@ qboolean VID_LoadRefresh( char *name )
 
 	Com_Printf( "------- Loading %s -------\n", name );
 
-#ifndef __WXWINDOWS__
+#ifndef REF_HARD_LINKED
 	if ( ( reflib_library = LoadLibrary( name ) ) == 0 )
 	{
 		Com_Printf( "LoadLibrary(\"%s\") failed\n", name );
@@ -604,8 +615,11 @@ qboolean VID_LoadRefresh( char *name )
 	ri.Vid_GetModeInfo = VID_GetModeInfo;
 	ri.Vid_MenuInit = VID_MenuInit;
 	ri.Vid_NewWindow = VID_NewWindow;
+#ifdef __WXWINDOWS__
+        ri.Vid_GetWindowPtr = VID_GetWindowPtr;
+#endif // __WXWINDOWS__
 
-#ifndef __WXWINDOWS__
+#ifndef REF_HARD_LINKED
 	if ( ( GetRefAPI = (void *) GetProcAddress( reflib_library, "GetRefAPI" ) ) == 0 )
 		Com_Error( ERR_FATAL, "GetProcAddress failed on %s", name );
 #endif
@@ -685,7 +699,14 @@ void VID_CheckChanges (void)
 		cl.refresh_prepped = false;
 		cls.disable_screen = true;
 
+#ifdef __WXWINDOWS__
+        // You can add an extra '_d' before '.dll' if you build the debug
+		// versions.
+		Com_sprintf( name, sizeof(name), "wxref_%s.dll", vid_ref->string );
+#else  // ndef __WXWINDOWS__
 		Com_sprintf( name, sizeof(name), "ref_%s.dll", vid_ref->string );
+#endif // ndef __WXWINDOWS__
+
 		if ( !VID_LoadRefresh( name ) )
 		{
 			if ( strcmp (vid_ref->string, "soft") == 0 )

@@ -65,11 +65,12 @@ public:
                    const wxPoint& pos = wxDefaultPosition,
                    VideoMode mode = MODE_640_480,
 				   const wxString &basedir = "",
-				   const wxString &game = "")
+				   const wxString &game = "",
+                   const wxString &ref = "soft")
     {
         Init();
 
-        (void)Create(parent, id, pos, mode, basedir, game);
+        (void)Create(parent, id, pos, mode, basedir, game, ref);
     }
 
     // creates the widget and initializes the quake engine if necessary
@@ -80,7 +81,8 @@ public:
                 const wxPoint& pos = wxDefaultPosition,
                 VideoMode mode = MODE_640_480,
 				const wxString &basedir = "",
-				const wxString &game = "");
+				const wxString &game = "",
+                const wxString &ref = "soft");
 
     // dtor will shut down the quake engine if this is the last wxQuake2Window
     // in existence

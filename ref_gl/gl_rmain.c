@@ -50,6 +50,11 @@ int			c_brush_polys, c_alias_polys;
 
 float		v_blend[4];			// final blending color
 
+#ifdef IML_Q2_EXTENSIONS
+// 20 May 2004 - IML - emk - Projection support for reticle.
+float r_projection_matrix[16];
+#endif
+
 void GL_Strings_f( void );
 
 //
@@ -723,6 +728,10 @@ void R_SetupGL (void)
 	qglMatrixMode(GL_PROJECTION);
     qglLoadIdentity ();
     MYgluPerspective (r_newrefdef.fov_y,  screenaspect,  4,  4096);
+#ifdef IML_Q2_EXTENSIONS
+    // 20 May 2004 - IML - emk - Projection support for reticle.
+    qglGetFloatv(GL_PROJECTION_MATRIX, r_projection_matrix);
+#endif
 
 	qglCullFace(GL_FRONT);
 
@@ -1650,6 +1659,69 @@ void R_DrawBeam( entity_t *e )
 	qglDepthMask( GL_TRUE );
 }
 
+#ifdef IML_Q2_EXTENSIONS
+
+/*
+===============
+ApplyGLMatrix
+
+Apply an OpenGL matrix to a point.
+===============
+*/
+
+typedef float vec4_t[4];
+static void ApplyGLMatrix(vec4_t result, float *m, vec4_t p)
+{
+    result[0] = p[0]*m[0] + p[1]*m[4] + p[2]*m[8] + p[3]*m[12];
+    result[1] = p[0]*m[1] + p[1]*m[5] + p[2]*m[9] + p[3]*m[13];
+    result[2] = p[0]*m[2] + p[1]*m[6] + p[2]*m[10] + p[3]*m[14];
+    result[3] = p[0]*m[3] + p[1]*m[7] + p[2]*m[11] + p[3]*m[15];
+}
+
+/*
+===============
+R_ProjectPoint
+
+Project a point from world co-ordinates to screen co-ordinates.
+===============
+*/
+
+void R_ProjectPoint(vec3_t point)
+{
+	vec4_t initial, transformed, projected;
+
+	// Convert the point to homogeneous coordinates.
+	initial[0] = point[0];
+	initial[1] = point[1];
+	initial[2] = point[2];
+	initial[3] = 1;
+
+	// Transform the point to camera-relative coordinates.
+    ApplyGLMatrix(transformed, r_world_matrix, initial);
+
+	// Apply the projection matrix.
+	if (transformed[2] > -4)
+		// Points near or behind the view plane need to be handled
+		// carefully when doing perspective projections.  Perhaps we
+		// should report whether or not 'point' falls within the frustrum?
+		transformed[2] = -4;
+    ApplyGLMatrix(projected, r_projection_matrix, transformed);
+
+	// Perform the "perspective divide" by the w-coordinate.
+	// This should give us x and y between -1 and 1.
+	projected[0] /= projected[3];
+	projected[1] /= projected[3];
+	//projected[2] /= projected[3];
+	//projected[3] /= projected[3];
+
+	// Convert our point into window space.
+	point[0] = vid.width/2 * (1 + projected[0]);
+    point[1] = vid.height/2 * (1 - projected[1]);
+    point[2] = 0;
+}
+
+#endif // IML_Q2_EXTENSIONS
+
 //===================================================================
 
 
@@ -1710,6 +1782,19 @@ refexport_t GetRefAPI (refimport_t rimp )
 	re.EndFrame = GLimp_EndFrame;
 
 	re.AppActivate = GLimp_AppActivate;
+
+#ifdef IML_Q2_EXTENSIONS
+    // 29 January 2004 - IML - emk - added for overlays
+    re.OverlayNew = NULL;
+    re.OverlayShow = NULL;
+    re.OverlayMove = NULL;
+    re.OverlayDirtyRect = NULL;
+    re.OverlayDelete = NULL;
+    re.DrawOverlays = NULL;
+
+	// 29 February 2004 - IML - emk - added for reticle
+	re.ProjectPoint = R_ProjectPoint;
+#endif // IML_Q2_EXTENSIONS
 
 	Swap_Init ();
 

@@ -618,8 +618,12 @@ void FS_SetGamedir (char *dir)
 	//
 	// flush all data, so it will be forced to reload
 	//
+#ifndef __WXWINDOWS__
+        // This causes an extra reload of the graphics drivers when
+        // we're running as a wxWindows widget.
 	if (dedicated && !dedicated->value)
 		Cbuf_AddText ("vid_restart\nsnd_restart\n");
+#endif // __WXWINDOWS__
 
 	Com_sprintf (fs_gamedir, sizeof(fs_gamedir), "%s/%s", fs_basedir->string, dir);
 

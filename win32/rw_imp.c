@@ -45,10 +45,7 @@ swwstate_t sww_state;
 void VID_CreateWindow( int width, int height, int stylebits )
 {
 #ifdef __WXWINDOWS__
-	extern HWND g_hwndWxQuake;
-
-	sww_state.hWnd = g_hwndWxQuake;
-	//g_hwndWxQuake = NULL;
+	sww_state.hWnd = *(HWND*) ri.Vid_GetWindowPtr();
 #else
 	WNDCLASS		wc;
 	RECT			r;
@@ -102,7 +99,7 @@ void VID_CreateWindow( int width, int height, int stylebits )
 		 NULL,
 		 sww_state.hInstance,
 		 NULL);
-#endif
+#endif // ndef __WXWINDOWS__
 
 	if (!sww_state.hWnd)
 		ri.Sys_Error (ERR_FATAL, "Couldn't create window");

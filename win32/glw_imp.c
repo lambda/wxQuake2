@@ -63,6 +63,9 @@ static qboolean VerifyDriver( void )
 
 qboolean VID_CreateWindow( int width, int height, qboolean fullscreen )
 {
+#ifdef __WXWINDOWS__
+	glw_state.hWnd = *(HWND*) ri.Vid_GetWindowPtr();
+#else
 	WNDCLASS		wc;
 	RECT			r;
 	cvar_t			*vid_xpos, *vid_ypos;
@@ -129,6 +132,7 @@ qboolean VID_CreateWindow( int width, int height, qboolean fullscreen )
 		 NULL,
 		 glw_state.hInstance,
 		 NULL);
+#endif // ndef __WXWINDOWS__
 
 	if (!glw_state.hWnd)
 		ri.Sys_Error (ERR_FATAL, "Couldn't create window");
@@ -315,11 +319,13 @@ void GLimp_Shutdown( void )
 			ri.Con_Printf( PRINT_ALL, "ref_gl::R_Shutdown() - ReleaseDC failed\n" );
 		glw_state.hDC   = NULL;
 	}
+#ifndef __WXWINDOWS__
 	if (glw_state.hWnd)
 	{
 		DestroyWindow (	glw_state.hWnd );
 		glw_state.hWnd = NULL;
 	}
+#endif // ndef __WXWINDOWS__
 
 	if ( glw_state.log_fp )
 	{
@@ -327,7 +333,9 @@ void GLimp_Shutdown( void )
 		glw_state.log_fp = 0;
 	}
 
+#ifndef __WXWINDOWS__
 	UnregisterClass (WINDOW_CLASS_NAME, glw_state.hInstance);
+#endif // ndef __WXWINDOWS__
 
 	if ( gl_state.fullscreen )
 	{

@@ -116,7 +116,8 @@ public:
     // ctors/dtor
     Quake2Engine(HWND hwnd, int videoMode,
 				 const wxString &basedir,
-				 const wxString &game);
+				 const wxString &game,
+                 const wxString &ref);
     ~Quake2Engine();
 
     // accessors
@@ -156,7 +157,8 @@ private:
 
 Quake2Engine::Quake2Engine(HWND hwnd, int videoMode,
 						   const wxString &basedir,
-						   const wxString &game)
+						   const wxString &game,
+                           const wxString &ref)
 {
     // Quake likes adding elements to argv so make sure the array has enough
     // space
@@ -186,6 +188,14 @@ Quake2Engine::Quake2Engine(HWND hwnd, int videoMode,
     argv[argc++] = "+set";
     argv[argc++] = "sw_mode";
     argv[argc++] = modeStr;
+    argv[argc++] = "+set";
+    argv[argc++] = "gl_mode";
+    argv[argc++] = modeStr;
+
+    // Specify our "refresh" (a.k.a. video) driver.
+    argv[argc++] = "+set";
+    argv[argc++] = "vid_ref";
+    argv[argc++] = const_cast<char *>(ref.mb_str());
 
     // don't show full screen initially
     argv[argc++] = "+set";
@@ -289,7 +299,8 @@ wxQuake2Window::Create(wxWindow *parent,
                        const wxPoint& pos,
                        VideoMode mode,
 					   const wxString &basedir,
-					   const wxString &game)
+					   const wxString &game,
+                       const wxString &ref)
 {
     // create the window
     if ( !wxWindow::Create(parent,
@@ -309,7 +320,7 @@ wxQuake2Window::Create(wxWindow *parent,
         return FALSE;
     }
 
-    m_engine = new Quake2Engine(GetHwnd(), mode, basedir, game);
+    m_engine = new Quake2Engine(GetHwnd(), mode, basedir, game, ref);
     if ( !m_engine->IsOk() )
     {
         delete m_engine;

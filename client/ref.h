@@ -240,6 +240,12 @@ typedef struct
 	qboolean	(*Vid_GetModeInfo)( int *width, int *height, int mode );
 	void		(*Vid_MenuInit)( void );
 	void		(*Vid_NewWindow)( int width, int height );
+
+#ifdef __WXWINDOWS__
+	// Returns a pointer to an HWND under Win32.  Behavior elsewhere
+	// may vary slightly.
+    void	*(*Vid_GetWindowPtr)();
+#endif // __WXWINDOWS__
 } refimport_t;
 
 
