@@ -106,7 +106,9 @@ class Quake2Engine
 {
 public:
     // ctors/dtor
-    Quake2Engine(HWND hwnd, int videoMode, const wxString &game);
+    Quake2Engine(HWND hwnd, int videoMode,
+				 const wxString &basedir,
+				 const wxString &game);
     ~Quake2Engine();
 
     // accessors
@@ -144,7 +146,9 @@ private:
 // Quake2Engine ctor/dtor
 // ----------------------------------------------------------------------------
 
-Quake2Engine::Quake2Engine(HWND hwnd, int videoMode, const wxString &game)
+Quake2Engine::Quake2Engine(HWND hwnd, int videoMode,
+						   const wxString &basedir,
+						   const wxString &game)
 {
     // Quake likes adding elements to argv so make sure the array has enough
     // space
@@ -153,6 +157,14 @@ Quake2Engine::Quake2Engine(HWND hwnd, int videoMode, const wxString &game)
 
     // it also expects the first argument to be this for some reason
     argv[argc++] = "exe";
+
+	// if we've been supplied with a basedir, pass it to Quake.
+	if (basedir != "")
+	{
+		argv[argc++] = "+set";
+		argv[argc++] = "basedir";
+		argv[argc++] = const_cast<char *>(basedir.mb_str());
+	}
 
     // set the mode
     char modeStr[64]; // enough bytes for any integer
@@ -263,6 +275,7 @@ wxQuake2Window::Create(wxWindow *parent,
                        int id,
                        const wxPoint& pos,
                        VideoMode mode,
+					   const wxString &basedir,
 					   const wxString &game)
 {
     // create the window
@@ -283,7 +296,7 @@ wxQuake2Window::Create(wxWindow *parent,
         return FALSE;
     }
 
-    m_engine = new Quake2Engine(GetHwnd(), mode, game);
+    m_engine = new Quake2Engine(GetHwnd(), mode, basedir, game);
     if ( !m_engine->IsOk() )
     {
         delete m_engine;
