@@ -418,6 +418,10 @@ LONG WINAPI MainWndProc (
 			return 0;
         return DefWindowProc (hWnd, uMsg, wParam, lParam);
 	case WM_SYSKEYDOWN:
+#ifndef __WXWINDOWS__
+		// ALT-Enter is disabled when we're running under wxWindows,
+		// because all screen resizing should be performed by the
+		// wxQuake2Window class.
 		if ( wParam == 13 )
 		{
 			if ( vid_fullscreen )
@@ -426,6 +430,7 @@ LONG WINAPI MainWndProc (
 			}
 			return 0;
 		}
+#endif
 		// fall through
 	case WM_KEYDOWN:
 		Key_Event( MapKey( lParam ), true, sys_msg_time);

@@ -95,6 +95,17 @@ public:
     // execute Quake console command non interactively
     void ExecCommand(const wxString& cmd);
 
+    // print a message to the Quake 2 player
+    void Print(const wxString& message);
+
+    // accessing Quake 2 variables (These functions may fail.  If
+    // they do, they will print an error on the Quake 2 console.
+    // Yes, this is completely useless behavior.)
+    void SetVariable(const wxString& name, const wxString &value);
+    void GetVariable(const wxString& name, wxString &out_value);
+    void SetVariable(const wxString& name, float value);
+    void GetVariable(const wxString& name, float &out_value);
+
     // suspend Quake engine -- note that this happens automatically when window
     // is hidden
     void Suspend();
@@ -111,12 +122,17 @@ public:
     // change the video mode
     void SetVideoMode(VideoMode mode);
 
-
     // overloaded base class methods
     virtual void SetFocus();
     virtual bool Show(bool show = TRUE);
 
 protected:
+    // Quake 2 commands
+    virtual bool RegisterCommand(const wxString &cmdName);
+    virtual void HandleCommand();
+    int CommandArgc(void);
+    wxString CommandArgv(int arg);
+
     // event handlers
     void OnIdle(wxIdleEvent& event);
     void OnKillFocus(wxFocusEvent& event);
@@ -125,6 +141,13 @@ protected:
     virtual long MSWWindowProc(WXUINT nMsg, WXWPARAM wParam, WXLPARAM lParam);
 
 private:
+    // this is only needed by CommandFunction
+    static wxQuake2Window *s_Instance;
+
+    // we pass this callback to Quake 2 when we want to register a
+    // console command
+    static void DoQuake2Command();
+
     // common part of all ctors
     void Init();
 

@@ -24,6 +24,8 @@
 
 #include "wxquake2.h"
 
+// If we try to include the Quake 2 headers directly, MSVC++ gets
+// confused.  We should probably patch the Quake 2 headers.
 extern "C"
 {
     // Quake engine functions
@@ -32,12 +34,22 @@ extern "C"
 
     void Com_Quit(void);
 
+	char *CopyString (char *in);
+
     void Cbuf_AddText (char *text);
     void Cbuf_Execute (void);
 
-    void Cvar_SetValue(char *var_name, float value);
+	typedef void (*xcommand_t) (void);
+	typedef enum { qFalse, qTrue } qboolean;
 
-    enum { qFalse, qTrue } VID_GetModeInfo(int *width, int *height, int mode);
+	qboolean Cmd_Exists (char *cmd_name);
+	void Cmd_AddCommand (char *cmd_name, xcommand_t function);
+	int Cmd_Argc (void);
+	char *Cmd_Argv (int arg);
+
+	void Com_Printf (char *fmt, ...);
+
+    qboolean VID_GetModeInfo(int *width, int *height, int mode);
 
     void AppActivate(BOOL fActive, BOOL minimize);
 
@@ -45,6 +57,22 @@ extern "C"
 
     int Sys_Milliseconds(void);
     LONG WINAPI MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+
+    typedef struct cvar_s
+    {
+		char		*name;
+		char		*string;
+		char		*latched_string;	// for CVAR_LATCH vars
+		int			flags;
+		qboolean	modified;	// set each time the cvar is changed
+		float		value;
+		struct cvar_s *next;
+    } cvar_t;
+
+    cvar_t *Cvar_Get (char *var_name, char *value, int flags);
+    cvar_t *Cvar_Set (char *var_name, char *value);
+    void	Cvar_SetValue (char *var_name, float value);
+    float	Cvar_VariableValue (char *var_name);
 
     // Quake variables
     extern HINSTANCE global_hInstance;
@@ -212,8 +240,13 @@ END_EVENT_TABLE()
 // wxQuake2Window ctors/dtor
 // ----------------------------------------------------------------------------
 
+wxQuake2Window *wxQuake2Window::s_Instance = NULL;
+
 void wxQuake2Window::Init()
 {
+	wxASSERT(s_Instance == NULL);
+	s_Instance = this;
+
     m_engine = NULL;
     m_nSuspend = 0;
 
@@ -259,6 +292,9 @@ wxQuake2Window::Create(wxWindow *parent,
     // set the size to be equal to the full size of the Quake window
     AdjustSize(mode);
 
+	// register a test command, just to show we're here
+	RegisterCommand("wxquake2");
+
 	// FIXME - This doesn't seem to get called reliably, which means
 	// there's probably something wrong with our processing of
 	// WM_ACTIVATE events.
@@ -269,6 +305,7 @@ wxQuake2Window::Create(wxWindow *parent,
 
 wxQuake2Window::~wxQuake2Window()
 {
+	s_Instance = NULL;
     delete m_engine;
 }
 
@@ -318,9 +355,41 @@ void wxQuake2Window::ExecCommand(const wxString& cmd)
     Cbuf_Execute();
 }
 
+void wxQuake2Window::Print(const wxString& message)
+{
+	::Com_Printf("%s", const_cast<char *>(message.mb_str()));
+}
+
+void wxQuake2Window::SetVariable(const wxString& name, const wxString &value)
+{
+    Cvar_Set(const_cast<char *>(name.mb_str()),
+			 const_cast<char *>(value.mb_str()));
+}
+
+void wxQuake2Window::GetVariable(const wxString& name, wxString &out_value)
+{
+    cvar_t *var = Cvar_Get(const_cast<char *>(name.mb_str()), "0", 0);
+	wxASSERT(var != NULL && var->string != NULL);
+	out_value = var->string;
+}
+
+void wxQuake2Window::SetVariable(const wxString& name, float value)
+{
+    Cvar_SetValue(const_cast<char *>(name.mb_str()), value);
+}
+
+void wxQuake2Window::GetVariable(const wxString& name, float &out_value)
+{
+    out_value = Cvar_VariableValue(const_cast<char *>(name.mb_str()));
+}
+
 void wxQuake2Window::Suspend()
 {
     ++m_nSuspend;
+
+	// Experimental code to release mouse when suspending.
+	// FIXME - Is the second parameter correct?
+	AppActivate(FALSE, FALSE);
 }
 
 void wxQuake2Window::Resume()
@@ -422,6 +491,58 @@ void wxQuake2Window::SetFocus()
 }
 
 // ----------------------------------------------------------------------------
+// wxQuake2Window callback support
+// ----------------------------------------------------------------------------
+
+bool wxQuake2Window::RegisterCommand(const wxString &cmdName)
+{
+	// Return false if this command is already registered.
+	// FIXME - This doesn't match the logic in Cmd_AddCommand,
+	// which also considers variables.  This may cause us to leak
+	// the specially-allocated string below.
+	if (::Cmd_Exists(const_cast<char*>(cmdName.mb_str())))
+		return false;
+
+	// Ask Quake 2 to send cmdName to us in the future.  We need to
+	// allocate a string on the heap, because Quake 2 requires this string
+	// to be permanent.  Quake 2 will not attempt to free this string.
+	char *str = CopyString(const_cast<char*>(cmdName.mb_str()));
+	::Cmd_AddCommand(str, &DoQuake2Command);
+	return true;
+}
+
+void wxQuake2Window::HandleCommand()
+{
+	// To implement a command, override this function, check CommandArgv(0)
+	// for the command name, and pass any unknown commands to your
+	// superclass.
+	wxString command = CommandArgv(0);
+	if (command == "wxquake2")
+		::Com_Printf("Running under wxQuake2.\n");
+	else
+		::Com_Printf("Command '%s' registered by wxQuake2 but not "
+					 "implemented.\n", CommandArgv(0).mb_str());
+}
+
+int wxQuake2Window::CommandArgc(void)
+{
+	return ::Cmd_Argc();
+}
+
+wxString wxQuake2Window::CommandArgv(int arg)
+{
+	return wxString(::Cmd_Argv(arg));
+}
+
+void wxQuake2Window::DoQuake2Command()
+{
+	// Receive a command from Quake, and dispatch it to our HandleCommand
+	// method.
+	wxASSERT(s_Instance);
+	s_Instance->HandleCommand();
+}
+
+// ----------------------------------------------------------------------------
 // wxQuake2Window event handlers
 // ----------------------------------------------------------------------------
 
@@ -439,8 +560,10 @@ void wxQuake2Window::OnIdle(wxIdleEvent& event)
         AppActivate(TRUE, m_isIconized);
     }
 
-    // let Quake run now
-    if ( m_engine->IsActive() && !IsSuspended() )
+    // Let Quake run now.  We used to check IsActive instead of IsRunning,
+    // but that caused Quake to stop repainting the window when
+    // backgrounded.
+    if ( m_engine->IsRunning() && !IsSuspended() )
     {
         m_engine->ShowNextFrame();
 
@@ -484,12 +607,17 @@ wxQuake2Window::MSWWindowProc(WXUINT nMsg, WXWPARAM wParam, WXLPARAM lParam)
 {
     if ( m_engine && m_engine->IsRunning() )
     {
-        // as Quake window proc doesn't get WM_CREATE, let it know about its
-        // window which it sets there
+        // As Quake window proc doesn't get WM_CREATE, let it know about its
+        // window which it sets there.
         if ( !cl_hwnd )
         {
             cl_hwnd = GetHwnd();
         }
+
+		// Experimental code to return focus to the Quake 2 window if it
+		// has been lost to another window in the same frame.
+		if ( nMsg == WM_LBUTTONDOWN )
+			SetFocus();
 
         // Note that we could intercept some events here and/or modify Quake
         // MainWndProc() to call us back instead of calling DefWindowProc().
