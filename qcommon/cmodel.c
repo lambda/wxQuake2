@@ -1596,6 +1596,16 @@ trace_t		CM_TransformedBoxTrace (vec3_t start, vec3_t end,
 	trace.endpos[1] = start[1] + trace.fraction * (end[1] - start[1]);
 	trace.endpos[2] = start[2] + trace.fraction * (end[2] - start[2]);
 
+#ifdef IML_Q2_EXTENSIONS
+	if ((brushmask & WANT_TRACE_EXIT) && trace.exited)
+	{
+		float frac = trace.exit_fraction;
+		trace.nextpos[0] = start[0] + frac * (end[0] - start[0]);
+		trace.nextpos[1] = start[1] + frac * (end[1] - start[1]);
+		trace.nextpos[2] = start[2] + frac * (end[2] - start[2]);
+	}
+#endif IML_Q2_EXTENSIONS
+
 	return trace;
 }
 
