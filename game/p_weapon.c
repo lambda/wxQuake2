@@ -165,6 +165,40 @@ qboolean Pickup_Weapon (edict_t *ent, edict_t *other)
 
 /*
 ===============
+SendBinMsg_Weapon
+
+Notify the client that the specified weapon (or "none") is fully active.
+The stock client ignores this message, but you may choose to do something
+interesting with it.
+===============
+*/
+
+#ifdef IML_Q2_EXTENSIONS
+
+#include "binmsg.h"
+
+void SendBinMsg_Weapon(edict_t *ent, char *name)
+{
+    binmsg_byte buffer[BINMSG_MAX_SIZE];
+    binmsg_message msg;
+
+    if (!binmsg_build(&msg, buffer, BINMSG_MAX_SIZE, "state"))
+        return;
+    if (!binmsg_add_string(&msg.args, "weapon"))
+        return;
+    if (!binmsg_add_string(&msg.args, name))
+        return;
+    if (!binmsg_build_done(&msg))
+        return;
+
+    SendBinMsg(ent, msg.buffer, msg.buffer_size);
+}
+
+#endif // IML_Q2_EXTENSIONS
+
+
+/*
+===============
 ChangeWeapon
 
 The old weapon has been dropped all the way, so make the new one
@@ -417,6 +451,9 @@ void Weapon_Generic (edict_t *ent, int FRAME_ACTIVATE_LAST, int FRAME_FIRE_LAST,
 	{
 		if (ent->client->ps.gunframe == FRAME_ACTIVATE_LAST)
 		{
+#ifdef IML_Q2_EXTENSIONS
+            SendBinMsg_Weapon(ent, ent->client->pers.weapon->pickup_name);
+#endif // IML_Q2_EXTENSIONS
 			ent->client->weaponstate = WEAPON_READY;
 			ent->client->ps.gunframe = FRAME_IDLE_FIRST;
 			return;
@@ -428,6 +465,9 @@ void Weapon_Generic (edict_t *ent, int FRAME_ACTIVATE_LAST, int FRAME_FIRE_LAST,
 
 	if ((ent->client->newweapon) && (ent->client->weaponstate != WEAPON_FIRING))
 	{
+#ifdef IML_Q2_EXTENSIONS
+        SendBinMsg_Weapon(ent, "none");
+#endif // IML_Q2_EXTENSIONS
 		ent->client->weaponstate = WEAPON_DROPPING;
 		ent->client->ps.gunframe = FRAME_DEACTIVATE_FIRST;
 

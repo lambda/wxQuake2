@@ -332,6 +332,19 @@ void BecomeExplosion2 (edict_t *self)
 	G_FreeEdict (self);
 }
 
+#ifdef IML_Q2_EXTENSIONS
+
+void SendBinMsg(edict_t *ent, unsigned char *buffer, unsigned int size)
+{
+    int i;
+    gi.WriteByte (svc_binmsg);
+    gi.WriteShort ((short) size);
+    for (i = 0; i < size; i++)
+        gi.WriteByte (buffer[i]);
+    gi.unicast (ent, true);
+}
+
+#endif // IML_Q2_EXTENSIONS
 
 /*QUAKED path_corner (.5 .3 0) (-8 -8 -8) (8 8 8) TELEPORT
 Target: next path corner

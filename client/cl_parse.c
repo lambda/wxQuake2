@@ -569,6 +569,39 @@ void CL_ParseConfigString (void)
 	}
 }
 
+/*
+================
+CL_ParseBinMsg
+================
+*/
+
+#ifdef IML_Q2_EXTENSIONS
+
+#include "../game/binmsg.h"
+
+static void (*BinMsgHandler)(binmsg_byte *, size_t) = NULL;
+
+void CL_ParseBinMsg (void)
+{
+    binmsg_byte buffer[BINMSG_MAX_SIZE];
+    size_t size, i;
+    
+    size = MSG_ReadShort(&net_message);
+    if (size > BINMSG_MAX_SIZE)
+        return;
+    for (i = 0; i < size; i++)
+        buffer[i] = MSG_ReadByte(&net_message);
+    if (BinMsgHandler)
+        BinMsgHandler(buffer, size);
+}
+
+void CL_SetBinMsgHandler(void (*handler)(binmsg_byte *, size_t))
+{
+    BinMsgHandler = handler;
+}
+
+#endif // IML_Q2_EXTENSIONS
+
 
 /*
 =====================================================================
@@ -788,6 +821,12 @@ void CL_ParseServerMessage (void)
 			s = MSG_ReadString (&net_message);
 			strncpy (cl.layout, s, sizeof(cl.layout)-1);
 			break;
+
+#ifdef IML_Q2_EXTENSIONS
+        case svc_binmsg:
+            CL_ParseBinMsg();
+            break;
+#endif // IML_Q2_EXTENSIONS
 
 		case svc_playerinfo:
 		case svc_packetentities:

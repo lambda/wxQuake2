@@ -37,6 +37,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define	svc_layout			4
 #define	svc_inventory		5
 #define	svc_stufftext		11
+#ifdef IML_Q2_EXTENSIONS
+#define svc_binmsg          128
+#endif // IML_Q2_EXTENSIONS
 
 //==================================================================
 
@@ -614,6 +617,9 @@ gitem_t	*FindItemByClassname (char *classname);
 #define	ITEM_INDEX(x) ((x)-itemlist)
 edict_t *Drop_Item (edict_t *ent, gitem_t *item);
 void SetRespawn (edict_t *ent, float delay);
+#ifdef IML_Q2_EXTENSIONS
+void SendBinMsg_Weapon(edict_t *ent, char *name);
+#endif // IML_Q2_EXTENSIONS
 void ChangeWeapon (edict_t *ent);
 void SpawnItem (edict_t *ent, gitem_t *item);
 void Think_Weapon (edict_t *ent);
@@ -702,6 +708,9 @@ void ThrowHead (edict_t *self, char *gibname, int damage, int type);
 void ThrowClientHead (edict_t *self, int damage);
 void ThrowGib (edict_t *self, char *gibname, int damage, int type);
 void BecomeExplosion1(edict_t *self);
+#ifdef IML_Q2_EXTENSIONS
+void SendBinMsg(edict_t *ent, unsigned char *buffer, unsigned int size);
+#endif // IML_Q2_EXTENSIONS
 
 //
 // g_ai.c

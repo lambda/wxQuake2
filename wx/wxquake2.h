@@ -14,6 +14,13 @@
 
 #include <wx/window.h>
 
+#ifdef IML_Q2_EXTENSIONS
+extern "C" {
+#include "../client/qoverlay.h"
+#include "../game/binmsg.h"
+};
+#endif // IML_Q2_EXTENSIONS
+
 // setup the DLL declaration macro: WXQ2_EXPORTS must be defined when compiling
 // this code as DLL, WXQ2_IMPORTS -- when using it from DLL
 #if defined(WXQ2_EXPORTS)
@@ -150,6 +157,9 @@ protected:
     int CommandArgc(void);
     wxString CommandArgv(int arg);
 
+    // binmsg dispatching
+    virtual void HandleBinMsg(unsigned char *buffer, size_t size);
+
     // event handlers
     void OnIdle(wxIdleEvent& event);
     void OnKillFocus(wxFocusEvent& event);
@@ -167,6 +177,9 @@ private:
     // we pass this callback to Quake 2 when we want to register a
     // console command
     static void DoQuake2Command();
+
+    // we pass this callback to Quake 2 to receive binmsgs
+    static void DoHandleBinMsg(unsigned char *buffer, size_t size);
 
     // common part of all ctors
     void Init();
@@ -204,10 +217,6 @@ private:
 };
 
 #ifdef IML_Q2_EXTENSIONS
-
-extern "C" {
-#include "../client/qoverlay.h"
-};
 
 class wxQuake2Overlay
 {

@@ -227,6 +227,10 @@ enum svc_ops_e
 	svc_packetentities,			// [...]
 	svc_deltapacketentities,	// [...]
 	svc_frame
+#ifdef IML_Q2_EXTENSIONS
+    ,                           // (trailing comma for svc_frame)
+    svc_binmsg = 128            // [short] size [size bytes] binmsg
+#endif // IML_Q2_EXTENSIONS
 };
 
 //==============================================

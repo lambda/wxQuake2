@@ -1,6 +1,7 @@
 #ifdef IML_Q2_EXTENSIONS
 
 #include <stddef.h>
+#include <string.h>
 #include "binmsg.h"
 
 // Optimize the living daylights out of local functions--most are very

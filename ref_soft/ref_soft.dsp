@@ -44,7 +44,7 @@ CFG=ref_soft - Win32 Debug Alpha
 # PROP Target_Dir "."
 CPP=cl.exe
 # ADD BASE CPP /nologo /MT /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /YX /c
-# ADD CPP /nologo /G5 /MT /W3 /GX /Zi /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /YX /c
+# ADD CPP /nologo /G5 /MT /W3 /GX /Zi /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "IML_Q2_EXTENSIONS" /YX /c
 MTL=midl.exe
 # ADD BASE MTL /nologo /D "NDEBUG" /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
@@ -73,7 +73,7 @@ LINK32=link.exe
 # PROP Target_Dir "."
 CPP=cl.exe
 # ADD BASE CPP /nologo /MTd /W3 /Gm /GX /Zi /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /YX /c
-# ADD CPP /nologo /G5 /MTd /W3 /Gm /GX /ZI /Od /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /FR /YX /FD /c
+# ADD CPP /nologo /G5 /MTd /W3 /Gm /GX /ZI /Od /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D "IML_Q2_EXTENSIONS" /FR /YX /FD /c
 MTL=midl.exe
 # ADD BASE MTL /nologo /D "_DEBUG" /win32
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
@@ -801,6 +801,31 @@ DEP_CPP_R_MOD=\
 	".\r_local.h"\
 	".\r_model.h"\
 	
+
+!ENDIF 
+
+# End Source File
+# Begin Source File
+
+SOURCE=.\r_over.c
+
+!IF  "$(CFG)" == "ref_soft - Win32 Release"
+
+DEP_CPP_R_OVE=\
+	"..\client\qoverlay.h"\
+	"..\client\ref.h"\
+	"..\game\q_shared.h"\
+	"..\qcommon\qcommon.h"\
+	"..\qcommon\qfiles.h"\
+	".\r_local.h"\
+	".\r_model.h"\
+	
+
+!ELSEIF  "$(CFG)" == "ref_soft - Win32 Debug"
+
+!ELSEIF  "$(CFG)" == "ref_soft - Win32 Debug Alpha"
+
+!ELSEIF  "$(CFG)" == "ref_soft - Win32 Release Alpha"
 
 !ENDIF 
 

@@ -87,6 +87,10 @@ extern "C"
     extern HWND g_hwndWxQuake;
     extern int g_isRunningWxQuake;
     extern int g_errorInWxQuake;
+
+#ifdef IML_Q2_EXTENSIONS
+    extern void CL_SetBinMsgHandler(void (*handler)(binmsg_byte *, size_t));
+#endif // IML_Q2_EXTENSIONS
 };
 
 // ----------------------------------------------------------------------------
@@ -318,6 +322,11 @@ wxQuake2Window::Create(wxWindow *parent,
 
 	// register a test command, just to show we're here
 	RegisterCommand("wxquake2");
+
+    // Start listening to binmsgs.
+#ifdef IML_Q2_EXTENSIONS
+    CL_SetBinMsgHandler(&DoHandleBinMsg);
+#endif // IML_Q2_EXTENSIONS
 
 	// FIXME - This doesn't seem to get called reliably, which means
 	// there's probably something wrong with our processing of
@@ -598,6 +607,18 @@ void wxQuake2Window::DoQuake2Command()
 	// method.
 	wxASSERT(s_Instance);
 	s_Instance->HandleCommand();
+}
+
+void wxQuake2Window::HandleBinMsg(unsigned char *buffer, size_t size)
+{
+    // Ignore all messages by default.
+}
+
+void wxQuake2Window::DoHandleBinMsg(unsigned char *buffer, size_t size)
+{
+    // Receive a binmsg from Quake and dispatch it.
+    wxASSERT(s_Instance);
+    s_Instance->HandleBinMsg(buffer, size);
 }
 
 // ----------------------------------------------------------------------------
