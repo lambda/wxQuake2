@@ -367,7 +367,12 @@ COLLISION DETECTION
 #define	CONTENTS_TRANSLUCENT	0x10000000	// auto set if any surface has trans
 #define	CONTENTS_LADDER			0x20000000
 
-
+#ifdef IML_Q2_EXTENSIONS
+	// A magic flag for specifying that we want the exit face when tracing.
+	// This was the most convenient way to get this information deep inside
+	// the trace machinery without massively #ifdef'ing all the trace APIs.
+#	define WANT_TRACE_EXIT      0x80000000
+#endif // IML_Q2_EXTENSIONS
 
 #define	SURF_LIGHT		0x1		// value will hold the light strength
 
@@ -383,7 +388,11 @@ COLLISION DETECTION
 
 
 // content masks
-#define	MASK_ALL				(-1)
+#ifdef IML_Q2_EXTENSIONS
+#	define	MASK_ALL			((-1)&~WANT_TRACE_EXIT)
+#else // IML_Q2_EXTENSIONS
+#	define	MASK_ALL			(-1)
+#endif // !IML_Q2_EXTENSIONS
 #define	MASK_SOLID				(CONTENTS_SOLID|CONTENTS_WINDOW)
 #define	MASK_PLAYERSOLID		(CONTENTS_SOLID|CONTENTS_PLAYERCLIP|CONTENTS_WINDOW|CONTENTS_MONSTER)
 #define	MASK_DEADSOLID			(CONTENTS_SOLID|CONTENTS_PLAYERCLIP|CONTENTS_WINDOW)
@@ -451,6 +460,29 @@ typedef struct
 	cplane_t	plane;		// surface normal at impact
 	csurface_t	*surface;	// surface hit
 	int			contents;	// contents on other side of surface hit
+
+#ifdef IML_Q2_EXTENSIONS
+	// We add support for calculating the exit surface of a trace, for
+	// use in radiation shielding code.  These fields are only used if
+	// if the content mask includes WANT_TRACE_EXIT.  If WANT_TRACE_EXIT
+	// is true, then 'allsolid' and 'startsolid' are undefined--use
+	// 'entered' and 'exited' instead.
+
+	// The fields fraction, endpos, plane, surface are valid if 'entered'
+	// is true.  The field 'contents' is set, but it may not mean much.
+	qboolean    entered;
+
+	// Fields exit_fraction, nextpos, exit_plane and exit_surface are valid
+	// if 'exited' is true.
+	qboolean    exited;
+ 
+	// Exit-related fields.
+	float		exit_fraction;  // time we exited the face
+	vec3_t		nextpos;		// spot at which to begin next trace
+	cplane_t	exit_plane;		// surface normal at exit
+	csurface_t	*exit_surface;	// surface exited
+#endif // IML_Q2_EXTENSIONS
+
 	struct edict_s	*ent;		// not set by CM_*() functions
 } trace_t;
 

@@ -981,6 +981,10 @@ trace_t	trace_trace;
 int		trace_contents;
 qboolean	trace_ispoint;		// optimized case
 
+#ifdef IML_Q2_EXTENSIONS
+qboolean trace_want_trace_exit;
+#endif IML_Q2_EXTENSIONS
+
 /*
 ================
 CM_ClipBoxToBrush
@@ -998,6 +1002,11 @@ void CM_ClipBoxToBrush (vec3_t mins, vec3_t maxs, vec3_t p1, vec3_t p2,
 	qboolean	getout, startout;
 	float		f;
 	cbrushside_t	*side, *leadside;
+
+#ifdef IML_Q2_EXTENSIONS
+	cplane_t		*trailplane;
+	cbrushside_t	*trailside;
+#endif // IML_Q2_EXTENSIONS
 
 	enterfrac = -1;
 	leavefrac = 1;
@@ -1068,11 +1077,29 @@ void CM_ClipBoxToBrush (vec3_t mins, vec3_t maxs, vec3_t p1, vec3_t p2,
 		}
 		else
 		{	// leave
+#ifndef IML_Q2_EXTENSIONS
 			f = (d1+DIST_EPSILON) / (d1-d2);
 			if (f < leavefrac)
 				leavefrac = f;
+#else // IML_Q2_EXTENSIONS
+			if (!trace_want_trace_exit)
+				f = (d1+DIST_EPSILON) / (d1-d2);
+			else 
+				f = (d1-DIST_EPSILON) / (d1-d2); // We want *outside*!
+			if (f < leavefrac)
+			{
+				leavefrac = f;
+				trailplane = plane;
+				trailside = side;
+			}
+#endif // IML_Q2_EXTENSIONS
 		}
 	}
+
+#ifdef IML_Q2_EXTENSIONS
+	// If we're not looking for the exit face, do what we always did.
+	if (!trace_want_trace_exit) {
+#endif // IML_Q2_EXTENSIONS
 
 	if (!startout)
 	{	// original point was inside brush
@@ -1093,6 +1120,31 @@ void CM_ClipBoxToBrush (vec3_t mins, vec3_t maxs, vec3_t p1, vec3_t p2,
 			trace->contents = brush->contents;
 		}
 	}
+
+#ifdef IML_Q2_EXTENSIONS
+	} else {
+		// Update our enter and exit faces.
+		if (enterfrac > -1 && enterfrac < trace->fraction)
+		{
+			if (enterfrac < 0)
+				enterfrac = 0;
+			trace->entered = true;
+			trace->fraction = enterfrac;
+			trace->plane = *clipplane;
+			trace->surface = &(leadside->surface->c);
+			trace->contents = brush->contents; // Probably meaningless.
+		}
+		if (leavefrac < 1 && leavefrac < trace->exit_fraction)
+		{
+			if (leavefrac > 1)
+				leavefrac = 1;
+			trace->exited = true;
+			trace->exit_fraction = leavefrac;
+			trace->exit_plane = *trailplane;
+			trace->exit_surface = &(trailside->surface->c);
+		}
+	}
+#endif // IML_Q2_EXTENSIONS
 }
 
 /*
@@ -1236,8 +1288,16 @@ void CM_RecursiveHullCheck (int num, float p1f, float p2f, vec3_t p1, vec3_t p2)
 	int			side;
 	float		midf;
 
+#ifndef IML_Q2_EXTENSIONS
 	if (trace_trace.fraction <= p1f)
 		return;		// already hit something nearer
+#else // IML_Q2_EXTENSIONS
+	// Slightly more complex logic if we're trying to find exit faces, too.
+	if (!trace_want_trace_exit && trace_trace.fraction <= p1f)
+		return;		// already hit something nearer
+	if (trace_want_trace_exit && trace_trace.exit_fraction <= p1f)
+		return;		// already exited something nearer
+#endif // IML_Q2_EXTENSIONS
 
 	// if < 0, we are in a leaf node
 	if (num < 0)
@@ -1365,7 +1425,16 @@ trace_t		CM_BoxTrace (vec3_t start, vec3_t end,
 	if (!numnodes)	// map not loaded
 		return trace_trace;
 
+#ifndef IML_Q2_EXTENSIONS
 	trace_contents = brushmask;
+#else // IML_Q2_EXTENSIONS
+	// Set up our exit_fraction.
+	trace_trace.exit_fraction = 1;
+
+	// Split out our "hidden" parameter flag.
+	trace_contents = brushmask & ~WANT_TRACE_EXIT;
+	trace_want_trace_exit = (brushmask & WANT_TRACE_EXIT) ? true : false;
+#endif // IML_Q2_EXTENSIONS
 	VectorCopy (start, trace_start);
 	VectorCopy (end, trace_end);
 	VectorCopy (mins, trace_mins);
@@ -1411,6 +1480,11 @@ trace_t		CM_BoxTrace (vec3_t start, vec3_t end,
 	}
 	else
 	{
+#ifdef IML_Q2_EXTENSIONS
+		if (trace_want_trace_exit)
+			Com_Error (ERR_DROP, "Can't calculate trace exit for a box!");
+#endif // IML_Q2_EXTENSIONS
+
 		trace_ispoint = false;
 		trace_extents[0] = -mins[0] > maxs[0] ? -mins[0] : maxs[0];
 		trace_extents[1] = -mins[1] > maxs[1] ? -mins[1] : maxs[1];
@@ -1431,6 +1505,23 @@ trace_t		CM_BoxTrace (vec3_t start, vec3_t end,
 		for (i=0 ; i<3 ; i++)
 			trace_trace.endpos[i] = start[i] + trace_trace.fraction * (end[i] - start[i]);
 	}
+
+#ifdef IML_Q2_EXTENSIONS
+	// The same as the above, but for our exit fraction.
+	if (trace_trace.exit_fraction == 1)
+		VectorCopy (end, trace_trace.nextpos);
+	else
+		for (i=0 ; i<3 ; i++)
+			trace_trace.nextpos[i] =
+				start[i] + trace_trace.exit_fraction * (end[i] - start[i]);
+
+	// If our entering face is after our exiting face, pretend
+	// we didn't find it.
+	if (trace_trace.entered && trace_trace.exited && 
+		(trace_trace.fraction > trace_trace.exit_fraction))
+		trace_trace.entered = false;
+#endif IML_Q2_EXTENSIONS
+
 	return trace_trace;
 }
 
