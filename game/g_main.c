@@ -477,13 +477,12 @@ void CheckPlayerLookTargets (void)
 		SendReticle(trace.ent, ent);
 
 		// If the reticle is on something new, remember it and run any
-		// associated r_activated_target (sound familiar?).
+		// associated r_look_target (sound familiar?).
 		if (trace.ent != ent->client->reticle_on)
 		{
 			ent->client->reticle_on = trace.ent;
-			if (trace.ent && trace.ent->r_activated_target)
-				G_UseTargetsByName(trace.ent, trace.ent->r_activated_target,
-								   ent);
+			if (trace.ent && trace.ent->r_look_target)
+				G_UseTargetsByName(trace.ent, trace.ent->r_look_target, ent);
 		}
     }
 }

@@ -38,7 +38,7 @@ field_t fields[] = {
 	{"look_target", FOFS(look_target), F_LSTRING},
 	{"r_text", FOFS(r_text), F_LSTRING},
 	{"r_target", FOFS(r_target), F_LSTRING},
-	{"r_activated_target", FOFS(r_activated_target), F_LSTRING},
+	{"r_look_target", FOFS(r_look_target), F_LSTRING},
 #endif //IML_Q2_EXTENSIONS
 	{"pathtarget", FOFS(pathtarget), F_LSTRING},
 	{"deathtarget", FOFS(deathtarget), F_LSTRING},

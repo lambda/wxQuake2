@@ -1038,7 +1038,7 @@ struct edict_s
 	char        *look_target;        // targeted when looked at
 	char        *r_text;             // text to display in reticle
 	char        *r_target;           // targeted when reticle clicked
-	char        *r_activated_target; // targeted when reticle first displayed
+	char        *r_look_target;      // targeted when reticle first displayed
 #endif // IML_Q2_EXTENSIONS
 	char		*killtarget;
 	char		*team;
