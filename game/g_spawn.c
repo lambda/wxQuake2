@@ -67,6 +67,7 @@ void SP_trigger_gravity (edict_t *ent);
 void SP_trigger_monsterjump (edict_t *ent);
 
 void SP_target_temp_entity (edict_t *ent);
+void SP_target_command (edict_t *ent);
 void SP_target_speaker (edict_t *ent);
 void SP_target_explosion (edict_t *ent);
 void SP_target_changelevel (edict_t *ent);
