@@ -204,6 +204,11 @@ Quake2Engine::Quake2Engine(HWND hwnd, int videoMode,
     argv[argc++] = "vid_fullscreen";
     argv[argc++] = "0";
 
+    // don't use the CD
+    argv[argc++] = "+set";
+    argv[argc++] = "cd_nocd";
+    argv[argc++] = "1";
+
     // if a game mod was specified, load it
 	if (game != "")
 	{
