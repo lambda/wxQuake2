@@ -65,6 +65,9 @@ void SP_trigger_counter (edict_t *ent);
 void SP_trigger_elevator (edict_t *ent);
 void SP_trigger_gravity (edict_t *ent);
 void SP_trigger_monsterjump (edict_t *ent);
+#ifdef IML_Q2_EXTENSIONS
+void SP_trigger_region (edict_t *ent);
+#endif // IML_Q2_EXTENSIONS
 
 void SP_target_temp_entity (edict_t *ent);
 void SP_target_command (edict_t *ent);
@@ -185,6 +188,9 @@ spawn_t	spawns[] = {
 	{"trigger_elevator", SP_trigger_elevator},
 	{"trigger_gravity", SP_trigger_gravity},
 	{"trigger_monsterjump", SP_trigger_monsterjump},
+#ifdef IML_Q2_EXTENSIONS
+    {"trigger_region", SP_trigger_region},
+#endif // IML_Q2_EXTENSIONS
 
 	{"target_temp_entity", SP_target_temp_entity},
 	{"target_command", SP_target_command},

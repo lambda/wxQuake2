@@ -39,6 +39,9 @@ field_t fields[] = {
 	{"r_text", FOFS(r_text), F_LSTRING},
 	{"r_target", FOFS(r_target), F_LSTRING},
 	{"r_look_target", FOFS(r_look_target), F_LSTRING},
+	{"region_name", FOFS(region_name), F_LSTRING},
+	{"enter_target", FOFS(enter_target), F_LSTRING},
+	{"exit_target", FOFS(exit_target), F_LSTRING},
 #endif //IML_Q2_EXTENSIONS
 	{"pathtarget", FOFS(pathtarget), F_LSTRING},
 	{"deathtarget", FOFS(deathtarget), F_LSTRING},

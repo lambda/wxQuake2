@@ -19,6 +19,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 #include "g_local.h"
 
+#ifdef IML_Q2_EXTENSIONS
+#include <stdio.h>
+#include "binmsg.h"
+#endif // IML_Q2_EXTENSIONS
 
 void InitTrigger (edict_t *self)
 {
@@ -596,3 +600,115 @@ void SP_trigger_monsterjump (edict_t *self)
 	self->movedir[2] = st.height;
 }
 
+/*
+============================================================================== 
+
+trigger_region
+
+==============================================================================
+*/
+
+#ifdef IML_Q2_EXTENSIONS
+
+static void AddRegion(edict_t *player, edict_t *region)
+{
+    int i;
+    for (i = 0; i < MAX_REGIONS; i++)
+    {
+        if (player->client->in_regions[i] == region)
+        {
+            break;
+        }
+        else if (player->client->in_regions[i] == NULL)
+        {
+            player->client->in_regions[i] = region;
+            break;
+        }
+    }
+}
+
+void trigger_region_touch (edict_t *self, edict_t *other, cplane_t *plane,
+                           csurface_t *surf)
+{
+    if (other->client)
+        AddRegion(other, self);
+}
+
+void SP_trigger_region (edict_t *self)
+{
+    InitTrigger (self);
+    self->touch = &trigger_region_touch;
+}
+
+static qboolean EntityInList (edict_t *ent, edict_t **list, size_t items)
+{
+    int i;
+    for (i = 0; i < items; i++)
+        if (list[i] == ent)
+            return true;
+    return false;
+}
+
+static void SendBinMsg_InRegion(edict_t *player, char *region_name,
+                                qboolean is_in_region)
+{
+    char key[MAX_STRING_CHARS];
+    binmsg_byte buffer[BINMSG_MAX_SIZE];
+    binmsg_message msg;
+
+    // Format our key name.
+    _snprintf(key, sizeof(key), "in-region?/%s", region_name);
+    key[MAX_STRING_CHARS-1] = '\0';
+
+    // Build and send the message.
+    if (!binmsg_build(&msg, buffer, BINMSG_MAX_SIZE, "state"))
+        return;
+    if (!binmsg_add_string(&msg.args, key))
+        return;
+    if (!binmsg_add_bool(&msg.args, is_in_region))
+        return;
+    if (!binmsg_build_done(&msg))
+        return;
+    SendBinMsg(player, msg.buffer, msg.buffer_size);
+}
+
+static void ExitRegion (edict_t *player, edict_t *region)
+{
+    if (region->region_name)
+        SendBinMsg_InRegion(player, region->region_name, false);
+    if (region->exit_target)
+        G_UseTargetsByName(region, region->exit_target, player);
+}
+
+static void EnterRegion (edict_t *player, edict_t *region)
+{
+    if (region->region_name)
+        SendBinMsg_InRegion(player, region->region_name, true);
+    if (region->enter_target)
+        G_UseTargetsByName(region, region->enter_target, player);
+}
+
+void CheckRegions (edict_t *player)
+{
+    int i;
+
+    // Send exit messages.
+    for (i = 0; i < MAX_REGIONS; i++)
+        if (!EntityInList(player->client->in_regions_old[i],
+                          player->client->in_regions, MAX_REGIONS))
+            ExitRegion(player, player->client->in_regions_old[i]);
+    
+    // Send enter messages.
+    for (i = 0; i < MAX_REGIONS; i++)
+        if (!EntityInList(player->client->in_regions[i],
+                          player->client->in_regions_old, MAX_REGIONS))
+            EnterRegion(player, player->client->in_regions[i]);
+    
+    // Move in_regions to in_regions_old and clear in_regions.
+    memcpy(player->client->in_regions_old,
+           player->client->in_regions, sizeof(edict_t*) * MAX_REGIONS);
+    memset(player->client->in_regions, 0, sizeof(edict_t*) * MAX_REGIONS);
+}
+
+
+#endif // IML_Q2_EXTENSIONS

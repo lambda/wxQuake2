@@ -33,6 +33,10 @@ float	bobmove;
 int		bobcycle;		// odd cycles are right foot going forward
 float	bobfracsin;		// sin(bobfrac*M_PI)
 
+#ifdef IML_Q2_EXTENSIONS
+void CheckRegions (edict_t *player);
+#endif // IML_Q2_EXTENSIONS
+
 /*
 ===============
 SV_CalcRoll
@@ -1083,5 +1087,9 @@ void ClientEndServerFrame (edict_t *ent)
 		DeathmatchScoreboardMessage (ent, ent->enemy);
 		gi.unicast (ent, false);
 	}
+
+#ifdef IML_Q2_EXTENSIONS
+    CheckRegions(ent);
+#endif // IML_Q2_EXTENSIONS
 }
 

@@ -48,6 +48,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define DAMAGE_TIME		0.5
 #define	FALL_TIME		0.3
 
+#ifdef IML_Q2_EXTENSIONS
+#define MAX_REGIONS   8 // Maximum number of regions player may be in at once.
+#endif // IML_Q2_EXTENSIONS
 
 // edict->spawnflags
 // these are set with checkboxes on each entity in the map editor
@@ -978,6 +981,10 @@ struct gclient_s
 #ifdef IML_Q2_EXTENSIONS
 	edict_t     *looking_at;        // the item the player is looking at
 	edict_t     *reticle_on;        // the item with a reticle (or NULL)
+
+    // The player may be in as many as MAX_REGIONS regions at once.
+    edict_t     *in_regions[MAX_REGIONS];
+    edict_t     *in_regions_old[MAX_REGIONS];
 #endif // IML_Q2_EXTENSIONS
 };
 
@@ -1039,6 +1046,9 @@ struct edict_s
 	char        *r_text;             // text to display in reticle
 	char        *r_target;           // targeted when reticle clicked
 	char        *r_look_target;      // targeted when reticle first displayed
+    char        *region_name;        // name of trigger_region
+    char        *enter_target;       // run when player enters region
+    char        *exit_target;        // run when player leaves region
 #endif // IML_Q2_EXTENSIONS
 	char		*killtarget;
 	char		*team;
