@@ -789,7 +789,11 @@ void Key_Event (int key, qboolean down, unsigned time)
 		key = K_ESCAPE;
 
 	// menu key is hardcoded, so the user can never unbind it
+#ifdef __WXWINDOWS__
+	if (key == K_ESCAPE && !Cvar_Get ("cl_disablemenu", "0", 0)->value)
+#else // !defined(__WXWINDOWS__)
 	if (key == K_ESCAPE)
+#endif // !defined(__WXWINDOWS__)
 	{
 		if (!down)
 			return;
