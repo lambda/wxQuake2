@@ -43,7 +43,7 @@ byte gInverseCLUT[1 << 3*ICLUT_BITS];
 ** evenly between 0 and 255, inclusive. */
 #define ICLUT_SCALE (255.0 / ((1<<ICLUT_BITS)-1)) 
 
-void SW_InitOverlays(byte *palette)
+void R_InitOverlays(byte *palette)
 {
     int r, g, b, i;
     int r_dist, g_dist, b_dist, dist, best_match_dist;
@@ -62,9 +62,6 @@ void SW_InitOverlays(byte *palette)
         {
             for (b = 0; b < 1<<ICLUT_BITS; b++)
             {
-				if (r == 31 && g == 31 && b ==31)
-					best_match = 1;
-
                 best_match = 0;
                 best_match_dist = INT_MAX;
                 for (i = 0; i < OPAQUE_PALETTE_ENTRIES; i++)
@@ -95,23 +92,41 @@ static void UpdateDirtyRect(overlay_t *overlay)
     if (overlay->dl == overlay->dr || overlay->dt == overlay->db)
         return;
 
-    src = overlay->raw_data + overlay->dt*overlay->stride + overlay->dl*3;
+    if (overlay->format == Q2_FORMAT_BGR)
+        src = overlay->raw_data + overlay->dt*overlay->stride + overlay->dl*3;
+    else
+        src = overlay->raw_data + overlay->dt*overlay->stride + overlay->dl*4;
     dst = overlay->indexed_data + overlay->dt*overlay->width + overlay->dl;
     dw = overlay->dr - overlay->dl;
     dh = overlay->db - overlay->dt;
     for (y = 0; y < dh; y++)
     {
-        // XXX - Handle other pixel formats.
         // TODO - Optimize this loop.
-        for (x = 0; x < dw; x++)
-            dst[x] = ICLUT(src[3*x+2], src[3*x+1], src[3*x+0]);
+        switch (overlay->format) {
+            case Q2_FORMAT_BGR:
+                for (x = 0; x < dw; x++)
+                    dst[x] = ICLUT(src[3*x+2], src[3*x+1], src[3*x+0]);
+                break;
+
+            case Q2_FORMAT_BGRA_PREMUL:
+                for (x = 0; x < dw; x++)
+                    if (src[4*x+3] == 255)
+                        dst[x] = ICLUT(src[4*x+2], src[4*x+1], src[4*x+0]);
+					else
+						dst[x] = TRANSPARENT_COLOR;
+                break;
+
+            //default:
+                // TODO - What should we do for unknown formats?
+        }
+                
         src += overlay->stride;
         dst += overlay->width;
     }
     overlay->dl = overlay->dt = overlay->db = overlay->dr = 0;
 }
 
-void SW_DrawOverlays()
+void R_DrawOverlays()
 {
     size_t i, x, y;
     for (i = 0; i < gOverlayCount; i++)
@@ -146,10 +161,10 @@ void SW_DrawOverlays()
     }
 }
 
-overlay_t *SW_OverlayNew(int format, byte *data,
-                         size_t left, size_t top,
-                         size_t width, size_t height,
-                         int stride)
+overlay_t *R_OverlayNew(int format, byte *data,
+                        size_t left, size_t top,
+                        size_t width, size_t height,
+                        int stride)
 {
 	overlay_t *ov;
 
@@ -179,14 +194,14 @@ overlay_t *SW_OverlayNew(int format, byte *data,
 	return ov;
 }
 
-void SW_OverlayMove(overlay_t *overlay, size_t left, size_t top)
+void R_OverlayMove(overlay_t *overlay, size_t left, size_t top)
 {
     overlay->left = left;
     overlay->top  = top;
 }
 
-void SW_OverlayDirtyRect(overlay_t *overlay, size_t left, size_t top,
-                         size_t width, size_t height)
+void R_OverlayDirtyRect(overlay_t *overlay, size_t left, size_t top,
+                        size_t width, size_t height)
 {
     int right, bottom;
 
@@ -217,9 +232,19 @@ void SW_OverlayDirtyRect(overlay_t *overlay, size_t left, size_t top,
         if (bottom > overlay->db)
             overlay->db = bottom;
     }
+
+    /* Clip our dirty rect to our bounding box. */
+    if (overlay->dl < 0)
+        overlay->dl = 0;
+    if (overlay->dt < 0)
+        overlay->dt = 0;
+    if (overlay->dr > overlay->width)
+        overlay->dr = overlay->width;
+    if (overlay->db > overlay->height)
+        overlay->db = overlay->height;
 }
 
-void SW_OverlayDelete(overlay_t *overlay)
+void R_OverlayDelete(overlay_t *overlay)
 {
     size_t i;
     

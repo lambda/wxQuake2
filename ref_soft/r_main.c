@@ -331,7 +331,7 @@ qboolean R_Init( void *hInstance, void *wndProc )
 
 #ifdef IML_Q2_EXTENSIONS
     // 29 January 2004 - IML - emk - added for overlays
-    SW_InitOverlays((byte *) &d_8to24table);
+    R_InitOverlays((byte *) &d_8to24table);
 #endif // IML_Q2_EXTENSIONS
 
 	// create the window
@@ -1395,11 +1395,11 @@ refexport_t GetRefAPI (refimport_t rimp)
 
 #ifdef IML_Q2_EXTENSIONS
     // 29 January 2004 - IML - emk - added for overlays
-    re.OverlayNew = SW_OverlayNew;
-    re.OverlayMove = SW_OverlayMove;
-    re.OverlayDirtyRect = SW_OverlayDirtyRect;
-    re.OverlayDelete = SW_OverlayDelete;
-    re.DrawOverlays = SW_DrawOverlays;
+    re.OverlayNew = R_OverlayNew;
+    re.OverlayMove = R_OverlayMove;
+    re.OverlayDirtyRect = R_OverlayDirtyRect;
+    re.OverlayDelete = R_OverlayDelete;
+    re.DrawOverlays = R_DrawOverlays;
 #endif // IML_Q2_EXTENSIONS
 
 	Swap_Init ();

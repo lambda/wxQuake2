@@ -44,7 +44,8 @@ extern void q2_overlay_move(overlay_t *overlay, size_t left, size_t top);
 **
 **   overlay - The overlay to update.
 **   left, top, width, height - The rectangle which has changed.  The
-**             coordinates are relative to the overlay itself.
+**             coordinates are relative to the overlay itself.  If the
+**             co-ordinates are too large, they will be clipped.
 */
 extern void q2_overlay_dirty_rect(overlay_t *overlay, size_t left, size_t top,
                                   size_t width, size_t height);

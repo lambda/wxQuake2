@@ -850,16 +850,16 @@ void		SWimp_AppActivate( qboolean active );
 #ifdef IML_Q2_EXTENSIONS
 
 // 29 January 2004 - IML - emk - added for overlays
-void SW_InitOverlays(byte *palette);
-void SW_DrawOverlays();
+void R_InitOverlays(byte *palette);
+void R_DrawOverlays();
 
-overlay_t *SW_OverlayNew(int format, byte *data,
-                         size_t left, size_t top,
-                         size_t width, size_t height,
-                         int stride);
-void SW_OverlayMove(overlay_t *overlay, size_t left, size_t top);
-void SW_OverlayDirtyRect(overlay_t *overlay, size_t left, size_t top,
-                         size_t width, size_t height);
-void SW_OverlayDelete(overlay_t *overlay);
+overlay_t *R_OverlayNew(int format, byte *data,
+                        size_t left, size_t top,
+                        size_t width, size_t height,
+                        int stride);
+void R_OverlayMove(overlay_t *overlay, size_t left, size_t top);
+void R_OverlayDirtyRect(overlay_t *overlay, size_t left, size_t top,
+                        size_t width, size_t height);
+void R_OverlayDelete(overlay_t *overlay);
 
 #endif // IML_Q2_EXTENSIONS

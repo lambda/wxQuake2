@@ -208,10 +208,8 @@ class wxQuake2Overlay
 public:
     // See qoverlay.h for documentation of the overlay functions.
     wxQuake2Overlay(int format, unsigned char *data,
-                    size_t left, size_t top,
-                    size_t width, size_t height,
-                    int stride)
-        : m_Overlay(q2_overlay_new(format, data, left, top, width, height,
+                    const wxRect &r, int stride)
+        : m_Overlay(q2_overlay_new(format, data, r.x, r.y, r.width, r.height,
                                    stride))
     {
     }

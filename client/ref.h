@@ -125,8 +125,7 @@ typedef struct
 
 #ifdef IML_Q2_EXTENSIONS
 // 29 January 2004 - IML - emk - added for overlays
-struct overlay_s;
-typedef struct overlay_s overlay_t;
+#include "qoverlay.h"
 #endif /* IML_Q2_EXTENSIONS */
 
 
