@@ -123,6 +123,11 @@ typedef struct
 	particle_t	*particles;
 } refdef_t;
 
+#ifdef IML_Q2_EXTENSIONS
+// 29 January 2004 - IML - emk - added for overlays
+struct overlay_s;
+typedef struct overlay_s overlay_t;
+#endif /* IML_Q2_EXTENSIONS */
 
 
 #define	API_VERSION		3
@@ -182,6 +187,19 @@ typedef struct
 	void	(*EndFrame) (void);
 
 	void	(*AppActivate)( qboolean activate );
+
+#ifdef IML_Q2_EXTENSIONS
+    // 29 January 2004 - IML - emk - added for overlays
+    overlay_t *(*OverlayNew)(int format, byte *data,
+                             size_t left, size_t top,
+                             size_t width, size_t height,
+                             int stride);
+    void (*OverlayMove)(overlay_t *overlay, size_t left, size_t top);
+    void (*OverlayDirtyRect)(overlay_t *overlay, size_t left, size_t top,
+                             size_t width, size_t height);
+    void (*OverlayDelete)(overlay_t *overlay);
+    void (*DrawOverlays)();
+#endif /* IML_Q2_EXTENSIONS */
 
 } refexport_t;
 

@@ -193,4 +193,45 @@ private:
     DECLARE_EVENT_TABLE()
 };
 
+#ifdef IML_Q2_EXTENSIONS
+
+extern "C" {
+#include "../client/qoverlay.h"
+};
+
+class wxQuake2Overlay
+{
+    DECLARE_NO_COPY_CLASS(wxQuake2Overlay)
+
+    overlay_t *m_Overlay;
+
+public:
+    // See qoverlay.h for documentation of the overlay functions.
+    wxQuake2Overlay(int format, unsigned char *data,
+                    size_t left, size_t top,
+                    size_t width, size_t height,
+                    int stride)
+        : m_Overlay(q2_overlay_new(format, data, left, top, width, height,
+                                   stride))
+    {
+    }
+
+    virtual ~wxQuake2Overlay()
+    {
+        q2_overlay_delete(m_Overlay);
+    }
+
+    virtual void MoveTo(const wxPoint &p)
+    {
+        q2_overlay_move(m_Overlay, p.x, p.y);
+    }
+
+    virtual void DirtyRect(const wxRect &r)
+    {
+        q2_overlay_dirty_rect(m_Overlay, r.x, r.y, r.width, r.height);
+    }
+};
+
+#endif // IML_Q2_EXTENSIONS
+
 #endif // _WXQUAKE2_H_

@@ -1432,6 +1432,12 @@ void SCR_UpdateScreen (void)
 			if (cl.frame.playerstate.stats[STAT_LAYOUTS] & 2)
 				CL_DrawInventory ();
 
+#ifdef IML_Q2_EXTENSIONS
+            // 29 January 2004 - IML - emk - added for overlays
+            if (re.DrawOverlays)
+                re.DrawOverlays();
+#endif /* IML_Q2_EXTENSIONS */
+
 			SCR_DrawNet ();
 			SCR_CheckDrawCenterString ();
 

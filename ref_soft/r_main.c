@@ -329,6 +329,11 @@ qboolean R_Init( void *hInstance, void *wndProc )
 	Draw_GetPalette ();
 	SWimp_Init( hInstance, wndProc );
 
+#ifdef IML_Q2_EXTENSIONS
+    // 29 January 2004 - IML - emk - added for overlays
+    SW_InitOverlays((byte *) &d_8to24table);
+#endif // IML_Q2_EXTENSIONS
+
 	// create the window
 	R_BeginFrame( 0 );
 
@@ -1387,6 +1392,15 @@ refexport_t GetRefAPI (refimport_t rimp)
 	re.EndFrame = SWimp_EndFrame;
 
 	re.AppActivate = SWimp_AppActivate;
+
+#ifdef IML_Q2_EXTENSIONS
+    // 29 January 2004 - IML - emk - added for overlays
+    re.OverlayNew = SW_OverlayNew;
+    re.OverlayMove = SW_OverlayMove;
+    re.OverlayDirtyRect = SW_OverlayDirtyRect;
+    re.OverlayDelete = SW_OverlayDelete;
+    re.DrawOverlays = SW_DrawOverlays;
+#endif // IML_Q2_EXTENSIONS
 
 	Swap_Init ();
 
