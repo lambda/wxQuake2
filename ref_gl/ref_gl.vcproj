@@ -321,7 +321,8 @@
 				ObjectFile=".\release/"
 				ProgramDataBaseFileName=".\release/"
 				WarningLevel="4"
-				SuppressStartupBanner="TRUE"/>
+				SuppressStartupBanner="TRUE"
+				DebugInformationFormat="3"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool

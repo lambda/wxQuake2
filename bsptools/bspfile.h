@@ -20,46 +20,13 @@
 //
 // @END_LICENSE
 
-/// \mainpage <tt>bsptools</tt> Application
-///
-/// This application is used to manipulate BSP files in various interesting
-/// ways.
-///
-/// \section overview_sec Overview
-///
-/// A <tt>*.bsp</tt> file contains information about a single game level.
-/// This data is represented by a number of classes, the most important of
-/// which are:
-///
-///  - bsp::level - The level itself.  All other objects can be reached from
-///    here.
-///  - bsp::entity - Key/value properties for each entity on the level.
-///  - bsp::model - BSP models for the level, doors, platforms, triggers, etc.
+//! \file bspfile.h
+/// Interfaces for accessing the contents of *.BSP files.
 
-/*
-#define	LUMP_ENTITIES		0
-#define	LUMP_PLANES			1
-#define	LUMP_VERTEXES		2
-#define	LUMP_VISIBILITY		3
-#define	LUMP_NODES			4
-#define	LUMP_TEXINFO		5
-#define	LUMP_FACES			6
-#define	LUMP_LIGHTING		7
-#define	LUMP_LEAFS			8
-#define	LUMP_LEAFFACES		9
-#define	LUMP_LEAFBRUSHES	10
-#define	LUMP_EDGES			11
-#define	LUMP_SURFEDGES		12
-#define	LUMP_MODELS			13
-#define	LUMP_BRUSHES		14
-#define	LUMP_BRUSHSIDES		15
-#define	LUMP_POP			16
-#define	LUMP_AREAS			17
-#define	LUMP_AREAPORTALS	18
-#define	HEADER_LUMPS		19
-*/
-
-namespace bsp {
+/// Support for accessing the contents of *.BSP files.
+namespace bspfile {
+    using std::string;
+    using std::vector;
 
     /// A three-element vector.  This is used to represent vertices, min
     /// and max bounds, origins, and a variety of other values found
@@ -67,23 +34,38 @@ namespace bsp {
     ///
     /// \see vec3_t, dvertex_t, LUMP_VERTEXES
     class vec3 {
-        float components[3];
+        float m_components[3];
         
     public:
+        /// Initialize a new vector to undefined values.
+        vec3() {}
+
         /// Create a new vector.
-        vec3(float x, float y, float z);
+        vec3(float x, float y, float z) {
+            m_components[0] = x;
+            m_components[1] = y;
+            m_components[2] = z;
+        }
+
         /// Create a new vector.
-        vec3(float *components);
+        ///
+        /// \param components Pointer to an array of three floats.
+        vec3(float *components) {
+            m_components[0] = components[0];
+            m_components[1] = components[1];
+            m_components[2] = components[2];
+        }
 
         /// Access a vector's components.
         float operator[](size_t i) const {
             assert(0 <= i && i < 3);
-            return components[i];
+            return m_components[i];
         }
+
         /// Access a vector's components.
         float &operator[](size_t i) {
             assert(0 <= i && i < 3);
-            return components[i];
+            return m_components[i];
         }
     };
 
@@ -132,14 +114,14 @@ namespace bsp {
         };
 
     private:
-        portals *m_portals;
+        portal *m_portals;
 
     public:
         /// The number of portals associated with this area.
         size_t get_portal_count() const;
 
         /// Get the specified portal.
-        portal get_portal(size_t id) const;
+        portal *get_portal(size_t id) const;
     };
 
     /// A geometric plane.  Planes are represented in the standard fashion:
@@ -152,10 +134,14 @@ namespace bsp {
         float m_dist;
 
     public:
+        /// Create a new plane.
+        plane(const vec3 &normal, float distance)
+            : m_normal(normal), m_dist(distance) {}
+        
         /// The plane's normal vector.
-        vec3 get_normal() const;
+        vec3 get_normal() const { return m_normal; }
         /// The plane's distance from the origin.
-        float get_dist() const;
+        float get_dist() const { return m_dist; }
     };
     
     /// Texture information for a surface.  The actual textures themselves
@@ -167,10 +153,14 @@ namespace bsp {
     /// \todo Figure out what to do with vecs & flags fields.
     class texinfo {
         int m_value;
-        std::string m_name;
+        string m_name;
         texinfo *m_next_texinfo;
 
     public:
+        /// Create a new texinfo.
+        texinfo(int value, const string &name, texinfo *next_texinfo = NULL)
+            : m_value(value), m_name(name), m_next_texinfo(next_texinfo) {}
+
         /// The value associated with this texture.  The meaning of this
         /// field varies depending on which texture flags are set; typically,
         /// it represents the light value of the texture.
@@ -178,7 +168,7 @@ namespace bsp {
 
         /// Get the name of this texture.  According to the Quake 2
         /// comments, there should be an matching textures/*.wal file.
-        std::string get_texture_name() const;
+        string get_texture_name() const;
 
         /// Returns the next texture info in an animation chain, or NULL if
         /// the texture is not animated.
@@ -193,6 +183,10 @@ namespace bsp {
         vec3 m_endpoints[2];
 
     public:
+        /// Create a new edge.
+        edge(const vec3 &endpoint_0, const vec3 &endpoint_1)
+            { m_endpoints[0] = endpoint_0; m_endpoints[1] = endpoint_1; }
+        
         /// Get endpoint 0 or 1 of the edge.
         vec3 get_endpoint(size_t id) const;
     };
@@ -207,21 +201,40 @@ namespace bsp {
     /// \todo get_light_styles
     /// \todo get_light_offset
     class face {
+	public:
+        /// Enumeration indicating which side of a plane the face is on.
+        enum side {
+            PLANE_FRONT, ///< The side of a plane towards the normal.
+            PLANE_BACK   ///< The side of a plane opposite the normal.
+        };
+
+    private:
         plane *m_plane;
-        edge *m_edges[2];
+        side m_side;
+        size_t m_edge_count;
+        edge *m_edges;
         texinfo *m_texinfo;
         
     public:
+        /// Create a new polygon face.
+        face(plane *plane_, side side_, size_t edge_count, edge *edges,
+             texinfo *texinfo_)
+            : m_plane(plane_), m_side(side_), m_edge_count(edge_count),
+              m_edges(edges), m_texinfo(texinfo_) {}
+
         /// Get the plane in which the polygon lies.
-        plane get_plane() const;
+        plane *get_plane() const;
+
+        /// Get the side of the plane towards which the polygon faces.
+        side get_side() const;
 
         /// The number of edges associated with the polygon.
         size_t get_edge_count() const;
         /// Get the specified edge.
-        edge get_edge(size_t id) const;
+        edge *get_edge(size_t id) const;
 
         /// Get the texture info for this face.
-        texinfo get_texinfo() const;
+        texinfo *get_texinfo() const;
     };
 
     /// A brushside is a single side of a brush.  Because a brush is a
@@ -233,14 +246,18 @@ namespace bsp {
         texinfo *m_texinfo;
 
     public:
+        /// Create a new brush side.
+        brushside(plane *p, texinfo *t)
+            : m_plane(p), m_texinfo(t) {}
+
         /// The plane in which this brushside lies.
         ///
         /// \todo I'm not sure how the engine determines which side is
         /// inside and which is outside.
-        plane get_plane() const;
+        plane *get_plane() const;
 
         /// Get the texture info for this face.
-        texinfo get_texinfo() const;
+        texinfo *get_texinfo() const;
     };
 
     /// A brush is one of the convex polyhedrons from which the map is
@@ -260,13 +277,18 @@ namespace bsp {
     /// \see leaf, face, dbrush_t, LUMP_BRUSHES
     /// \todo get_contents
     class brush {
+        size_t m_brushside_count;
         brushside *m_brushsides;
 
     public:
+        /// Create a new brush.
+        brush(size_t brushside_count, brushside *brushsides)
+            : m_brushside_count(brushside_count), m_brushsides(brushsides) {}
+
         /// The number of brushsides associated with this brush.
         size_t get_brushside_count() const;
         /// Get the specified brushside.
-        brushside get_brushside(size_t id) const;
+        brushside *get_brushside(size_t id) const;
     };
 
     /// An object with a bounding box.
@@ -296,10 +318,18 @@ namespace bsp {
         cluster_set *m_pvs;
         cluster_set *m_phs;
         area *m_area;
+        size_t m_brush_count;
         brush *m_brushes;
+        size_t m_face_count;
         face *m_faces;
 
     public:
+        /// Create a new leaf.
+        leaf(size_t cluster, area *a, size_t brush_count, brush *brushes,
+             size_t face_count, face *faces)
+            : m_cluster(cluster), m_area(a), m_brush_count(brush_count),
+              m_brushes(brushes), m_face_count(face_count), m_faces(faces) {}
+
         /// Get the cluster number associated with this leaf.  A cluster is
         /// a medium sized region of a level which can be checked against
         /// another leaf's pvs or phs to determine potential visibility and
@@ -331,12 +361,12 @@ namespace bsp {
         cluster_set get_phs() const;
         /// Get the area containing this leaf.  Areas are used to contol
         /// dynamic visibility and audibility.
-        area get_area() const;
+        area *get_area() const;
 
         /// The number of brushes associated with this leaf.
         size_t get_brush_count() const;
         /// Get the specified brush.
-        brush get_brush(size_t id) const;
+        brush *get_brush(size_t id) const;
 
         /// The number of faces associated with this leaf.  Only used by
         /// the drawing code.
@@ -344,7 +374,7 @@ namespace bsp {
         /// \todo Pull into a superclass?
         size_t get_face_count() const;
         /// Get the specified face.
-        face get_face(size_t id) const;
+        face *get_face(size_t id) const;
     };
 
     /// An interior node of the BSP tree.
@@ -353,23 +383,29 @@ namespace bsp {
     class node : public node_child {
         plane *m_split_plane;
         node_child *m_children[2];
+        size_t m_face_count;
         face *m_faces;
 
     public:
+		 /// \todo Remove.
+		node() {}
+        node(plane *split_plane, node_child *child_0, node_child *child_1,
+             size_t face_count, face *faces);
+
         /// Get the split plane for this node.  All objects one side of the
         /// plane will be placed into child 0, and all objects on the other
         /// side will be placed into child 1.  Side 0 is in the direction
         /// of the normal; side 1 is opposite.
         plane get_split_plane() const;
         /// Get either child 0 or child 1.
-        bsp_child get_child(size_t id) const;
+        node_child *get_child(size_t id) const;
 
         /// The number of faces associated with this node.  This appears to
         /// be used only in the dynamic lighting code and in the software
         /// BSP rendering code.
         size_t get_face_count() const;
         /// Get the specified face.
-        face get_face(size_t id) const;
+        face *get_face(size_t id) const;
     };
 
     /// A BSP ("binary space partition") tree.  There is one model for the
@@ -408,6 +444,7 @@ namespace bsp {
     class model : public bounded {
         vec3 m_origin;
         node *m_headnode;
+        size_t m_face_count;
         face *m_faces;
 
     public:
@@ -416,7 +453,7 @@ namespace bsp {
         vec3 get_origin() const;
 
         /// Get the headnode of this model's BSP tree.
-        node get_headnode() const;
+        node *get_headnode() const;
 
         /// The number of faces associated with this model.  According to
         /// the Quake 2 source, "submodels just draw faces without walking
@@ -425,7 +462,7 @@ namespace bsp {
         /// tree.
         size_t get_face_count() const;
         /// Get the specified face.
-        face get_face(size_t id) const;
+        face *get_face(size_t id) const;
     };
 
     /// An entity in the map (including monsters, objects, doors, etc.).
@@ -443,36 +480,53 @@ namespace bsp {
     class entity {
     public:
         /// Get the class of this entity.
-        std::string get_classname();
+        string get_classname();
 
         /// Does this entity have the specified property?
-        bool has_property(const std::string &name) const;
+        bool has_property(const string &name) const;
         /// Get the specified property's value.
-        std::string get_property(const std::string &name) const;
+        string get_property(const string &name) const;
 
         /// Does this entity have an associated model?
         bool has_model() const;
         /// Get the model associated with this entity.
-        model get_model() const;
+        model *get_model() const;
     };
 
     /// A Quake 2 BSP file containing data for a single map.
     ///
     /// \see dheader_t
     class level {
-        entity *m_entities;
-        model *m_models;
-        node *m_nodes;
-        leaf *m_leafs;
-        brush *m_brushes;
-        brushside *m_brushsides;
-        face *m_faces;
-        texinfo *m_texinfo;
-        plane *m_planes;
-        edge *m_edges;
-        vec3 *m_vertices;
+        vector<unsigned char> m_raw_data;
+
+        vector<entity> m_entities;
+        vector<model> m_models;
+        vector<node> m_nodes;
+        vector<leaf> m_leafs;
+        vector<brush> m_brushes;
+        vector<brushside> m_brushsides;
+        vector<face> m_faces;
+        vector<texinfo> m_texinfos;
+        vector<plane> m_planes;
+        vector<edge> m_edges;
+        vector<vec3> m_vertices;
+
+        vector<edge*> m_surfedges;
+        vector<face*> m_leaffaces;
+        vector<brush*> m_leafbrushes;
+
+        template <typename T>
+        void get_lump(size_t lump_id, T *&out_base, size_t &out_size);
+        template <typename RecordType, typename ObjectType>
+        void load_records(size_t lump_id, vector<ObjectType> &out_objs);
+
+        void load_pvs_phs();
+        void load_areas_and_portals();
+        void load_entities();
 
     public:
+        level(const string &filename);
+
         /// \name Entity Functions
         ///
         /// These functions allow you to access the level's entities.
@@ -480,10 +534,10 @@ namespace bsp {
         //@{
 
         /// The number of entities in this level.
-        size_t get_entity_count() const;
+		size_t get_entity_count() const { return m_entities.size(); }
         /// Get the specified entity.  Entity number 0 <i>should</i> be the
         /// worldspawn.
-        entity get_entity(size_t id) const;
+		const entity *get_entity(size_t id) const { return &m_entities[id]; }
 
         //@}
 
@@ -496,50 +550,50 @@ namespace bsp {
         //@{
 
         /// The number of models in this level.
-        size_t get_model_count() const;
+		size_t get_model_count() const { return m_models.size(); }
         /// Get the specified model.  Model number 0 is the level itself.
-        model get_model(size_t id) const;
+		model *get_model(size_t id) { return &m_models[id]; }
 
         /// The number of BSP nodes in this level. 
-        size_t get_node_count(size_t id) const;
+		size_t get_node_count(size_t id) const { return m_nodes.size(); }
         /// Get the specified BSP node.  Node 0 <i>should</i> be the root
         /// node for the level's BSP tree.
-        node get_node(size_t id) const;
+		node *get_node(size_t id) { return &m_nodes[id]; }
 
         /// The number of BSP leafs in this level.
-        size_t get_leaf_count() const;
+		size_t get_leaf_count() const { return m_leafs.size(); }
         /// Get the specified BSP leaf.
-        leaf get_leaf(size_t id) const;
+		leaf *get_leaf(size_t id) { return &m_leafs[id]; }
 
         /// The number of brushes in the level.
-        size_t get_brush_count() const;
+		size_t get_brush_count() const { return m_brushes.size(); }
         /// Get the specified brush.
-        brush get_brush(size_t id) const;
+		brush *get_brush(size_t id) { return &m_brushes[id]; }
 
         /// The number of brushsides in the level.
-        size_t get_brushside_count() const;
+		size_t get_brushside_count() const { return m_brushsides.size(); }
         /// Get the specified brushside.
-        brushside get_brushside(size_t id) const;
+		brushside *get_brushside(size_t id) { return &m_brushsides[id]; }
 
         /// The number of polygon faces in the level.
-        size_t get_face_count() const;
+		size_t get_face_count() const { return m_faces.size(); }
         /// Get the specified face.
-        face get_face(size_t id) const;
+		face *get_face(size_t id) { return &m_faces[id]; }
 
         /// The number of planes in this level.
-        size_t get_plane_count() const;
+		size_t get_plane_count() const { return m_planes.size(); }
         /// Get the specified plane.
-        plane get_plane() const;
+		plane *get_plane(size_t id) { return &m_planes[id]; }
 
         /// The number of polygon edges in the level.
-        size_t get_edge_count() const;
+		size_t get_edge_count() const { return m_edges.size(); }
         /// Get the specified edge.
-        edge get_edge(size_t id) const;
+		edge *get_edge(size_t id) { return &m_edges[id]; }
 
         /// The number of vertices in the level.
-        size_t get_vertex_count() const;
+		size_t get_vertex_count() const { return m_vertices.size(); }
         /// Get the specified vertex.
-        vec3 get_vertex(size_t id) const;
+		vec3 get_vertex(size_t id) { return m_vertices[id]; }
 
         //@}
 
@@ -550,9 +604,9 @@ namespace bsp {
         //@{
 
         /// The number of texinfos in the level.
-        size_t get_texinfo_count() const;
+		size_t get_texinfo_count() const { return m_texinfos.size(); }
         /// Get the specified texinfo.
-        texinfo get_texinfo(size_t id) const;
+		texinfo *get_texinfo(size_t id) { return &m_texinfos[id]; }
 
         //@}
 
@@ -575,11 +629,22 @@ namespace bsp {
         cluster_set get_cluster_phs(size_t id) const;
 
         /// The number of areas in this level.
-        size_t get_area_count() const;
+		/// \bug Implement.
+		size_t get_area_count() const { return 0; }
         /// Get the specified area.
-        area get_area(size_t id) const;
+		/// \bug Implement.
+		area *get_area(size_t id) { return NULL; }
 
         //@}
+
+		/// \bug Implement.
+		edge *get_surfedge_list(size_t count, size_t index) { return NULL; }
+		/// \bug Implement.
+		brushside *get_brushside_list(size_t count, size_t index) { return NULL; }
+		/// \bug Implement.
+		brush *get_leafbrush_list(size_t count, size_t index) { return NULL; }
+		/// \bug Implement.
+		face *get_leafface_list(size_t count, size_t index) { return NULL; }
     };
 
     //=====================================================================
@@ -590,5 +655,5 @@ namespace bsp {
     // class lighting {};
 
     // Does not appear to be used anywhere by engine.
-    // class pop {};
+    //class pop {};
 };

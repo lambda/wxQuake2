@@ -3,6 +3,7 @@
 	ProjectType="Visual C++"
 	Version="7.00"
 	Name="game"
+	ProjectGUID="{E3E18AF4-CBA2-4F24-A7E1-6B5A73D3A46E}"
 	SccProjectName=""
 	SccLocalPath="">
 	<Platforms>
@@ -205,7 +206,7 @@
 				ProgramDataBaseFileName=".\release/"
 				WarningLevel="4"
 				SuppressStartupBanner="TRUE"
-				DebugInformationFormat="2"/>
+				DebugInformationFormat="3"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool

@@ -99,6 +99,37 @@ typedef struct
 	float		white;			// highest of rgb
 } lightstyle_t;
 
+#ifdef IML_Q2_EXTENSIONS
+
+// 29 January 2004 - IML - emk - added for overlays
+#include "qoverlay.h"
+
+// 24 May 2004 - IML - emk - This data now shared by client and ref_*.
+struct overlay_s {
+    int format;
+    byte *raw_data;
+    size_t left, top, width, height;
+    int stride;
+    int is_shown;
+
+    // Dirty rectangle. The right and bottom co-ordinates are
+    // exclusive.
+    size_t dl, dt, dr, db;
+
+    // Private data for the various ref_* libraries. 
+    void *ref_data;
+};
+
+// 8 June 2004 - IML - emk - added for displaying debug data
+struct line_seg_s {
+    vec3_t color;
+    vec3_t start;
+    vec3_t end;
+};
+typedef struct line_seg_s line_seg_t;
+
+#endif /* IML_Q2_EXTENSIONS */
+
 typedef struct
 {
 	int			x, y, width, height;// in virtual screen coordinates
@@ -121,30 +152,13 @@ typedef struct
 
 	int			num_particles;
 	particle_t	*particles;
-} refdef_t;
 
 #ifdef IML_Q2_EXTENSIONS
-
-// 29 January 2004 - IML - emk - added for overlays
-#include "qoverlay.h"
-
-// 24 May 2004 - IML - emk - This data now shared by client and ref_*.
-struct overlay_s {
-    int format;
-    byte *raw_data;
-    size_t left, top, width, height;
-    int stride;
-    int is_shown;
-
-    // Dirty rectangle. The right and bottom co-ordinates are
-    // exclusive.
-    size_t dl, dt, dr, db;
-
-    // Private data for the various ref_* libraries. 
-    void *ref_data;
-};
-
+    // 10 June 2004 - IML - emk - added for displaying debug data
+    int         num_lines;
+    line_seg_t  *lines;
 #endif /* IML_Q2_EXTENSIONS */
+} refdef_t;
 
 
 #define	API_VERSION		3

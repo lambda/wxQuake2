@@ -20,31 +20,7 @@
 //
 // @END_LICENSE
 
-//! \file bsptools.cpp
-/// Command-line interface to the bsptools program.
-
+//! \file precompiled.cpp
+/// This file is compiled to build the precompiled header.
 #include "precompiled.h"
-#include <iostream>
-#include "bspfile.h"
 
-/// \mainpage <tt>bsptools</tt> Application
-///
-/// This application is used to manipulate BSP files in various interesting
-/// ways.
-///
-/// \section overview_sec Overview
-///
-/// A <tt>*.bsp</tt> file contains information about a single game level.
-/// This data is represented by a number of classes, the most important of
-/// which are:
-///
-///  - bsp::level - The level itself.  All other objects can be reached from
-///    here.
-///  - bsp::entity - Key/value properties for each entity on the level.
-///  - bsp::model - BSP models for the level, doors, platforms, triggers, etc.
-
-/// Main entry point for program.
-int main(int argc, char **argv) {
-	std::cout << "Hello, world!" << std::endl;
-	return 0;
-}

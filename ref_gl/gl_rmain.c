@@ -466,6 +466,40 @@ void GL_DrawParticles( int num_particles, const particle_t particles[], const un
 	GL_TexEnv( GL_REPLACE );
 }
 
+#ifdef IML_Q2_EXTENSIONS
+
+/*
+===============
+R_DrawLineSegments
+
+Draw a group of line segments (mostly for debugging).
+===============
+*/
+
+static void R_DrawLineSegments()
+{
+    int i;
+
+    qglEnable(GL_BLEND);
+	qglDisable(GL_TEXTURE_2D);
+    qglShadeModel(GL_FLAT);
+    qglLineWidth(2);
+
+    qglBegin(GL_LINES);
+    for (i = 0; i < r_newrefdef.num_lines; i++)
+    {
+        qglColor3fv(r_newrefdef.lines[i].color);
+        qglVertex3fv(r_newrefdef.lines[i].start);
+        qglVertex3fv(r_newrefdef.lines[i].end);
+    }
+    qglEnd();
+
+	qglEnable(GL_TEXTURE_2D);
+    qglDisable(GL_BLEND);
+}
+
+#endif /* IML_Q2_EXTENSIONS */
+
 /*
 ===============
 R_DrawParticles
@@ -850,6 +884,11 @@ void R_RenderView (refdef_t *fd)
 	R_DrawWorld ();
 
 	R_DrawEntitiesOnList ();
+
+#ifdef IML_Q2_EXTENSIONS
+    // 10 June 2004 - IML - emk - Draw debugging information.
+    R_DrawLineSegments();
+#endif /* IML_Q2_EXTENSIONS */
 
 	R_RenderDlights ();
 
@@ -1680,13 +1719,13 @@ static void ApplyGLMatrix(vec4_t result, float *m, vec4_t p)
 
 /*
 ===============
-R_ProjectPoint
+GL_ProjectPoint
 
 Project a point from world co-ordinates to screen co-ordinates.
 ===============
 */
 
-void R_ProjectPoint(vec3_t point)
+void GL_ProjectPoint(vec3_t point)
 {
 	vec4_t initial, transformed, projected;
 
@@ -1791,7 +1830,7 @@ refexport_t GetRefAPI (refimport_t rimp )
     re.OverlayDraw = GL_OverlayDraw;
 
 	// 29 February 2004 - IML - emk - added for reticle
-	re.ProjectPoint = R_ProjectPoint;
+	re.ProjectPoint = GL_ProjectPoint;
 #endif // IML_Q2_EXTENSIONS
 
 	Swap_Init ();
