@@ -375,14 +375,47 @@ void ExitLevel (void)
 
 /*
 ================
-CheckPlayerLookTargets
+SendReticle
 
-Advances the world by 0.1 seconds
+Send reticle-drawing data to the client
 ================
 */
 
-// Limit visibility to about 500 meters for now.
-enum { VIEW_DISTANCE = 32 * 500 };
+void SendReticle(edict_t *ent, edict_t *player)
+{
+	int i;
+
+	gi.WriteByte(svc_reticle);
+	if (!ent || !ent->r_text || !ent->r_text[0])
+	{
+		// Turn the reticle off.
+		gi.WriteByte(0);
+	}
+	else
+	{
+		// Turn the reticle on.
+		gi.WriteString(ent->r_text);
+		gi.WritePosition(ent->s.origin);
+		for (i=0 ; i<3 ; i++)
+			gi.WriteAngle(ent->s.angles[i]);
+		gi.WritePosition(ent->mins);
+		gi.WritePosition(ent->maxs);
+	}
+	gi.unicast(player, true);
+}
+
+/*
+================
+CheckPlayerLookTargets
+
+Find out what the player is looking at, if anything
+================
+*/
+
+enum {
+	LOOK_DISTANCE = 32 * 500,  // Limit visibility to 500 meters.
+	RETICLE_DISTANCE = 32      // Limit reticles to 1 meter.
+};
 
 void CheckPlayerLookTargets (void)
 {
@@ -409,7 +442,7 @@ void CheckPlayerLookTargets (void)
         ps = &ent->client->ps;
         VectorAdd(ent->s.origin, ps->viewoffset, view_origin);
         AngleVectors(ps->viewangles, forward, right, NULL);
-        VectorSet(distance, VIEW_DISTANCE, 0, 0);
+        VectorSet(distance, LOOK_DISTANCE, 0, 0);
         G_ProjectSource(view_origin, distance, forward, right, view_target);
 
         // Trace the player's line of sight and see what we hit.  We begin
@@ -425,6 +458,33 @@ void CheckPlayerLookTargets (void)
         if (show_look->value && trace.ent && trace.ent->classname)
             gi.cprintf(ent, PRINT_HIGH, "Looking at: %s %x\n",
                        trace.ent->classname, trace.ent);
+
+		// If we're looking at something new, remember it and run any
+		// associated look_target.
+		if (trace.ent != ent->client->looking_at)
+		{
+			ent->client->looking_at = trace.ent;
+			if (trace.ent && trace.ent->look_target)
+				G_UseTargetsByName(trace.ent, trace.ent->look_target, ent);
+		}
+
+		// Objects don't get reticles if they're too far away.
+		if (trace.fraction > (1.0 * RETICLE_DISTANCE) / LOOK_DISTANCE)
+			trace.ent = NULL;
+
+		// We need to resend the reticle every frame, in case the entity
+		// is moving relative to the world.
+		SendReticle(trace.ent, ent);
+
+		// If the reticle is on something new, remember it and run any
+		// associated r_activated_target (sound familiar?).
+		if (trace.ent != ent->client->reticle_on)
+		{
+			ent->client->reticle_on = trace.ent;
+			if (trace.ent && trace.ent->r_activated_target)
+				G_UseTargetsByName(trace.ent, trace.ent->r_activated_target,
+								   ent);
+		}
     }
 }
 

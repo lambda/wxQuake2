@@ -39,6 +39,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define	svc_stufftext		11
 #ifdef IML_Q2_EXTENSIONS
 #define svc_binmsg          128
+#define svc_reticle         129
 #endif // IML_Q2_EXTENSIONS
 
 //==================================================================
@@ -638,6 +639,10 @@ edict_t *G_Find (edict_t *from, int fieldofs, char *match);
 edict_t *findradius (edict_t *from, vec3_t org, float rad);
 edict_t *G_PickTarget (char *targetname);
 void	G_UseTargets (edict_t *ent, edict_t *activator);
+#ifdef IML_Q2_EXTENSIONS
+void    G_UseTargetsByName (edict_t *trigger, char *target_name,
+							edict_t *activator);
+#endif // IML_Q2_EXTENSIONS
 void	G_SetMovedir (vec3_t angles, vec3_t movedir);
 
 void	G_InitEdict (edict_t *e);
@@ -969,6 +974,11 @@ struct gclient_s
 
 	edict_t		*chase_target;		// player we are chasing
 	qboolean	update_chase;		// need to update chase info?
+
+#ifdef IML_Q2_EXTENSIONS
+	edict_t     *looking_at;        // the item the player is looking at
+	edict_t     *reticle_on;        // the item with a reticle (or NULL)
+#endif // IML_Q2_EXTENSIONS
 };
 
 
@@ -1024,7 +1034,11 @@ struct edict_s
 	char		*target;
 	char		*targetname;
 #ifdef IML_Q2_EXTENSIONS
-	int         console_trigger;
+	int         console_trigger;     // true if triggerable from console
+	char        *look_target;        // targeted when looked at
+	char        *r_text;             // text to display in reticle
+	char        *r_target;           // targeted when reticle clicked
+	char        *r_activated_target; // targeted when reticle first displayed
 #endif // IML_Q2_EXTENSIONS
 	char		*killtarget;
 	char		*team;

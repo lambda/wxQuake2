@@ -229,7 +229,9 @@ enum svc_ops_e
 	svc_frame
 #ifdef IML_Q2_EXTENSIONS
     ,                           // (trailing comma for svc_frame)
-    svc_binmsg = 128            // [short] size [size bytes] binmsg
+    svc_binmsg = 128,           // [short] size [size bytes] binmsg
+    svc_reticle                 // [string] reticle text (last field if "")
+                                // [pos] origin [angle*3] [pos*2] min, max
 #endif // IML_Q2_EXTENSIONS
 };
 

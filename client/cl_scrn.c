@@ -63,6 +63,10 @@ cvar_t		*scr_graphscale;
 cvar_t		*scr_graphshift;
 cvar_t		*scr_drawall;
 
+#ifdef IML_Q2_EXTENSIONS
+cvar_t      *scr_drawreticle;
+#endif // IML_Q2_EXTENSIONS
+
 typedef struct
 {
 	int		x1, y1, x2, y2;
@@ -72,6 +76,14 @@ dirty_t		scr_dirty, scr_old_dirty[2];
 
 char		crosshair_pic[MAX_QPATH];
 int			crosshair_width, crosshair_height;
+
+#ifdef IML_Q2_EXTENSIONS
+char        scr_r_text[MAX_R_TEXT] = "";
+vec3_t      scr_r_origin;
+vec3_t      scr_r_angles;
+vec3_t      scr_r_mins;
+vec3_t      scr_r_maxs;
+#endif // IML_Q2_EXTENSIONS
 
 void SCR_TimeRefresh_f (void);
 void SCR_Loading_f (void);
@@ -424,6 +436,9 @@ void SCR_Init (void)
 	scr_graphscale = Cvar_Get ("graphscale", "1", 0);
 	scr_graphshift = Cvar_Get ("graphshift", "0", 0);
 	scr_drawall = Cvar_Get ("scr_drawall", "0", 0);
+#ifdef IML_Q2_EXTENSIONS
+	scr_drawreticle = Cvar_Get ("scr_drawreticle", "1", 0);
+#endif // IML_Q2_EXTENSIONS
 
 //
 // register our commands
@@ -1277,6 +1292,90 @@ void SCR_ExecuteLayoutString (char *s)
 	}
 }
 
+#ifdef IML_Q2_EXTENSIONS
+
+/*
+================
+SCR_DrawReticle
+
+Draw the reticle, if appropriate
+================
+*/
+
+#ifndef MIN
+#define MIN(V1,V2) ((V1) < (V2) ? (V1) : (V2))
+#endif
+#ifndef MAX
+#define MAX(V1,V2) ((V1) > (V2) ? (V1) : (V2))
+#endif
+ 
+void SCR_DrawReticle (void)
+{
+	vec3_t vertices[8];
+	vec3_t forward, right, up, temp;
+	vec3_t mins, maxs;
+	int i;
+
+	// If we're not displaying a reticle right now, give up now.
+	scr_drawreticle = Cvar_Get ("scr_drawreticle", "1", 0);
+	if (!scr_drawreticle->value || !scr_r_text[0])
+		return;
+
+	// If the video driver can't project points for us, give up now.
+	if (!re.ProjectPoint)
+		return;
+
+	// Compute the unrotated, untranslated bounding box vertices.
+	VectorSet(vertices[0], scr_r_mins[0], scr_r_mins[1], scr_r_mins[2]);
+	VectorSet(vertices[1], scr_r_mins[0], scr_r_mins[1], scr_r_maxs[2]);
+	VectorSet(vertices[2], scr_r_mins[0], scr_r_maxs[1], scr_r_mins[2]);
+	VectorSet(vertices[3], scr_r_mins[0], scr_r_maxs[1], scr_r_maxs[2]);
+	VectorSet(vertices[4], scr_r_maxs[0], scr_r_mins[1], scr_r_mins[2]);
+	VectorSet(vertices[5], scr_r_maxs[0], scr_r_mins[1], scr_r_maxs[2]);
+	VectorSet(vertices[6], scr_r_maxs[0], scr_r_maxs[1], scr_r_mins[2]);
+	VectorSet(vertices[7], scr_r_maxs[0], scr_r_maxs[1], scr_r_maxs[2]);
+
+	// Transform the vertices and project them into 2D.
+	AngleVectors(scr_r_angles, forward, right, up);
+	for (i = 0; i < 8; i++)
+	{
+		// Rotate the vertices.
+		VectorSet(temp,
+				  DotProduct(vertices[i], forward),
+				  // I'm sure there's a wonderful and exciting reason why
+				  // we need a minus sign on our x co-ordinate.
+				  -DotProduct(vertices[i], right),
+				  DotProduct(vertices[i], up));
+		VectorCopy(temp, vertices[i]);
+
+		// Translate and project the vertices.
+		VectorAdd(vertices[i], scr_r_origin, vertices[i]);
+		re.ProjectPoint(vertices[i]);
+	}
+
+	// Find the 2D bounding box.
+	ClearBounds(mins, maxs);
+	for (i = 0; i < 8; i++)
+		AddPointToBounds(vertices[i], mins, maxs);
+
+	// Clip the bounding box to the screen size.
+	mins[0] = MAX(mins[0], scr_vrect.x + 5);
+	mins[1] = MAX(mins[1], scr_vrect.y + 5);
+	maxs[0] = MIN(maxs[0], scr_vrect.x + scr_vrect.width - 5);
+	maxs[1] = MIN(maxs[1], scr_vrect.y + scr_vrect.height - 5);
+
+	// TODO - Draw the reticle itself.
+	re.DrawPic(mins[0], mins[1], "reticle_lt");
+	re.DrawPic(mins[0], maxs[1] - 32, "reticle_lb");
+	re.DrawPic(maxs[0] - 32, mins[1], "reticle_rt");
+	re.DrawPic(maxs[0] - 32, maxs[1] - 32, "reticle_rb");
+
+	// Draw the label for this reticle.
+	DrawString(mins[0] + 4, mins[1] + 4, scr_r_text);
+}
+
+#endif // IML_Q2_EXTENSIONS
+
 
 /*
 ================
@@ -1443,6 +1542,7 @@ void SCR_UpdateScreen (void)
             // 29 January 2004 - IML - emk - added for overlays
             if (re.DrawOverlays)
                 re.DrawOverlays();
+			SCR_DrawReticle();
 #endif /* IML_Q2_EXTENSIONS */
 
 			SCR_DrawNet ();

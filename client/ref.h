@@ -199,6 +199,9 @@ typedef struct
                              size_t width, size_t height);
     void (*OverlayDelete)(overlay_t *overlay);
     void (*DrawOverlays)();
+
+	// 29 February 2004 - IML - emk - added for reticle
+	void (*ProjectPoint)(vec3_t point);
 #endif /* IML_Q2_EXTENSIONS */
 
 } refexport_t;

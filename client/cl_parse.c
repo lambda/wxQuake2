@@ -600,6 +600,26 @@ void CL_SetBinMsgHandler(void (*handler)(binmsg_byte *, size_t))
     BinMsgHandler = handler;
 }
 
+void CL_ParseReticle (void)
+{
+	char *str;
+	vec3_t origin, angles, mins, maxs;
+	int i;
+
+	// Parse the message.
+	str = MSG_ReadString(&net_message);
+	strncpy(scr_r_text, str, sizeof(scr_r_text));
+	scr_r_text[sizeof(scr_r_text) - 1] = '\0';
+	if (str[0] != '\0')
+	{
+		MSG_ReadPos(&net_message, scr_r_origin);
+		for (i = 0; i < 3; i++)
+			scr_r_angles[i] = MSG_ReadAngle(&net_message);
+		MSG_ReadPos(&net_message, scr_r_mins);
+		MSG_ReadPos(&net_message, scr_r_maxs);
+	}
+}
+
 #endif // IML_Q2_EXTENSIONS
 
 
@@ -825,6 +845,9 @@ void CL_ParseServerMessage (void)
 #ifdef IML_Q2_EXTENSIONS
         case svc_binmsg:
             CL_ParseBinMsg();
+            break;
+        case svc_reticle:
+            CL_ParseReticle();
             break;
 #endif // IML_Q2_EXTENSIONS
 

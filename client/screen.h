@@ -59,6 +59,15 @@ extern	vrect_t		scr_vrect;		// position of render window
 extern	char		crosshair_pic[MAX_QPATH];
 extern	int			crosshair_width, crosshair_height;
 
+#ifdef IML_Q2_EXTENSIONS
+#define MAX_R_TEXT (256)
+extern  char        scr_r_text[MAX_R_TEXT];
+extern  vec3_t      scr_r_origin;
+extern  vec3_t      scr_r_angles;
+extern  vec3_t      scr_r_mins;
+extern  vec3_t      scr_r_maxs;
+#endif // IML_Q2_EXTENSIONS
+
 void SCR_AddDirtyPoint (int x, int y);
 void SCR_DirtyScreen (void);
 

@@ -255,6 +255,36 @@ void G_UseTargets (edict_t *ent, edict_t *activator)
 }
 
 
+#ifdef IML_Q2_EXTENSIONS
+
+/*
+================
+G_UseTargetsByName
+
+A special version of G_UseTargets for those times when the target's name is
+stored in a field other than 'target'.  (Quake 2 had a pretty simple
+interaction model--only one possible interaction per object.)
+================
+*/
+
+void G_UseTargetsByName(edict_t *trigger, char *target_name,
+						edict_t *activator)
+{
+	// Create a temporary trigger, pass it to G_UseTargets, and destroy it
+	// immediately.
+	edict_t *temp;
+	temp = G_Spawn();
+	temp->target     = target_name;
+	temp->delay      = trigger->delay;
+	temp->message    = trigger->message;
+	temp->killtarget = trigger->killtarget;
+	G_UseTargets(temp, activator);
+	G_FreeEdict(temp);
+}
+
+#endif // IML_Q2_EXTENSIONS
+
+
 /*
 =============
 TempVector

@@ -35,6 +35,10 @@ field_t fields[] = {
 	{"targetname", FOFS(targetname), F_LSTRING},
 #ifdef IML_Q2_EXTENSIONS
 	{"console_trigger", FOFS(console_trigger), F_INT},
+	{"look_target", FOFS(look_target), F_LSTRING},
+	{"r_text", FOFS(r_text), F_LSTRING},
+	{"r_target", FOFS(r_target), F_LSTRING},
+	{"r_activated_target", FOFS(r_activated_target), F_LSTRING},
 #endif //IML_Q2_EXTENSIONS
 	{"pathtarget", FOFS(pathtarget), F_LSTRING},
 	{"deathtarget", FOFS(deathtarget), F_LSTRING},

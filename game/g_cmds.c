@@ -899,6 +899,8 @@ void Cmd_PlayerList_f(edict_t *ent)
 	gi.cprintf(ent, PRINT_HIGH, "%s", text);
 }
 
+#ifdef IML_Q2_EXTENSIONS
+
 /*
 ==================
 Cmd_Trigger_f
@@ -906,8 +908,6 @@ Cmd_Trigger_f
 Triggers a target
 ==================
 */
-
-#ifdef IML_Q2_EXTENSIONS
 
 void Cmd_Trigger_f(edict_t *ent)
 {
@@ -919,6 +919,9 @@ void Cmd_Trigger_f(edict_t *ent)
 	if (gi.argc() != 2)
 	{
 		gi.cprintf (ent, PRINT_HIGH, "Usage: trigger TARGETNAME\n");
+		for (i=0 ; i<globals.num_edicts ; i++)
+			if (g_edicts[i].targetname && g_edicts[i].console_trigger)
+				gi.cprintf (ent, PRINT_HIGH, "  %s\n", g_edicts[i].targetname);
 		return;
 	}
 
@@ -946,6 +949,31 @@ void Cmd_Trigger_f(edict_t *ent)
 	else
 	{
 		gi.cprintf (ent, PRINT_HIGH, "Can't activate target: %s\n", name);
+	}
+}
+
+/*
+==================
+Cmd_Reticle_f
+
+Triggers the r_target associated with the current reticle, if any.
+==================
+*/
+
+void Cmd_Reticle_f(edict_t *ent)
+{
+	edict_t *r_on;
+
+	if (gi.argc() != 1)
+	{
+		gi.cprintf (ent, PRINT_HIGH, "Usage: reticle\n");
+		return;
+	}
+
+	r_on = ent->client->reticle_on;
+	if (r_on && r_on->r_target)
+	{
+		G_UseTargetsByName(r_on, r_on->r_target, ent);
 	}
 }
 
@@ -1041,6 +1069,8 @@ void ClientCommand (edict_t *ent)
 #ifdef IML_Q2_EXTENSIONS
 	else if (Q_stricmp(cmd, "trigger") == 0)
 	     Cmd_Trigger_f(ent);
+	else if (Q_stricmp(cmd, "reticle") == 0)
+	     Cmd_Reticle_f(ent);
 #endif // IML_Q2_EXTENSIONS
 	else	// anything that doesn't match a command will be a chat
 		Cmd_Say_f (ent, false, true);

@@ -1317,6 +1317,38 @@ void R_SetSky (char *name, float rotate, vec3_t axis)
 }
 
 
+#ifdef IML_Q2_EXTENSIONS
+
+/*
+===============
+R_ProjectPoint
+
+Project a point from world co-ordinates to screen co-ordinates.
+===============
+*/
+
+void R_ProjectPoint(vec3_t point)
+{
+	vec3_t local, transformed;
+	float zi;
+
+	// Project the point.  This code is based on the code in r_part.c.
+	VectorSubtract(point, r_origin, local);
+	TransformVector(local, transformed);
+	if (transformed[2] < 0.01)
+		// Points near or behind the view plane need to be handled
+		// carefully when doing perspective projections.  Perhaps we
+		// should report whether or not 'point' falls within the frustrum?
+		transformed[2] = 0.01;
+	zi = 1.0 / transformed[2];
+	point[0] = xcenter + zi * transformed[0] * xscale + 0.5;
+    point[1] = ycenter - zi * transformed[1] * yscale + 0.5;
+	point[2] = 0;
+}
+
+#endif // IML_Q2_EXTENSIONS
+
+
 /*
 ===============
 Draw_GetPalette
@@ -1402,6 +1434,9 @@ refexport_t GetRefAPI (refimport_t rimp)
     re.OverlayDirtyRect = R_OverlayDirtyRect;
     re.OverlayDelete = R_OverlayDelete;
     re.DrawOverlays = R_DrawOverlays;
+
+	// 29 February 2004 - IML - emk - added for reticle
+	re.ProjectPoint = R_ProjectPoint;
 #endif // IML_Q2_EXTENSIONS
 
 	Swap_Init ();
