@@ -1351,31 +1351,6 @@ void Draw_GetPalette (void)
 
 struct image_s *R_RegisterSkin (char *name);
 
-/*
-===============
-R_ViewXyTo3D
-===============
-*/
-
-#ifdef IML_Q2_EXTENSIONS
-
-// 1 February 2004 - IML - emk - added for 3D mouse
-qboolean R_ViewXyTo3D(int x, int y, vec3_t *out_origin, vec3_t *out_normal)
-{
-	// If x,y isn't even in our viewrect, it can't point to anything.
-	vrect_t vrect = r_refdef.vrect;
-	if (x < vrect.x || (vrect.x+vrect.width) <= x ||
-		y < vrect.y || (vrect.y+vrect.height) <= y)
-		return 0; //FALSE;
-
-	// Our vector begins at our view origin.
-	//*out_origin = r_origin;
-
-	// XXX - Finish implementing.
-	return 1; //TRUE;
-}
-
-#endif /* IML_Q2_EXTENSIONS */
 
 /*
 @@@@@@@@@@@@@@@@@@@@@
@@ -1427,7 +1402,6 @@ refexport_t GetRefAPI (refimport_t rimp)
     re.OverlayDirtyRect = R_OverlayDirtyRect;
     re.OverlayDelete = R_OverlayDelete;
     re.DrawOverlays = R_DrawOverlays;
-	re.ViewXyTo3D = R_ViewXyTo3D;
 #endif // IML_Q2_EXTENSIONS
 
 	Swap_Init ();

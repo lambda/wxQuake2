@@ -199,10 +199,6 @@ typedef struct
                              size_t width, size_t height);
     void (*OverlayDelete)(overlay_t *overlay);
     void (*DrawOverlays)();
-
-    // 1 February 2004 - IML - emk - added for 3D mouse
-    qboolean (*ViewXyTo3D)(int x, int y, vec3_t *out_origin,
-						   vec3_t *out_normal);
 #endif /* IML_Q2_EXTENSIONS */
 
 } refexport_t;
