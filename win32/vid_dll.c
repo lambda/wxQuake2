@@ -543,8 +543,10 @@ void VID_NewWindow ( int width, int height)
 
 void VID_FreeReflib (void)
 {
+#ifndef __WXWINDOWS__
 	if ( !FreeLibrary( reflib_library ) )
 		Com_Error( ERR_FATAL, "Reflib FreeLibrary failed" );
+#endif
 	memset (&re, 0, sizeof(re));
 	reflib_library = NULL;
 	reflib_active  = false;
@@ -558,7 +560,11 @@ VID_LoadRefresh
 qboolean VID_LoadRefresh( char *name )
 {
 	refimport_t	ri;
+#ifdef __WXWINDOWS__
+    extern refexport_t GetRefAPI (refimport_t rimp);
+#else
 	GetRefAPI_t	GetRefAPI;
+#endif
 	
 	if ( reflib_active )
 	{
@@ -568,12 +574,14 @@ qboolean VID_LoadRefresh( char *name )
 
 	Com_Printf( "------- Loading %s -------\n", name );
 
+#ifndef __WXWINDOWS__
 	if ( ( reflib_library = LoadLibrary( name ) ) == 0 )
 	{
 		Com_Printf( "LoadLibrary(\"%s\") failed\n", name );
 
 		return false;
 	}
+#endif
 
 	ri.Cmd_AddCommand = Cmd_AddCommand;
 	ri.Cmd_RemoveCommand = Cmd_RemoveCommand;
@@ -592,8 +600,10 @@ qboolean VID_LoadRefresh( char *name )
 	ri.Vid_MenuInit = VID_MenuInit;
 	ri.Vid_NewWindow = VID_NewWindow;
 
+#ifndef __WXWINDOWS__
 	if ( ( GetRefAPI = (void *) GetProcAddress( reflib_library, "GetRefAPI" ) ) == 0 )
 		Com_Error( ERR_FATAL, "GetProcAddress failed on %s", name );
+#endif
 
 	re = GetRefAPI( ri );
 

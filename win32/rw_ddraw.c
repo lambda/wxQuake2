@@ -47,6 +47,7 @@ qboolean DDRAW_Init( unsigned char **ppbuffer, int *ppitch )
 	PALETTEENTRY palentries[256];
 	int i;
 	extern cvar_t *sw_allow_modex;
+    HWND hWnd;
 
 	HRESULT (WINAPI *QDirectDrawCreate)( GUID FAR *lpGUID, LPDIRECTDRAW FAR * lplpDDRAW, IUnknown FAR * pUnkOuter );
 
@@ -97,8 +98,23 @@ ri.Con_Printf( PRINT_ALL, "Initializing DirectDraw\n");
 	sww_state.modex = false;
 
 	ri.Con_Printf( PRINT_ALL, "...setting exclusive mode: ");
+
+    hWnd = sww_state.hWnd;
+#ifdef __WXWINDOWS__
+    // we need to pass a top level window to SetCooperativeLevel() and while
+    // this is always the case in the standalone Quake, it's not true when it
+    // is embedded in a wxWindow
+    for ( ;; )
+    {
+        HWND hWndParent = GetParent(hWnd);
+        if ( !hWndParent )
+            break;
+        hWnd = hWndParent;
+    }
+#endif // __WXWINDOWS__
+
 	if ( ( ddrval = sww_state.lpDirectDraw->lpVtbl->SetCooperativeLevel( sww_state.lpDirectDraw, 
-																		 sww_state.hWnd,
+																		 hWnd,
 																		 DDSCL_EXCLUSIVE | DDSCL_FULLSCREEN ) ) != DD_OK )
 	{
 		ri.Con_Printf( PRINT_ALL, "failed - %s\n",DDrawError (ddrval) );

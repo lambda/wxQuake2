@@ -54,6 +54,11 @@ static HANDLE		qwclsemaphore;
 int			argc;
 char		*argv[MAX_NUM_ARGVS];
 
+#ifdef __WXWINDOWS__
+extern int g_isRunningWxQuake;
+extern int g_errorInWxQuake;
+#endif
+
 
 /*
 ===============================================================================
@@ -84,7 +89,11 @@ void Sys_Error (char *error, ...)
 // shut down QHOST hooks if necessary
 	DeinitConProc ();
 
+#ifdef __WXWINDOWS__
+    g_errorInWxQuake = 1;
+#else
 	exit (1);
+#endif
 }
 
 void Sys_Quit (void)
@@ -100,7 +109,11 @@ void Sys_Quit (void)
 // shut down QHOST hooks if necessary
 	DeinitConProc ();
 
+#ifdef __WXWINDOWS__
+    g_isRunningWxQuake = 0;
+#else
 	exit (0);
+#endif
 }
 
 
@@ -593,6 +606,8 @@ WinMain
 */
 HINSTANCE	global_hInstance;
 
+#ifndef __WXWINDOWS__
+
 int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
     MSG				msg;
@@ -663,3 +678,6 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 	// never gets here
     return TRUE;
 }
+
+#endif // !__WXWINDOWS__
+

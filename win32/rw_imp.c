@@ -44,6 +44,12 @@ swwstate_t sww_state;
 
 void VID_CreateWindow( int width, int height, int stylebits )
 {
+#ifdef __WXWINDOWS__
+	extern HWND g_hwndWxQuake;
+
+	sww_state.hWnd = g_hwndWxQuake;
+	//g_hwndWxQuake = NULL;
+#else
 	WNDCLASS		wc;
 	RECT			r;
 	cvar_t			*vid_xpos, *vid_ypos, *vid_fullscreen;
@@ -96,6 +102,7 @@ void VID_CreateWindow( int width, int height, int stylebits )
 		 NULL,
 		 sww_state.hInstance,
 		 NULL);
+#endif
 
 	if (!sww_state.hWnd)
 		ri.Sys_Error (ERR_FATAL, "Couldn't create window");
@@ -362,6 +369,7 @@ void SWimp_Shutdown( void )
 	DIB_Shutdown();
 	DDRAW_Shutdown();
 
+#ifndef __WXWINDOWS__
 	if ( sww_state.hWnd )
 	{
 		ri.Con_Printf( PRINT_ALL, "...destroying window\n" );
@@ -370,6 +378,7 @@ void SWimp_Shutdown( void )
 		sww_state.hWnd = NULL;
 		UnregisterClass (WINDOW_CLASS_NAME, sww_state.hInstance);
 	}
+#endif // __WXWINDOWS__
 }
 
 /*
