@@ -104,7 +104,37 @@ void PF_cprintf (edict_t *ent, int level, char *fmt, ...)
 		Com_Printf ("%s", msg);
 }
 
+#ifdef IML_Q2_EXTENSTIONS
+/*
+===============
+PF_ccmd
 
+Send a command to the client from a game object
+===============
+*/
+void PF_ccmd(edict_t *ent, char *fmt, ...)
+{
+      char            msg[1024];
+      va_list         argptr;
+      int                     n;
+
+      if (ent)
+      {
+               n = NUM_FOR_EDICT(ent);
+               if (n < 1 || n > maxclients->value)
+                        Com_Error (ERR_DROP, "ccmd to a non-client");
+      }
+
+      va_start (argptr, fmt);
+      vsprintf (msg, fmt, argptr);
+      va_end (argptr);
+
+      if (ent)
+               SV_ClientCommand(svs.clients+(n-1), "%s", msg);
+      else
+               Com_Printf ("Tried to send %s", msg);
+}
+#endif // IML_Q2_EXTENSTIONS
 /*
 ===============
 PF_centerprintf
@@ -336,6 +366,9 @@ void SV_InitGameProgs (void)
 	import.bprintf = SV_BroadcastPrintf;
 	import.dprintf = PF_dprintf;
 	import.cprintf = PF_cprintf;
+#ifdef IML_Q2_EXTENSIONS
+	import.ccmd = PF_ccmd;
+#endif // IML_Q2_EXTENSIONS
 	import.centerprintf = PF_centerprintf;
 	import.error = PF_error;
 

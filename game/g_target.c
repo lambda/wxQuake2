@@ -41,6 +41,58 @@ void SP_target_temp_entity (edict_t *ent)
 
 //==========================================================
 
+/*QUAKED target_command (1 0 0) (-8 -8 -8) (8 8 8)
+"command"	string to be executed on the console
+
+Run a quake console command on a trigger.
+*/
+void Use_Target_Command (edict_t *ent, edict_t *other, edict_t *activator)
+{
+	edict_t *player;
+	int check = 1;
+	
+#ifdef IML_Q2_EXTENSIONS
+    if (activator->client != NULL)
+	{	// call command on behalf of activator.
+		gi.ccmd(activator, "%s\n", ent->message);
+    }
+	else 
+	{	// send the command to all players (sequentially)
+		while (check < game.maxclients) 
+		{
+			ent = &g_edicts[check];
+			if (ent->inuse) 
+			{
+				gi.ccmd(ent, "%s\n", ent->message);
+			}
+			check++;
+		}
+	}
+#else
+	
+	// Give some feedback
+	gi.bprintf("No IML_Q2_EXTENSIONS: %s\n", ent->message);
+#endif // IML_Q2_EXTENSIONS
+}
+
+
+void SP_target_command (edict_t *ent)
+{
+	if(!ent->message)
+	{
+		gi.dprintf("target_command with no command at %s\n", vtos(ent->s.origin));
+		return;
+	}
+	ent->use = Use_Target_Command;
+
+	// must link the entity so we get areas and clusters so
+	// the server can determine who to send updates to
+	gi.linkentity (ent);
+}
+
+
+//==========================================================
+
 /*QUAKED target_speaker (1 0 0) (-8 -8 -8) (8 8 8) looped-on looped-off reliable
 "noise"		wav file to play
 "attenuation"

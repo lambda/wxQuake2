@@ -122,6 +122,27 @@ void SV_BroadcastPrintf (int level, char *fmt, ...)
 	}
 }
 
+#ifdef IML_Q2_EXTENSIONS
+/*
+=================
+SV_ClientCommand
+
+Sends a (reliable) command to a single client
+=================
+*/
+void SV_ClientCommand(client_t *cl, char *fmt, ...)
+{
+      va_list         argptr;
+      char            string[1024];
+
+      va_start (argptr, fmt);
+      vsprintf (string, fmt, argptr);
+      va_end (argptr);
+
+      MSG_WriteByte (&cl->netchan.message, svc_stufftext);
+      MSG_WriteString (&cl->netchan.message, string);
+}
+#endif // IML_Q2_EXTENSIONS
 /*
 =================
 SV_BroadcastCommand

@@ -105,6 +105,9 @@ typedef struct
 	void	(*bprintf) (int printlevel, char *fmt, ...);
 	void	(*dprintf) (char *fmt, ...);
 	void	(*cprintf) (edict_t *ent, int printlevel, char *fmt, ...);
+#ifdef IML_Q2_EXTENSIONS
+    void	(*ccmd)    (edict_t *ent, char *fmt, ...);
+#endif // IML_Q2_EXTENSIONS
 	void	(*centerprintf) (edict_t *ent, char *fmt, ...);
 	void	(*sound) (edict_t *ent, int channel, int soundindex, float volume, float attenuation, float timeofs);
 	void	(*positioned_sound) (vec3_t origin, edict_t *ent, int channel, int soundinedex, float volume, float attenuation, float timeofs);

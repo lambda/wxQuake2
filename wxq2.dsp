@@ -44,7 +44,7 @@ CFG=wxq2 - Win32 Debug
 # PROP Target_Dir ""
 CPP=cl.exe
 # ADD BASE CPP /nologo /MD /W4 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "WXQ2_EXPORTS" /YX /FD /c
-# ADD CPP /nologo /MD /O2 /I "$(WXWIN)/include" /I "$(WXWIN)\lib\mswdll" /D "_USRDLL" /D "WIN32" /D "NDEBUG" /D WINVER=0x0400 /D "STRICT" /D "__WXWINDOWS__" /D "REF_HARD_LINKED" /D "WXQ2_EXPORTS" /FD /c
+# ADD CPP /nologo /MD /O2 /I "$(WXWIN)/include" /I "$(WXWIN)\lib\mswdll" /D "_USRDLL" /D WINVER=0x0400 /D "STRICT" /D "__WXWINDOWS__" /D "REF_HARD_LINKED" /D "WXQ2_EXPORTS" /D "NDEBUG" /D "WIN32" /D "IML_Q2_EXTENSIONS" /FD /c
 MTL=midl.exe
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
@@ -73,7 +73,7 @@ LINK32=link.exe
 # PROP Target_Dir ""
 CPP=cl.exe
 # ADD BASE CPP /nologo /MDd /W4 /Gm /GX /Zi /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "WXQ2_EXPORTS" /YX /FD /GZ /c
-# ADD CPP /nologo /MDd /Zi /Od /I "$(WXWIN)/include" /I "$(WXWIN)\lib\mswdlld" /D "_USRDLL" /D "WIN32" /D "_DEBUG" /D "__WXDEBUG__" /D WINVER=0x0400 /D "STRICT" /D "__WXWINDOWS__" /D "REF_HARD_LINKED" /D "WXQ2_EXPORTS" /FD /c
+# ADD CPP /nologo /MDd /Zi /Od /I "$(WXWIN)/include" /I "$(WXWIN)\lib\mswdlld" /D "_USRDLL" /D "__WXDEBUG__" /D WINVER=0x0400 /D "STRICT" /D "__WXWINDOWS__" /D "REF_HARD_LINKED" /D "WXQ2_EXPORTS" /D "WIN32" /D "_DEBUG" /D "IML_Q2_EXTENSIONS" /FD /c
 MTL=midl.exe
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
@@ -99,9 +99,11 @@ LINK32=link.exe
 # PROP Output_Dir "Release"
 # PROP Intermediate_Dir "wx\Release"
 # PROP Target_Dir ""
+LINK32=link.exe
+MTL=midl.exe
 CPP=cl.exe
 # ADD BASE CPP /nologo /MD /W4 /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD CPP /nologo /MT /GR /GX /O2 /I "$(WXWIN)/include" /I "$(WXWIN)\lib\msw" /D "WIN32" /D "NDEBUG" /D WINVER=0x0400 /D "STRICT" /D "__WXWINDOWS__" /D "REF_HARD_LINKED" /FD /c
+# ADD CPP /nologo /MT /GR /GX /O2 /I "$(WXWIN)/include" /I "$(WXWIN)\lib\msw" /D "WIN32" /D "NDEBUG" /D WINVER=0x0400 /D "STRICT" /D "__WXWINDOWS__" /D "REF_HARD_LINKED" /D "IML_Q2_EXTENSIONS" /FD /c
 RSC=rc.exe
 # ADD BASE RSC /l 0x409
 # ADD RSC /l 0x409
@@ -124,9 +126,11 @@ LIB32=link.exe -lib
 # PROP Output_Dir "Debug"
 # PROP Intermediate_Dir "wx\Debug"
 # PROP Target_Dir ""
+LINK32=link.exe
+MTL=midl.exe
 CPP=cl.exe
 # ADD BASE CPP /nologo /MDd /W4 /Zi /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD CPP /nologo /MTd /Zi /Od /I "$(WXWIN)/include" /I "$(WXWIN)\lib\mswd" /D "WIN32" /D "_DEBUG" /D "__WXDEBUG__" /D WINVER=0x0400 /D "STRICT" /D "__WXWINDOWS__" /D "REF_HARD_LINKED" /FD /c
+# ADD CPP /nologo /MTd /Zi /Od /I "$(WXWIN)/include" /I "$(WXWIN)\lib\mswd" /D "WIN32" /D "_DEBUG" /D "__WXDEBUG__" /D WINVER=0x0400 /D "STRICT" /D "__WXWINDOWS__" /D "REF_HARD_LINKED" /D "IML_Q2_EXTENSIONS" /FD /c
 RSC=rc.exe
 # ADD BASE RSC /l 0x409
 # ADD RSC /l 0x409

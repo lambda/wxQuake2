@@ -158,6 +158,11 @@ Quake2Engine::Quake2Engine(HWND hwnd, int videoMode,
     // space
     int argc = 0;
     char *argv[256];
+	wxString quoted_basedir, quoted_game;
+
+    // Quote the basedir and game, in case there are spaces.
+	quoted_basedir = "\"" + basedir + "\"";
+	quoted_game = "\"" + game + "\"";
 
     // it also expects the first argument to be this for some reason
     argv[argc++] = "exe";
@@ -167,7 +172,7 @@ Quake2Engine::Quake2Engine(HWND hwnd, int videoMode,
 	{
 		argv[argc++] = "+set";
 		argv[argc++] = "basedir";
-		argv[argc++] = const_cast<char *>(basedir.mb_str());
+		argv[argc++] = const_cast<char *>(quoted_basedir.mb_str());
 	}
 
     // set the mode
@@ -188,7 +193,7 @@ Quake2Engine::Quake2Engine(HWND hwnd, int videoMode,
 	{
 		argv[argc++] = "+set";
 		argv[argc++] = "game";
-		argv[argc++] = const_cast<char *>(game.mb_str());
+		argv[argc++] = const_cast<char *>(quoted_game.mb_str());
 	}
     argv[argc++] = NULL;
 
