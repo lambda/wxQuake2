@@ -1014,6 +1014,9 @@ struct edict_s
 	float		angle;			// set in qe3, -1 = up, -2 = down
 	char		*target;
 	char		*targetname;
+#ifdef IML_Q2_EXTENSIONS
+	int         console_trigger;
+#endif // IML_Q2_EXTENSIONS
 	char		*killtarget;
 	char		*team;
 	char		*pathtarget;

@@ -33,6 +33,9 @@ field_t fields[] = {
 	{"decel", FOFS(decel), F_FLOAT},
 	{"target", FOFS(target), F_LSTRING},
 	{"targetname", FOFS(targetname), F_LSTRING},
+#ifdef IML_Q2_EXTENSIONS
+	{"console_trigger", FOFS(console_trigger), F_INT},
+#endif //IML_Q2_EXTENSIONS
 	{"pathtarget", FOFS(pathtarget), F_LSTRING},
 	{"deathtarget", FOFS(deathtarget), F_LSTRING},
 	{"killtarget", FOFS(killtarget), F_LSTRING},

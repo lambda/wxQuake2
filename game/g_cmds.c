@@ -899,6 +899,57 @@ void Cmd_PlayerList_f(edict_t *ent)
 	gi.cprintf(ent, PRINT_HIGH, "%s", text);
 }
 
+/*
+==================
+Cmd_Trigger_f
+
+Triggers a target
+==================
+*/
+
+#ifdef IML_Q2_EXTENSIONS
+
+void Cmd_Trigger_f(edict_t *ent)
+{
+    int i;
+	char *name;
+	edict_t *trigger;
+	qboolean found;
+	
+	if (gi.argc() != 2)
+	{
+		gi.cprintf (ent, PRINT_HIGH, "Usage: trigger TARGETNAME\n");
+		return;
+	}
+
+	name = gi.argv(1);
+
+	found = false;		 	
+	for (i=0 ; i<globals.num_edicts ; i++)
+	{
+		if (g_edicts[i].targetname &&
+			(!Q_stricmp(g_edicts[i].targetname, name)) &&
+			g_edicts[i].console_trigger)
+		{
+			found = true;
+			break;
+		}
+	}
+
+	if (found)
+	{
+		trigger = G_Spawn();
+		trigger->target = name;
+		G_UseTargets(trigger, ent);
+		G_FreeEdict(trigger);
+	}
+	else
+	{
+		gi.cprintf (ent, PRINT_HIGH, "Can't activate target: %s\n", name);
+	}
+}
+
+#endif // IML_Q2_EXTENSIONS
 
 /*
 =================
@@ -987,6 +1038,10 @@ void ClientCommand (edict_t *ent)
 		Cmd_Wave_f (ent);
 	else if (Q_stricmp(cmd, "playerlist") == 0)
 		Cmd_PlayerList_f(ent);
+#ifdef IML_Q2_EXTENSIONS
+	else if (Q_stricmp(cmd, "trigger") == 0)
+	     Cmd_Trigger_f(ent);
+#endif // IML_Q2_EXTENSIONS
 	else	// anything that doesn't match a command will be a chat
 		Cmd_Say_f (ent, false, true);
 }
