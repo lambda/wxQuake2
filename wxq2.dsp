@@ -103,7 +103,8 @@ MTL=midl.exe
 LINK32=link.exe
 CPP=cl.exe
 # ADD BASE CPP /nologo /MD /W4 /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD CPP /nologo /MT /GR /GX /O2 /I "$(WXWIN)/include" /I "$(WXWIN)\lib\msw" /D "WIN32" /D "NDEBUG" /D WINVER=0x0400 /D "STRICT" /D "__WXWINDOWS__" /D "REF_HARD_LINKED" /D "IML_Q2_EXTENSIONS" /FD /c
+# ADD CPP /nologo /MT /GR /GX /Zi /Ot /Og /Oi /I "$(WXWIN)/include" /I "$(WXWIN)\lib\msw" /D "WIN32" /D "NDEBUG" /D WINVER=0x0400 /D "STRICT" /D "__WXWINDOWS__" /D "REF_HARD_LINKED" /D "IML_Q2_EXTENSIONS" /FD /c
+# SUBTRACT CPP /Ox /Os
 RSC=rc.exe
 # ADD BASE RSC /l 0x409
 # ADD RSC /l 0x409
@@ -130,7 +131,7 @@ MTL=midl.exe
 LINK32=link.exe
 CPP=cl.exe
 # ADD BASE CPP /nologo /MDd /W4 /Zi /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD CPP /nologo /MTd /Zi /Od /I "$(WXWIN)/include" /I "$(WXWIN)\lib\mswd" /D "WIN32" /D "_DEBUG" /D "__WXDEBUG__" /D WINVER=0x0400 /D "STRICT" /D "__WXWINDOWS__" /D "REF_HARD_LINKED" /D "IML_Q2_EXTENSIONS" /FD /c
+# ADD CPP /nologo /MTd /GR /GX /Zi /Od /I "$(WXWIN)/include" /I "$(WXWIN)\lib\mswd" /D "WIN32" /D "_DEBUG" /D "__WXDEBUG__" /D WINVER=0x0400 /D "STRICT" /D "__WXWINDOWS__" /D "REF_HARD_LINKED" /D "IML_Q2_EXTENSIONS" /FD /c
 RSC=rc.exe
 # ADD BASE RSC /l 0x409
 # ADD RSC /l 0x409
