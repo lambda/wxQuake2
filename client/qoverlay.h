@@ -53,5 +53,9 @@ extern void q2_overlay_dirty_rect(overlay_t *overlay, size_t left, size_t top,
 /* Destroy the overlay. */
 extern void q2_overlay_delete(overlay_t *overlay);
 
+/* Check to see if interactive mouse is enabled--we may want to direct
+** mouse events to overlays outside of Quake 2. */
+extern int q2_mouse_is_interactive();
+
 #endif /* IML_Q2_EXTENSIONS */
 #endif /* Q2_OVERLAY_H */

@@ -429,6 +429,10 @@ void IN_Frame (void)
 	}
 
 	if ( !cl.refresh_prepped
+#ifdef IML_Q2_EXTENSIONS
+		// 1 February 2004 - IML - emk - Interactive mouse support.
+		|| cls.interactivemouse
+#endif IML_Q2_EXTENSIONS
 		|| cls.key_dest == key_console
 		|| cls.key_dest == key_menu)
 	{

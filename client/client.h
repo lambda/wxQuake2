@@ -203,6 +203,11 @@ typedef struct
 	connstate_t	state;
 	keydest_t	key_dest;
 
+#ifdef IML_Q2_EXTENSIONS
+	// 1 February 2004 - IML - emk - Interactive mouse support.
+	qboolean    interactivemouse;   // Pass mouse events to wxWindows.
+#endif // IML_Q2_EXTENSIONS
+
 	int			framecount;
 	int			realtime;			// always increasing, no clamping, etc
 	float		frametime;			// seconds since last frame

@@ -33,4 +33,9 @@ void q2_overlay_delete(overlay_t *overlay)
         re.OverlayDelete(overlay);
 }
 
+int q2_mouse_is_interactive()
+{
+    return (cls.interactivemouse && cls.key_dest == key_game);
+}
+
 #endif /* IML_Q2_EXTENSIONS */

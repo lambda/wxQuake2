@@ -175,6 +175,12 @@ void IN_UseUp (void) {KeyUp(&in_use);}
 
 void IN_Impulse (void) {in_impulse=atoi(Cmd_Argv(1));}
 
+#ifdef IML_Q2_EXTENSIONS
+// 1 February 2004 - IML - emk - Interactive mouse support.
+void IN_MInteractDown (void) { cls.interactivemouse = true; }
+void IN_MInteractUp (void) { cls.interactivemouse = false; }
+#endif // IML_Q2_EXTENSIONS
+
 /*
 ===============
 CL_KeyState
@@ -445,6 +451,11 @@ void CL_InitInput (void)
 	Cmd_AddCommand ("impulse", IN_Impulse);
 	Cmd_AddCommand ("+klook", IN_KLookDown);
 	Cmd_AddCommand ("-klook", IN_KLookUp);
+#ifdef IML_Q2_EXTENSIONS
+	// 1 February 2004 - IML - emk - Interactive mouse support.
+	Cmd_AddCommand ("+minteract", IN_MInteractDown);
+	Cmd_AddCommand ("-minteract", IN_MInteractUp);
+#endif // IML_Q2_EXTENSIONS
 
 	cl_nodelta = Cvar_Get ("cl_nodelta", "0", 0);
 }

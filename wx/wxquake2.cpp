@@ -657,6 +657,19 @@ wxQuake2Window::MSWWindowProc(WXUINT nMsg, WXWPARAM wParam, WXLPARAM lParam)
 		if ( nMsg == WM_LBUTTONDOWN )
 			SetFocus();
 
+#ifdef IML_Q2_EXTENSIONS
+		// Interactive mouse support: Divert mouse events to wxWindows.
+		if (q2_mouse_is_interactive() &&
+			(nMsg == WM_LBUTTONDOWN ||
+			 nMsg == WM_LBUTTONUP ||
+			 nMsg == WM_RBUTTONDOWN ||
+			 nMsg == WM_RBUTTONUP ||
+			 nMsg == WM_MBUTTONDOWN ||
+			 nMsg == WM_MBUTTONUP ||
+			 nMsg == WM_MOUSEMOVE))
+			return wxWindow::MSWWindowProc(nMsg, wParam, lParam);
+#endif // IML_Q2_EXTENSIONS
+
         // Note that we could intercept some events here and/or modify Quake
         // MainWndProc() to call us back instead of calling DefWindowProc().
 		// For now, we only intercept WM_ERASEBKGND, which wxWindows can
