@@ -67,6 +67,8 @@
 /// \param origin The current origin of the BSP model.
 /// \param angles The current Euler rotation of the BSP model.
 /// \return Bitwise OR of zero or more CONTENT_* flags.
+///
+/// \see CM_PointContents
 
 //! \fn void CM_TestInLeaf (int leafnum)
 ///
@@ -89,6 +91,8 @@
 /// \param trace [out] The trace record to fill out if the box overlaps
 ///             the brush.
 /// \param brush The brush to test against.
+///
+/// \see CM_ClipBoxToBrush (a similar function)
 ///
 /// <h3>Algorithm</h3>
 ///
@@ -186,7 +190,7 @@
 /// \param brushmask The content types which will stop the box's trace.
 /// \return A description of the trace's results.
 ///
-/// \see WANT_TRACE_EXIT, CM_TestBoxInBrush
+/// \see WANT_TRACE_EXIT, CM_TestBoxInBrush, CM_TransformedBoxTrace
 ///
 /// <h3>Algorithm</h3>
 ///
