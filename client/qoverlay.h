@@ -3,7 +3,7 @@
 
 #ifdef IML_Q2_EXTENSIONS
 
-/* These are also declared in ref.h. */
+/* As far as we're concerned, this is an opaque data structure. */
 struct overlay_s;
 typedef struct overlay_s overlay_t;
 

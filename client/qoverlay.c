@@ -35,6 +35,11 @@ void q2_overlay_delete(overlay_t *overlay)
 
 int q2_mouse_is_interactive()
 {
+    // The mouse is interactive only if (1) the cls data structure thinks
+    // it should be and (2) key input is currently being directed to the
+    // Quake 2 game (and not the console or menu or something like that).
+    // The latter condition automatically turns off interactive mouse
+    // whenever the user goes into some kind of special Quake 2 mode.
     return (cls.interactivemouse && cls.key_dest == key_game);
 }
 

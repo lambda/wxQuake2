@@ -40,7 +40,8 @@ byte gInverseCLUT[1 << 3*ICLUT_BITS];
                 ((B>>IGNORED_BITS))])
 
 /* We have 1<<ICLUT_BITS entries for each channel, which we want to spread
-** evenly between 0 and 255, inclusive. */
+** evenly between 0 and 255, inclusive.  Multiply a 5-bit channel by this
+** value to get an evenly-distributed 8-bit value. */
 #define ICLUT_SCALE (255.0 / ((1<<ICLUT_BITS)-1)) 
 
 void R_InitOverlays(byte *palette)
