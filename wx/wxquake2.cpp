@@ -191,8 +191,7 @@ Quake2Engine::Quake2Engine(HWND hwnd, int videoMode,
     // if a game mod was specified, load it
 	if (game != "")
 	{
-		argv[argc++] = "+set";
-		argv[argc++] = "game";
+		argv[argc++] = "+game";
 		argv[argc++] = const_cast<char *>(quoted_game.mb_str());
 	}
     argv[argc++] = NULL;
