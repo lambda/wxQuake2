@@ -48,14 +48,22 @@ struct binmsg_message_tag;
 typedef struct {
     struct binmsg_message_tag *message;
     size_t size;
+
+    // Only defined when building.
     binmsg_byte *size_backref;
-} binmsg_array_info;
+} binmsg_array;
 
 typedef struct binmsg_message_tag {
     binmsg_byte *buffer;
     size_t buffer_size;
-    size_t buffer_size_max;
-    binmsg_array_info args;
+    binmsg_array args;
+    binmsg_byte *next, *limit;
+
+    // Only defined when building.
+    binmsg_byte *limit_max;
+
+    // Only defined when parsing.
+    binmsg_string name;
 } binmsg_message;
 
 binmsg_bool binmsg_build(binmsg_message *message,
@@ -63,30 +71,23 @@ binmsg_bool binmsg_build(binmsg_message *message,
                          size_t buffer_size,
                          binmsg_string name);
 binmsg_bool binmsg_build_done(binmsg_message *message);
-binmsg_bool binmsg_add_int(binmsg_array_info *array, binmsg_int value);
-binmsg_bool binmsg_add_float(binmsg_array_info *array, binmsg_float value);
-binmsg_bool binmsg_add_string(binmsg_array_info *array, binmsg_string value);
-binmsg_bool binmsg_add_bool(binmsg_array_info *array, binmsg_bool value);
-binmsg_bool binmsg_add_array_begin(binmsg_array_info *array,
-                                   binmsg_array_info *out_array);
-binmsg_bool binmsg_add_array_end(binmsg_array_info *array);
+binmsg_bool binmsg_add_int(binmsg_array *array, binmsg_int value);
+binmsg_bool binmsg_add_float(binmsg_array *array, binmsg_float value);
+binmsg_bool binmsg_add_string(binmsg_array *array, binmsg_string value);
+binmsg_bool binmsg_add_bool(binmsg_array *array, binmsg_bool value);
+binmsg_bool binmsg_add_array_begin(binmsg_array *array,
+                                   binmsg_array *out_array);
+binmsg_bool binmsg_add_array_end(binmsg_array *array);
 
 binmsg_bool binmsg_parse(binmsg_message *message,
                          binmsg_byte *data,
-                         size_t size,
-                         binmsg_string *out_name,
-                         binmsg_array_info *out_arg_list);
-binmsg_bool binmsg_get_next_type(binmsg_array_info *array,
-                                 binmsg_type *out_type);
-binmsg_bool binmsg_get_int(binmsg_array_info *array, binmsg_int *out_value);
-binmsg_bool binmsg_get_float(binmsg_array_info *array,
-                             binmsg_float *out_value);
-binmsg_bool binmsg_get_string(binmsg_array_info *array,
-                              binmsg_string *out_value);
-binmsg_bool binmsg_get_bool(binmsg_array_info *array, binmsg_bool *out_value);
-binmsg_bool binmsg_get_array_begin(binmsg_array_info *array,
-                                   binmsg_array_info *out_array);
-binmsg_bool binmsg_get_array_end(binmsg_array_info *array);
+                         size_t size);
+binmsg_bool binmsg_get_next_type(binmsg_array *array, binmsg_type *out_type);
+binmsg_bool binmsg_get_int(binmsg_array *array, binmsg_int *out_value);
+binmsg_bool binmsg_get_float(binmsg_array *array, binmsg_float *out_value);
+binmsg_bool binmsg_get_string(binmsg_array *array, binmsg_string *out_value);
+binmsg_bool binmsg_get_bool(binmsg_array *array, binmsg_bool *out_value);
+binmsg_bool binmsg_get_array(binmsg_array *array, binmsg_array *out_array);
 
 #endif // IML_Q2_EXTENSIONS
 #endif // BINMSG_H
