@@ -385,7 +385,8 @@ void wxQuake2Window::ExecCommand(const wxString& cmd)
     wxCHECK_RET( m_engine->IsRunning(),
 				 _T("can't exec commands without engine running") );
 
-    Cbuf_AddText(const_cast<char *>(cmd.mb_str()));
+    wxString terminated = cmd + "\n";
+    Cbuf_AddText(const_cast<char *>(terminated.mb_str()));
     Cbuf_Execute();
 }
 
