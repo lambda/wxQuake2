@@ -1,0 +1,792 @@
+<?xml version="1.0" encoding = "Windows-1252"?>
+<VisualStudioProject
+	ProjectType="Visual C++"
+	Version="7.00"
+	Name="wxq2"
+	SccProjectName=""
+	SccLocalPath="">
+	<Platforms>
+		<Platform
+			Name="Win32"/>
+	</Platforms>
+	<Configurations>
+		<Configuration
+			Name="Debug DLL|Win32"
+			OutputDirectory=".\DebugDll"
+			IntermediateDirectory=".\wx\DebugDll"
+			ConfigurationType="2"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="FALSE">
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="0"
+				AdditionalIncludeDirectories="$(WXWIN)/include,$(WXWIN)\lib\mswdlld"
+				PreprocessorDefinitions="_USRDLL;__WXDEBUG__;WINVER=0x0400;STRICT;__WXWINDOWS__;REF_HARD_LINKED;WXQ2_EXPORTS;WIN32;_DEBUG;IML_Q2_EXTENSIONS"
+				RuntimeLibrary="3"
+				PrecompiledHeaderFile=".\wx\DebugDll/wxq2.pch"
+				AssemblerListingLocation=".\wx\DebugDll/"
+				ObjectFile=".\wx\DebugDll/"
+				ProgramDataBaseFileName=".\wx\DebugDll/"
+				SuppressStartupBanner="TRUE"
+				DebugInformationFormat="3"
+				CompileAs="0"/>
+			<Tool
+				Name="VCCustomBuildTool"/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalOptions="/MACHINE:I386"
+				AdditionalDependencies="odbc32.lib rpcrt4.lib comctl32.lib wsock32.lib winmm.lib $(WXWIN)\lib\wxmsw250d.lib"
+				OutputFile="DebugDll/wxq2d.dll"
+				LinkIncremental="2"
+				SuppressStartupBanner="TRUE"
+				GenerateDebugInformation="TRUE"
+				ProgramDatabaseFile=".\DebugDll/wxq2d.pdb"
+				ImportLibrary=".\DebugDll/wxq2d.lib"/>
+			<Tool
+				Name="VCMIDLTool"
+				PreprocessorDefinitions="_DEBUG"
+				MkTypLibCompatible="TRUE"
+				SuppressStartupBanner="TRUE"
+				TargetEnvironment="1"
+				TypeLibraryName=".\DebugDll/wxq2.tlb"/>
+			<Tool
+				Name="VCPostBuildEventTool"/>
+			<Tool
+				Name="VCPreBuildEventTool"/>
+			<Tool
+				Name="VCPreLinkEventTool"/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="_DEBUG"
+				Culture="1033"/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"/>
+			<Tool
+				Name="VCWebDeploymentTool"/>
+		</Configuration>
+		<Configuration
+			Name="Release|Win32"
+			OutputDirectory=".\Release"
+			IntermediateDirectory=".\wx\Release"
+			ConfigurationType="4"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="FALSE">
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="0"
+				GlobalOptimizations="TRUE"
+				EnableIntrinsicFunctions="TRUE"
+				FavorSizeOrSpeed="0"
+				AdditionalIncludeDirectories="$(WXWIN)/include,$(WXWIN)\lib\msw"
+				PreprocessorDefinitions="WIN32,NDEBUG,WINVER=0x0400,STRICT,__WXWINDOWS__,REF_HARD_LINKED,IML_Q2_EXTENSIONS"
+				RuntimeLibrary="0"
+				RuntimeTypeInfo="TRUE"
+				PrecompiledHeaderFile=".\wx\Release/wxq2.pch"
+				AssemblerListingLocation=".\wx\Release/"
+				ObjectFile=".\wx\Release/"
+				ProgramDataBaseFileName=".\wx\Release/"
+				SuppressStartupBanner="TRUE"
+				DebugInformationFormat="3"
+				CompileAs="0"/>
+			<Tool
+				Name="VCCustomBuildTool"/>
+			<Tool
+				Name="VCLibrarianTool"
+				OutputFile=".\Release\wxq2.lib"
+				SuppressStartupBanner="TRUE"/>
+			<Tool
+				Name="VCMIDLTool"/>
+			<Tool
+				Name="VCPostBuildEventTool"/>
+			<Tool
+				Name="VCPreBuildEventTool"/>
+			<Tool
+				Name="VCPreLinkEventTool"/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				Culture="1033"/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"/>
+		</Configuration>
+		<Configuration
+			Name="Debug|Win32"
+			OutputDirectory=".\Debug"
+			IntermediateDirectory=".\wx\Debug"
+			ConfigurationType="4"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="FALSE">
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="0"
+				AdditionalIncludeDirectories="$(WXWIN)/include,$(WXWIN)\lib\mswd"
+				PreprocessorDefinitions="WIN32,_DEBUG,__WXDEBUG__,WINVER=0x0400,STRICT,__WXWINDOWS__,REF_HARD_LINKED,IML_Q2_EXTENSIONS"
+				RuntimeLibrary="1"
+				RuntimeTypeInfo="TRUE"
+				PrecompiledHeaderFile=".\wx\Debug/wxq2.pch"
+				AssemblerListingLocation=".\wx\Debug/"
+				ObjectFile=".\wx\Debug/"
+				ProgramDataBaseFileName=".\wx\Debug/"
+				SuppressStartupBanner="TRUE"
+				DebugInformationFormat="3"
+				CompileAs="0"/>
+			<Tool
+				Name="VCCustomBuildTool"/>
+			<Tool
+				Name="VCLibrarianTool"
+				OutputFile="Debug\wxq2d.lib"
+				SuppressStartupBanner="TRUE"/>
+			<Tool
+				Name="VCMIDLTool"/>
+			<Tool
+				Name="VCPostBuildEventTool"/>
+			<Tool
+				Name="VCPreBuildEventTool"/>
+			<Tool
+				Name="VCPreLinkEventTool"/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				Culture="1033"/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"/>
+		</Configuration>
+		<Configuration
+			Name="Release DLL|Win32"
+			OutputDirectory=".\ReleaseDll"
+			IntermediateDirectory=".\wx\ReleaseDll"
+			ConfigurationType="2"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="FALSE">
+			<Tool
+				Name="VCCLCompilerTool"
+				InlineFunctionExpansion="1"
+				AdditionalIncludeDirectories="$(WXWIN)/include,$(WXWIN)\lib\mswdll"
+				PreprocessorDefinitions="_USRDLL;WINVER=0x0400;STRICT;__WXWINDOWS__;REF_HARD_LINKED;WXQ2_EXPORTS;NDEBUG;WIN32;IML_Q2_EXTENSIONS"
+				StringPooling="TRUE"
+				RuntimeLibrary="2"
+				EnableFunctionLevelLinking="TRUE"
+				PrecompiledHeaderFile=".\wx\ReleaseDll/wxq2.pch"
+				AssemblerListingLocation=".\wx\ReleaseDll/"
+				ObjectFile=".\wx\ReleaseDll/"
+				ProgramDataBaseFileName=".\wx\ReleaseDll/"
+				SuppressStartupBanner="TRUE"
+				CompileAs="0"/>
+			<Tool
+				Name="VCCustomBuildTool"/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalOptions="/MACHINE:I386"
+				AdditionalDependencies="odbc32.lib rpcrt4.lib comctl32.lib wsock32.lib winmm.lib $(WXWIN)\lib\wxmsw250.lib"
+				OutputFile=".\ReleaseDll/wxq2.dll"
+				LinkIncremental="1"
+				SuppressStartupBanner="TRUE"
+				ProgramDatabaseFile=".\ReleaseDll/wxq2.pdb"
+				ImportLibrary=".\ReleaseDll/wxq2.lib"/>
+			<Tool
+				Name="VCMIDLTool"
+				PreprocessorDefinitions="NDEBUG"
+				MkTypLibCompatible="TRUE"
+				SuppressStartupBanner="TRUE"
+				TargetEnvironment="1"
+				TypeLibraryName=".\ReleaseDll/wxq2.tlb"/>
+			<Tool
+				Name="VCPostBuildEventTool"/>
+			<Tool
+				Name="VCPreBuildEventTool"/>
+			<Tool
+				Name="VCPreLinkEventTool"/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="NDEBUG"
+				Culture="1033"/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"/>
+			<Tool
+				Name="VCWebDeploymentTool"/>
+		</Configuration>
+	</Configurations>
+	<Files>
+		<Filter
+			Name="quake"
+			Filter="">
+			<Filter
+				Name="common"
+				Filter="">
+				<File
+					RelativePath=".\game\binmsg.c">
+				</File>
+				<File
+					RelativePath=".\qcommon\cmd.c">
+				</File>
+				<File
+					RelativePath=".\qcommon\cmodel.c">
+				</File>
+				<File
+					RelativePath=".\qcommon\common.c">
+				</File>
+				<File
+					RelativePath=".\qcommon\crc.c">
+				</File>
+				<File
+					RelativePath=".\qcommon\cvar.c">
+				</File>
+				<File
+					RelativePath=".\qcommon\files.c">
+				</File>
+				<File
+					RelativePath=".\game\m_flash.c">
+				</File>
+				<File
+					RelativePath=".\qcommon\md4.c">
+				</File>
+				<File
+					RelativePath=".\qcommon\net_chan.c">
+				</File>
+				<File
+					RelativePath=".\qcommon\pmove.c">
+				</File>
+				<File
+					RelativePath=".\game\q_shared.c">
+				</File>
+			</Filter>
+			<Filter
+				Name="client"
+				Filter="*.c">
+				<File
+					RelativePath=".\client\cl_cin.c">
+				</File>
+				<File
+					RelativePath=".\client\cl_ents.c">
+				</File>
+				<File
+					RelativePath=".\client\cl_fx.c">
+				</File>
+				<File
+					RelativePath=".\client\cl_input.c">
+				</File>
+				<File
+					RelativePath=".\client\cl_inv.c">
+				</File>
+				<File
+					RelativePath=".\client\cl_main.c">
+				</File>
+				<File
+					RelativePath=".\client\cl_newfx.c">
+				</File>
+				<File
+					RelativePath=".\client\cl_parse.c">
+				</File>
+				<File
+					RelativePath=".\client\cl_pred.c">
+				</File>
+				<File
+					RelativePath=".\client\cl_scrn.c">
+				</File>
+				<File
+					RelativePath=".\client\cl_tent.c">
+				</File>
+				<File
+					RelativePath=".\client\cl_view.c">
+				</File>
+				<File
+					RelativePath=".\client\console.c">
+				</File>
+				<File
+					RelativePath=".\client\keys.c">
+				</File>
+				<File
+					RelativePath=".\client\menu.c">
+				</File>
+				<File
+					RelativePath=".\client\qmenu.c">
+				</File>
+				<File
+					RelativePath=".\client\qoverlay.c">
+				</File>
+				<File
+					RelativePath=".\client\snd_dma.c">
+				</File>
+				<File
+					RelativePath=".\client\snd_mem.c">
+				</File>
+				<File
+					RelativePath=".\client\snd_mix.c">
+				</File>
+				<File
+					RelativePath=".\client\x86.c">
+				</File>
+			</Filter>
+			<Filter
+				Name="server"
+				Filter="">
+				<File
+					RelativePath=".\server\sv_ccmds.c">
+				</File>
+				<File
+					RelativePath=".\server\sv_ents.c">
+				</File>
+				<File
+					RelativePath=".\server\sv_game.c">
+				</File>
+				<File
+					RelativePath=".\server\sv_init.c">
+				</File>
+				<File
+					RelativePath=".\server\sv_main.c">
+				</File>
+				<File
+					RelativePath=".\server\sv_send.c">
+				</File>
+				<File
+					RelativePath=".\server\sv_user.c">
+				</File>
+				<File
+					RelativePath=".\server\sv_world.c">
+				</File>
+			</Filter>
+			<Filter
+				Name="ref_soft"
+				Filter="">
+				<File
+					RelativePath=".\ref_soft\r_aclip.c">
+				</File>
+				<File
+					RelativePath=".\ref_soft\r_aclipa.asm">
+					<FileConfiguration
+						Name="Debug DLL|Win32">
+						<Tool
+							Name="VCCustomBuildTool"
+							CommandLine="&quot;D:\Asm\Masm 6.15\ml.exe&quot; /nologo /c /Cp /coff &quot;/Fo$(OutDir)\$(InputName).obj&quot; /Zm /Zi &quot;$(InputPath)&quot;
+"
+							Outputs="$(OutDir)\$(InputName).obj"/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32">
+						<Tool
+							Name="VCCustomBuildTool"
+							CommandLine="ml.exe /nologo /c /Cp /coff &quot;/Fo$(OutDir)\$(InputName).obj&quot; /Zm /Zi &quot;$(InputPath)&quot;
+"
+							Outputs="$(OutDir)\$(InputName).obj"/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug|Win32">
+						<Tool
+							Name="VCCustomBuildTool"
+							CommandLine="ml.exe /nologo /c /Cp /coff &quot;/Fo$(OutDir)\$(InputName).obj&quot; /Zm /Zi &quot;$(InputPath)&quot;
+"
+							Outputs="$(OutDir)\$(InputName).obj"/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release DLL|Win32">
+						<Tool
+							Name="VCCustomBuildTool"
+							CommandLine="&quot;D:\Asm\Masm 6.15\ml.exe&quot; /c /Cp /coff &quot;/Fo$(OutDir)\$(InputName).obj&quot; /Zm /Zi &quot;$(InputPath)&quot;
+"
+							Outputs="$(OutDir)\$(InputName).obj"/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath=".\ref_soft\r_alias.c">
+				</File>
+				<File
+					RelativePath=".\ref_soft\r_bsp.c">
+				</File>
+				<File
+					RelativePath=".\ref_soft\r_draw.c">
+				</File>
+				<File
+					RelativePath=".\ref_soft\r_draw16.asm">
+					<FileConfiguration
+						Name="Debug DLL|Win32">
+						<Tool
+							Name="VCCustomBuildTool"
+							CommandLine="&quot;D:\Asm\Masm 6.15\ml.exe&quot; /nologo /c /Cp /coff &quot;/Fo$(OutDir)\$(InputName).obj&quot; /Zm /Zi &quot;$(InputPath)&quot;
+"
+							Outputs="$(OutDir)\$(InputName).obj"/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32">
+						<Tool
+							Name="VCCustomBuildTool"
+							CommandLine="ml.exe /nologo /c /Cp /coff &quot;/Fo$(OutDir)\$(InputName).obj&quot; /Zm /Zi &quot;$(InputPath)&quot;
+"
+							Outputs="$(OutDir)\$(InputName).obj"/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug|Win32">
+						<Tool
+							Name="VCCustomBuildTool"
+							CommandLine="ml.exe /nologo /c /Cp /coff &quot;/Fo$(OutDir)\$(InputName).obj&quot; /Zm /Zi &quot;$(InputPath)&quot;
+"
+							Outputs="$(OutDir)\$(InputName).obj"/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release DLL|Win32">
+						<Tool
+							Name="VCCustomBuildTool"
+							CommandLine="&quot;D:\Asm\Masm 6.15\ml.exe&quot; /nologo /c /Cp /coff &quot;/Fo$(OutDir)\$(InputName).obj&quot; /Zm /Zi &quot;$(InputPath)&quot;
+"
+							Outputs="$(OutDir)\$(InputName).obj"/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath=".\ref_soft\r_drawa.asm">
+					<FileConfiguration
+						Name="Debug DLL|Win32">
+						<Tool
+							Name="VCCustomBuildTool"
+							CommandLine="&quot;D:\Asm\Masm 6.15\ml.exe&quot; /nologo /c /Cp /coff &quot;/Fo$(OutDir)\$(InputName).obj&quot; /Zm /Zi &quot;$(InputPath)&quot;
+"
+							Outputs="$(OutDir)\$(InputName).obj"/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32">
+						<Tool
+							Name="VCCustomBuildTool"
+							CommandLine="ml.exe /nologo /c /Cp /coff &quot;/Fo$(OutDir)\$(InputName).obj&quot; /Zm /Zi &quot;$(InputPath)&quot;
+"
+							Outputs="$(OutDir)\$(InputName).obj"/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug|Win32">
+						<Tool
+							Name="VCCustomBuildTool"
+							CommandLine="ml.exe /nologo /c /Cp /coff &quot;/Fo$(OutDir)\$(InputName).obj&quot; /Zm /Zi &quot;$(InputPath)&quot;
+"
+							Outputs="$(OutDir)\$(InputName).obj"/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release DLL|Win32">
+						<Tool
+							Name="VCCustomBuildTool"
+							CommandLine="&quot;D:\Asm\Masm 6.15\ml.exe&quot; /nologo /c /Cp /coff &quot;/Fo$(OutDir)\$(InputName).obj&quot; /Zm /Zi &quot;$(InputPath)&quot;
+"
+							Outputs="$(OutDir)\$(InputName).obj"/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath=".\ref_soft\r_edge.c">
+				</File>
+				<File
+					RelativePath=".\ref_soft\r_edgea.asm">
+					<FileConfiguration
+						Name="Debug DLL|Win32">
+						<Tool
+							Name="VCCustomBuildTool"
+							CommandLine="&quot;D:\Asm\Masm 6.15\ml.exe&quot; /nologo /c /Cp /coff &quot;/Fo$(OutDir)\$(InputName).obj&quot; /Zm /Zi &quot;$(InputPath)&quot;
+"
+							Outputs="$(OutDir)\$(InputName).obj"/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32">
+						<Tool
+							Name="VCCustomBuildTool"
+							CommandLine="ml.exe /nologo /c /Cp /coff &quot;/Fo$(OutDir)\$(InputName).obj&quot; /Zm /Zi &quot;$(InputPath)&quot;
+"
+							Outputs="$(OutDir)\$(InputName).obj"/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug|Win32">
+						<Tool
+							Name="VCCustomBuildTool"
+							CommandLine="ml.exe /nologo /c /Cp /coff &quot;/Fo$(OutDir)\$(InputName).obj&quot; /Zm /Zi &quot;$(InputPath)&quot;
+"
+							Outputs="$(OutDir)\$(InputName).obj"/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release DLL|Win32">
+						<Tool
+							Name="VCCustomBuildTool"
+							CommandLine="&quot;D:\Asm\Masm 6.15\ml.exe&quot; /nologo /c /Cp /coff &quot;/Fo$(OutDir)\$(InputName).obj&quot; /Zm /Zi &quot;$(InputPath)&quot;
+"
+							Outputs="$(OutDir)\$(InputName).obj"/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath=".\ref_soft\r_image.c">
+				</File>
+				<File
+					RelativePath=".\ref_soft\r_light.c">
+				</File>
+				<File
+					RelativePath=".\ref_soft\r_main.c">
+				</File>
+				<File
+					RelativePath=".\ref_soft\r_misc.c">
+				</File>
+				<File
+					RelativePath=".\ref_soft\r_model.c">
+				</File>
+				<File
+					RelativePath=".\ref_soft\r_over.c">
+				</File>
+				<File
+					RelativePath=".\ref_soft\r_part.c">
+				</File>
+				<File
+					RelativePath=".\ref_soft\r_poly.c">
+				</File>
+				<File
+					RelativePath=".\ref_soft\r_polysa.asm">
+					<FileConfiguration
+						Name="Debug DLL|Win32">
+						<Tool
+							Name="VCCustomBuildTool"
+							CommandLine="&quot;D:\Asm\Masm 6.15\ml.exe&quot; /nologo /c /Cp /coff &quot;/Fo$(OutDir)\$(InputName).obj&quot; /Zm /Zi &quot;$(InputPath)&quot;
+"
+							Outputs="$(OutDir)\$(InputName).obj"/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32">
+						<Tool
+							Name="VCCustomBuildTool"
+							CommandLine="ml.exe /nologo /c /Cp /coff &quot;/Fo$(OutDir)\$(InputName).obj&quot; /Zm /Zi &quot;$(InputPath)&quot;
+"
+							Outputs="$(OutDir)\$(InputName).obj"/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug|Win32">
+						<Tool
+							Name="VCCustomBuildTool"
+							CommandLine="ml.exe /nologo /c /Cp /coff &quot;/Fo$(OutDir)\$(InputName).obj&quot; /Zm /Zi &quot;$(InputPath)&quot;
+"
+							Outputs="$(OutDir)\$(InputName).obj"/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release DLL|Win32">
+						<Tool
+							Name="VCCustomBuildTool"
+							CommandLine="&quot;D:\Asm\Masm 6.15\ml.exe&quot; /nologo /c /Cp /coff &quot;/Fo$(OutDir)\$(InputName).obj&quot; /Zm /Zi &quot;$(InputPath)&quot;
+"
+							Outputs="$(OutDir)\$(InputName).obj"/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath=".\ref_soft\r_polyse.c">
+				</File>
+				<File
+					RelativePath=".\ref_soft\r_rast.c">
+				</File>
+				<File
+					RelativePath=".\ref_soft\r_scan.c">
+				</File>
+				<File
+					RelativePath=".\ref_soft\r_scana.asm">
+					<FileConfiguration
+						Name="Debug DLL|Win32">
+						<Tool
+							Name="VCCustomBuildTool"
+							CommandLine="&quot;D:\Asm\Masm 6.15\ml.exe&quot; /nologo /c /Cp /coff &quot;/Fo$(OutDir)\$(InputName).obj&quot; /Zm /Zi &quot;$(InputPath)&quot;
+"
+							Outputs="$(OutDir)\$(InputName).obj"/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32">
+						<Tool
+							Name="VCCustomBuildTool"
+							CommandLine="ml.exe /nologo /c /Cp /coff &quot;/Fo$(OutDir)\$(InputName).obj&quot; /Zm /Zi &quot;$(InputPath)&quot;
+"
+							Outputs="$(OutDir)\$(InputName).obj"/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug|Win32">
+						<Tool
+							Name="VCCustomBuildTool"
+							CommandLine="ml.exe /nologo /c /Cp /coff &quot;/Fo$(OutDir)\$(InputName).obj&quot; /Zm /Zi &quot;$(InputPath)&quot;
+"
+							Outputs="$(OutDir)\$(InputName).obj"/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release DLL|Win32">
+						<Tool
+							Name="VCCustomBuildTool"
+							CommandLine="&quot;D:\Asm\Masm 6.15\ml.exe&quot; /nologo /c /Cp /coff &quot;/Fo$(OutDir)\$(InputName).obj&quot; /Zm /Zi &quot;$(InputPath)&quot;
+"
+							Outputs="$(OutDir)\$(InputName).obj"/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath=".\ref_soft\r_spr8.asm">
+					<FileConfiguration
+						Name="Debug DLL|Win32">
+						<Tool
+							Name="VCCustomBuildTool"
+							CommandLine="&quot;D:\Asm\Masm 6.15\ml.exe&quot; /nologo /c /Cp /coff &quot;/Fo$(OutDir)\$(InputName).obj&quot; /Zm /Zi &quot;$(InputPath)&quot;
+"
+							Outputs="$(OutDir)\$(InputName).obj"/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32">
+						<Tool
+							Name="VCCustomBuildTool"
+							CommandLine="ml.exe /nologo /c /Cp /coff &quot;/Fo$(OutDir)\$(InputName).obj&quot; /Zm /Zi &quot;$(InputPath)&quot;
+"
+							Outputs="$(OutDir)\$(InputName).obj"/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug|Win32">
+						<Tool
+							Name="VCCustomBuildTool"
+							CommandLine="ml.exe /nologo /c /Cp /coff &quot;/Fo$(OutDir)\$(InputName).obj&quot; /Zm /Zi &quot;$(InputPath)&quot;
+"
+							Outputs="$(OutDir)\$(InputName).obj"/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release DLL|Win32">
+						<Tool
+							Name="VCCustomBuildTool"
+							CommandLine="&quot;D:\Asm\Masm 6.15\ml.exe&quot; /nologo /c /Cp /coff &quot;/Fo$(OutDir)\$(InputName).obj&quot; /Zm /Zi &quot;$(InputPath)&quot;
+"
+							Outputs="$(OutDir)\$(InputName).obj"/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath=".\ref_soft\r_sprite.c">
+				</File>
+				<File
+					RelativePath=".\ref_soft\r_surf.c">
+				</File>
+				<File
+					RelativePath=".\ref_soft\r_surf8.asm">
+					<FileConfiguration
+						Name="Debug DLL|Win32">
+						<Tool
+							Name="VCCustomBuildTool"
+							CommandLine="&quot;D:\Asm\Masm 6.15\ml.exe&quot; /nologo /c /Cp /coff &quot;/Fo$(OutDir)\$(InputName).obj&quot; /Zm /Zi &quot;$(InputPath)&quot;
+"
+							Outputs="$(OutDir)\$(InputName).obj"/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32">
+						<Tool
+							Name="VCCustomBuildTool"
+							CommandLine="ml.exe /nologo /c /Cp /coff &quot;/Fo$(OutDir)\$(InputName).obj&quot; /Zm /Zi &quot;$(InputPath)&quot;
+"
+							Outputs="$(OutDir)\$(InputName).obj"/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug|Win32">
+						<Tool
+							Name="VCCustomBuildTool"
+							CommandLine="ml.exe /nologo /c /Cp /coff &quot;/Fo$(OutDir)\$(InputName).obj&quot; /Zm /Zi &quot;$(InputPath)&quot;
+"
+							Outputs="$(OutDir)\$(InputName).obj"/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release DLL|Win32">
+						<Tool
+							Name="VCCustomBuildTool"
+							CommandLine="&quot;D:\Asm\Masm 6.15\ml.exe&quot; /nologo /c /Cp /coff &quot;/Fo$(OutDir)\$(InputName).obj&quot; /Zm /Zi &quot;$(InputPath)&quot;
+"
+							Outputs="$(OutDir)\$(InputName).obj"/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath=".\ref_soft\r_varsa.asm">
+					<FileConfiguration
+						Name="Debug DLL|Win32">
+						<Tool
+							Name="VCCustomBuildTool"
+							CommandLine="&quot;D:\Asm\Masm 6.15\ml.exe&quot; /nologo /c /Cp /coff &quot;/Fo$(OutDir)\$(InputName).obj&quot; /Zm /Zi &quot;$(InputPath)&quot;
+"
+							Outputs="$(OutDir)\$(InputName).obj"/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32">
+						<Tool
+							Name="VCCustomBuildTool"
+							CommandLine="ml.exe /nologo /c /Cp /coff &quot;/Fo$(OutDir)\$(InputName).obj&quot; /Zm /Zi &quot;$(InputPath)&quot;
+"
+							Outputs="$(OutDir)\$(InputName).obj"/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug|Win32">
+						<Tool
+							Name="VCCustomBuildTool"
+							CommandLine="ml.exe /nologo /c /Cp /coff &quot;/Fo$(OutDir)\$(InputName).obj&quot; /Zm /Zi &quot;$(InputPath)&quot;
+"
+							Outputs="$(OutDir)\$(InputName).obj"/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release DLL|Win32">
+						<Tool
+							Name="VCCustomBuildTool"
+							CommandLine="&quot;D:\Asm\Masm 6.15\ml.exe&quot; /nologo /c /Cp /coff &quot;/Fo$(OutDir)\$(InputName).obj&quot; /Zm /Zi &quot;$(InputPath)&quot;
+"
+							Outputs="$(OutDir)\$(InputName).obj"/>
+					</FileConfiguration>
+				</File>
+			</Filter>
+			<Filter
+				Name="win32"
+				Filter="">
+				<File
+					RelativePath=".\win32\cd_win.c">
+				</File>
+				<File
+					RelativePath=".\win32\conproc.c">
+				</File>
+				<File
+					RelativePath=".\win32\in_win.c">
+				</File>
+				<File
+					RelativePath=".\win32\net_wins.c">
+				</File>
+				<File
+					RelativePath=".\win32\q_shwin.c">
+				</File>
+				<File
+					RelativePath=".\win32\rw_ddraw.c">
+				</File>
+				<File
+					RelativePath=".\win32\rw_dib.c">
+				</File>
+				<File
+					RelativePath=".\win32\rw_imp.c">
+				</File>
+				<File
+					RelativePath=".\win32\snd_win.c">
+				</File>
+				<File
+					RelativePath=".\win32\sys_win.c">
+				</File>
+				<File
+					RelativePath=".\win32\vid_dll.c">
+				</File>
+				<File
+					RelativePath=".\win32\vid_menu.c">
+				</File>
+			</Filter>
+		</Filter>
+		<File
+			RelativePath=".\wx\wxquake2.cpp">
+			<FileConfiguration
+				Name="Debug DLL|Win32">
+				<Tool
+					Name="VCCLCompilerTool"
+					PreprocessorDefinitions="_USRDLL;__WXDEBUG__;WINVER=0x0400;STRICT;__WXWINDOWS__;REF_HARD_LINKED;WXQ2_EXPORTS;WIN32;_DEBUG;IML_Q2_EXTENSIONS;WXUSINGDLL;$(NoInherit)"
+					WarningLevel="4"/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Release|Win32">
+				<Tool
+					Name="VCCLCompilerTool"
+					WarningLevel="4"/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Debug|Win32">
+				<Tool
+					Name="VCCLCompilerTool"
+					WarningLevel="4"/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Release DLL|Win32">
+				<Tool
+					Name="VCCLCompilerTool"
+					PreprocessorDefinitions="_USRDLL;WINVER=0x0400;STRICT;__WXWINDOWS__;REF_HARD_LINKED;WXQ2_EXPORTS;NDEBUG;WIN32;IML_Q2_EXTENSIONS;WXUSINGDLL;$(NoInherit)"
+					WarningLevel="4"/>
+			</FileConfiguration>
+		</File>
+	</Files>
+	<Globals>
+	</Globals>
+</VisualStudioProject>
