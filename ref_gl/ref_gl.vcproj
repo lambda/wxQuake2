@@ -268,7 +268,7 @@
 				IgnoreImportLibrary="TRUE"
 				AdditionalOptions="/MACHINE:I386"
 				AdditionalDependencies="winmm.lib"
-				OutputFile="./../../../Win32/Bin/wxref_gl_d.dll"
+				OutputFile="./../../../Win32/Bin/wxref_gl.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
 				ModuleDefinitionFile=".\ref_gl.def"

@@ -1540,8 +1540,7 @@ void SCR_UpdateScreen (void)
 
 #ifdef IML_Q2_EXTENSIONS
             // 29 January 2004 - IML - emk - added for overlays
-            if (re.DrawOverlays)
-                re.DrawOverlays();
+            q2_draw_overlays();
 			SCR_DrawReticle();
 #endif /* IML_Q2_EXTENSIONS */
 

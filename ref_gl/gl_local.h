@@ -256,6 +256,14 @@ void GL_TexEnv( GLenum value );
 void GL_EnableMultitexture( qboolean enable );
 void GL_SelectTexture( GLenum );
 
+#ifdef IML_Q2_EXTENSIONS
+// 24 May 2004 - IML - emk - GL overlay support
+void GL_OverlayInitializeRefData(overlay_t *overlay);
+void GL_OverlayReleaseRefData(overlay_t *overlay);
+void GL_OverlayUpdateDirtyRect(overlay_t *overlay);
+void GL_OverlayDraw(overlay_t *overlay);
+#endif // IML_Q2_EXTENSIONS
+
 void R_LightPoint (vec3_t p, vec3_t color);
 void R_PushDlights (void);
 

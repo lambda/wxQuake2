@@ -124,8 +124,26 @@ typedef struct
 } refdef_t;
 
 #ifdef IML_Q2_EXTENSIONS
+
 // 29 January 2004 - IML - emk - added for overlays
 #include "qoverlay.h"
+
+// 24 May 2004 - IML - emk - This data now shared by client and ref_*.
+struct overlay_s {
+    int format;
+    byte *raw_data;
+    size_t left, top, width, height;
+    int stride;
+    int is_shown;
+
+    // Dirty rectangle. The right and bottom co-ordinates are
+    // exclusive.
+    size_t dl, dt, dr, db;
+
+    // Private data for the various ref_* libraries. 
+    void *ref_data;
+};
+
 #endif /* IML_Q2_EXTENSIONS */
 
 
@@ -189,16 +207,10 @@ typedef struct
 
 #ifdef IML_Q2_EXTENSIONS
     // 29 January 2004 - IML - emk - added for overlays
-    overlay_t *(*OverlayNew)(int format, byte *data,
-                             size_t left, size_t top,
-                             size_t width, size_t height,
-                             int stride);
-    void (*OverlayShow)(overlay_t *overlay, int show);
-    void (*OverlayMove)(overlay_t *overlay, size_t left, size_t top);
-    void (*OverlayDirtyRect)(overlay_t *overlay, size_t left, size_t top,
-                             size_t width, size_t height);
-    void (*OverlayDelete)(overlay_t *overlay);
-    void (*DrawOverlays)();
+    void (*OverlayInitializeRefData)(overlay_t *overlay);
+    void (*OverlayReleaseRefData)(overlay_t *overlay);
+    void (*OverlayUpdateDirtyRect)(overlay_t *overlay);
+    void (*OverlayDraw)(overlay_t *overlay);
 
 	// 29 February 2004 - IML - emk - added for reticle
 	void (*ProjectPoint)(vec3_t point);

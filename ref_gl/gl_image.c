@@ -1580,3 +1580,117 @@ void	GL_ShutdownImages (void)
 	}
 }
 
+#ifdef IML_Q2_EXTENSIONS
+
+/*
+===============
+GL_OverlayInitializeRefData
+===============
+*/
+
+void GL_OverlayInitializeRefData(overlay_t *overlay)
+{
+    // Allocate space for ref_data.
+    overlay->ref_data = malloc(overlay->width * overlay->height * 4);
+}
+
+/*
+===============
+GL_OverlayReleaseRefData
+===============
+*/
+
+void GL_OverlayReleaseRefData(overlay_t *overlay)
+{
+    // Release space for ref_data.
+    free(overlay->ref_data);
+}
+
+/*
+===============
+GL_OverlayUpdateDirtyRect
+===============
+*/
+
+void GL_OverlayUpdateDirtyRect(overlay_t *overlay)
+{
+    int x, y, dw, dh;
+    byte *gl_data, *src, *dst;
+
+    gl_data = (byte *) overlay->ref_data;
+    if (overlay->format == Q2_FORMAT_BGR)
+        src = overlay->raw_data + overlay->dt*overlay->stride + overlay->dl*3;
+    else
+        src = overlay->raw_data + overlay->dt*overlay->stride + overlay->dl*4;
+    dst = gl_data + overlay->dt*overlay->width*4 + overlay->dl*4;
+    dw = overlay->dr - overlay->dl;
+    dh = overlay->db - overlay->dt;
+    for (y = 0; y < dh; y++)
+    {
+        // TODO - Optimize this loop.
+        switch (overlay->format) {
+            case Q2_FORMAT_BGR:
+                for (x = 0; x < dw; x++)
+                {
+                    dst[4*x+0] = src[3*x+2];
+                    dst[4*x+1] = src[3*x+1];
+                    dst[4*x+2] = src[3*x+0];
+                    dst[4*x+3] = 255;
+                }
+                break;
+
+            case Q2_FORMAT_BGRA_PREMUL:
+                for (x = 0; x < dw; x++)
+                {
+                    dst[4*x+0] = src[4*x+2];
+                    dst[4*x+1] = src[4*x+1];
+                    dst[4*x+2] = src[4*x+0];
+                    dst[4*x+3] = src[4*x+3];
+                }
+                break;
+
+            //default:
+                // TODO - What should we do for unknown formats?
+        }
+                
+        src += overlay->stride;
+        dst += overlay->width*4;
+    }
+}
+
+/*
+===============
+GL_OverlayDraw
+===============
+*/
+
+extern void	R_SetGL2D (void);
+
+void GL_OverlayDraw(overlay_t *overlay)
+{
+    // Basic GL setup.
+    R_SetGL2D(); // Probably guaranteed to have been called, but...
+    qglDisable(GL_ALPHA_TEST);
+    qglDisable(GL_TEXTURE_2D); // Probably not necessary.
+    //qglShadeModel(GL_FLAT); // In Red Book sample code.  Useful?
+
+    // Set up blending.
+    qglEnable(GL_BLEND);
+    qglBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+
+    // Do the drawing.
+    qglPixelZoom(1, -1);
+    qglRasterPos3i(overlay->left, overlay->top, 0);
+    qglDrawPixels(overlay->width, overlay->height, GL_RGBA,
+                  GL_UNSIGNED_BYTE, overlay->ref_data);
+
+    // Experimental flush to try to stop flickering problem.
+    qglFlush();
+
+    // Restore GL parameters.
+    qglDisable(GL_BLEND);
+    qglEnable(GL_TEXTURE_2D);
+    qglEnable(GL_ALPHA_TEST);
+}
+
+#endif // IML_Q2_EXTENSIONS

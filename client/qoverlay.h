@@ -3,16 +3,16 @@
 
 #ifdef IML_Q2_EXTENSIONS
 
-/* As far as we're concerned, this is an opaque data structure. */
+/* This is an opaque data structure for our callers. */
 struct overlay_s;
 typedef struct overlay_s overlay_t;
 
 /* Standard 24-bit RGB color, in reverse order. */
-#define Q2_FORMAT_BGR         (1)
+#define Q2_FORMAT_BGR         1
 
 /* 32-bit graphics, with the color channels premultiplied and alpha 255
 ** opaque. */ 
-#define Q2_FORMAT_BGRA_PREMUL (2)
+#define Q2_FORMAT_BGRA_PREMUL 2
 
 /* Create a new overlay.  Overlays are drawn over the regular Quake 2
 ** graphics, but below the console.
@@ -59,6 +59,9 @@ extern void q2_overlay_dirty_rect(overlay_t *overlay, size_t left, size_t top,
 
 /* Destroy the overlay. */
 extern void q2_overlay_delete(overlay_t *overlay);
+
+/* Draw all the overlays.  Called from Quake 2 client code automatically. */
+extern void q2_draw_overlays();
 
 /* Check to see if interactive mouse is enabled--we may want to direct
 ** mouse events to overlays outside of Quake 2. */

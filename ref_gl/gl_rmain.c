@@ -1785,12 +1785,10 @@ refexport_t GetRefAPI (refimport_t rimp )
 
 #ifdef IML_Q2_EXTENSIONS
     // 29 January 2004 - IML - emk - added for overlays
-    re.OverlayNew = NULL;
-    re.OverlayShow = NULL;
-    re.OverlayMove = NULL;
-    re.OverlayDirtyRect = NULL;
-    re.OverlayDelete = NULL;
-    re.DrawOverlays = NULL;
+    re.OverlayInitializeRefData = GL_OverlayInitializeRefData;
+    re.OverlayReleaseRefData = GL_OverlayReleaseRefData;
+    re.OverlayUpdateDirtyRect = GL_OverlayUpdateDirtyRect;
+    re.OverlayDraw = GL_OverlayDraw;
 
 	// 29 February 2004 - IML - emk - added for reticle
 	re.ProjectPoint = R_ProjectPoint;
