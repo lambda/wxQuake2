@@ -657,6 +657,48 @@ void Cmd_Kill_f (edict_t *ent)
 
 /*
 =================
+Cmd_Kill_Entity_f
+=================
+Examination of the source suggests that we just need to call G_FreeEdict
+on monsters to make them go away.
+*/
+
+#ifdef IML_Q2_EXTENSIONS
+
+void Cmd_Kill_Entity_f (edict_t *ent)
+{	
+	int i;
+	char *name;
+	
+	if (gi.argc() != 2)
+	{
+		gi.cprintf (ent, PRINT_HIGH, "Usage: killentity NAME\n");
+		for(i=0 ; i<globals.num_edicts ; i++)
+			if (g_edicts[i].targetname
+				&& g_edicts[i].console_trigger
+				&& !g_edicts[i].client)
+				gi.cprintf ( ent, PRINT_HIGH, "  %s\n", g_edicts[i].targetname);
+		return;
+	}
+
+	// Kill every entity with the specified target_name and console_trigger set.
+	name = gi.argv(1);	
+	for (i=0 ; i<globals.num_edicts ; i++)
+	{
+		if (g_edicts[i].targetname
+		    && (!Q_stricmp(g_edicts[i].targetname, name))
+		    && g_edicts[i].console_trigger
+		    && !g_edicts[i].client)
+		{
+			G_FreeEdict (&g_edicts[i]);
+		}
+	}
+}
+
+#endif // IML_Q2_EXTENSIONS
+
+/*
+=================
 Cmd_PutAway_f
 =================
 */
@@ -1068,9 +1110,11 @@ void ClientCommand (edict_t *ent)
 		Cmd_PlayerList_f(ent);
 #ifdef IML_Q2_EXTENSIONS
 	else if (Q_stricmp(cmd, "trigger") == 0)
-	     Cmd_Trigger_f(ent);
+		Cmd_Trigger_f(ent);
 	else if (Q_stricmp(cmd, "reticle") == 0)
-	     Cmd_Reticle_f(ent);
+		Cmd_Reticle_f(ent);
+	else if (Q_stricmp (cmd, "killentity") == 0)
+		Cmd_Kill_Entity_f (ent);
 #endif // IML_Q2_EXTENSIONS
 	else	// anything that doesn't match a command will be a chat
 		Cmd_Say_f (ent, false, true);
