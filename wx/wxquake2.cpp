@@ -183,7 +183,7 @@ Quake2Engine::Quake2Engine(HWND hwnd, int videoMode,
 	if (game != "")
 	{
 		argv[argc++] = "+set";
-		argv[argc++] = "gamedir";
+		argv[argc++] = "game";
 		argv[argc++] = const_cast<char *>(game.mb_str());
 	}
     argv[argc++] = NULL;
