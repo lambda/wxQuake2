@@ -193,6 +193,7 @@ typedef struct
                              size_t left, size_t top,
                              size_t width, size_t height,
                              int stride);
+    void (*OverlayShow)(overlay_t *overlay, int show);
     void (*OverlayMove)(overlay_t *overlay, size_t left, size_t top);
     void (*OverlayDirtyRect)(overlay_t *overlay, size_t left, size_t top,
                              size_t width, size_t height);

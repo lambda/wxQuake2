@@ -92,6 +92,10 @@ public:
     // are we currently shown in full screen mode?
     bool IsFullScreen() const;
 
+    // are we running the game's audio, networking and physics in the
+    // background?
+    bool ShouldRunGameInBackground();
+
     // are we loading a level in the background?
     bool IsLoadingInBackground();
 
@@ -128,6 +132,9 @@ public:
 
     // toggle between the window and full screen mode
     void ToggleFullScreen();
+
+    // Tell the engine to continute running the game in the background.
+    void RunGameInBackground(bool run = TRUE);
 
     // change the video mode
     void SetVideoMode(VideoMode mode);
@@ -180,6 +187,9 @@ private:
     // true if we're in full screen
     bool m_isFullScreen;
 
+    // true if we want to run the game in the background
+    bool m_shouldRunGameInBackground;
+
     // true if we have to restore our old size after switching from full screen
     bool m_restoreSize;
 
@@ -217,6 +227,11 @@ public:
     virtual ~wxQuake2Overlay()
     {
         q2_overlay_delete(m_Overlay);
+    }
+
+    virtual void Show(bool show)
+    {
+        q2_overlay_show(m_Overlay, show);
     }
 
     virtual void MoveTo(const wxPoint &p)

@@ -1335,6 +1335,13 @@ void SCR_UpdateScreen (void)
 		return;
 	}
 
+#ifdef IML_Q2_EXTENSIONS
+    // 3 February 2004 - IML - emk - Support for disabling GUI.
+    // Unlike disable_screen above, we don't time out.
+    if (cls.disable_gui)
+        return;
+#endif // IML_Q2_EXTENSIONS
+
 	if (!scr_initialized || !con.initialized)
 		return;				// not initialized yet
 

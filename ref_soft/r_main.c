@@ -1422,6 +1422,7 @@ refexport_t GetRefAPI (refimport_t rimp)
 #ifdef IML_Q2_EXTENSIONS
     // 29 January 2004 - IML - emk - added for overlays
     re.OverlayNew = R_OverlayNew;
+    re.OverlayShow = R_OverlayShow;
     re.OverlayMove = R_OverlayMove;
     re.OverlayDirtyRect = R_OverlayDirtyRect;
     re.OverlayDelete = R_OverlayDelete;

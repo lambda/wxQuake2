@@ -206,6 +206,11 @@ typedef struct
 #ifdef IML_Q2_EXTENSIONS
 	// 1 February 2004 - IML - emk - Interactive mouse support.
 	qboolean    interactivemouse;   // Pass mouse events to wxWindows.
+
+    // 3 February 2004 - IML - emk - Support for disabling GUI.
+    // This has functionality very similar to disable_screen, but it
+    // doesn't time out or get involved in any of the loading plaque stuff.
+    qboolean	disable_gui;
 #endif // IML_Q2_EXTENSIONS
 
 	int			framecount;

@@ -274,6 +274,7 @@ void wxQuake2Window::Init()
     m_restoreSize = FALSE;
 	m_isIconized = FALSE;
     m_isFullScreen = FALSE;
+    m_shouldRunGameInBackground = FALSE;
 
     SetBackgroundColour(*wxBLACK);
 }
@@ -356,6 +357,11 @@ bool wxQuake2Window::IsFullScreen() const
     return m_isFullScreen;
 }
 
+bool wxQuake2Window::ShouldRunGameInBackground()
+{
+    return m_shouldRunGameInBackground;
+}
+
 bool wxQuake2Window::IsLoadingInBackground()
 {
 	return (SCR_IsLoadingInBackground() == qTrue) ? true : false;
@@ -420,10 +426,18 @@ void wxQuake2Window::GetVariable(const wxString& name, float &out_value)
 
 void wxQuake2Window::Suspend()
 {
-    ++m_nSuspend;
+    if (!m_nSuspend++)
+    {
+        // Experimental code to release mouse when suspending.
+        DeactivateQuake();
 
-	// Experimental code to release mouse when suspending.
-	DeactivateQuake();
+#ifdef IML_Q2_EXTENSIONS
+        // There are a couple of situations when we may continue running
+        // Quake 2 even though it's theoretically suspended.  But even in
+        // those situations, we won't need the GUI.
+        q2_enable_gui(FALSE);
+#endif // IML_Q2_EXTENSIONS
+    }
 }
 
 void wxQuake2Window::Resume()
@@ -434,6 +448,10 @@ void wxQuake2Window::Resume()
     {
         // kick the event loop back into life to start getting idle events
         wxWakeUpIdle();
+
+#ifdef IML_Q2_EXTENSIONS
+        q2_enable_gui(TRUE);
+#endif // IML_Q2_EXTENSIONS
     }
 }
 
@@ -465,6 +483,11 @@ void wxQuake2Window::ShowFullScreen(bool fullScreen)
 void wxQuake2Window::ToggleFullScreen()
 {
     ShowFullScreen(!IsFullScreen());
+}
+
+void wxQuake2Window::RunGameInBackground(bool run)
+{
+    m_shouldRunGameInBackground = run;
 }
 
 void wxQuake2Window::AdjustSize(VideoMode mode)
@@ -597,7 +620,8 @@ void wxQuake2Window::OnIdle(wxIdleEvent& event)
     // Let Quake run now.  We used to check IsActive instead of IsRunning,
     // but that caused Quake to stop repainting the window when
     // our application wasn't the front application.
-    if ( m_engine->IsRunning() && (!IsSuspended() || IsLoadingInBackground()) )
+    if ( m_engine->IsRunning() && (!IsSuspended() || IsLoadingInBackground() ||
+                                   ShouldRunGameInBackground()) )
     {
         m_engine->ShowNextFrame();
 

@@ -14,6 +14,12 @@ overlay_t *q2_overlay_new(int format, unsigned char *data,
         return NULL;
 }
 
+void q2_overlay_show(overlay_t *overlay, int show)
+{
+    if (re.OverlayShow)
+        re.OverlayShow(overlay, show);
+}
+
 void q2_overlay_move(overlay_t *overlay, size_t left, size_t top)
 {
     if (re.OverlayMove)
@@ -41,6 +47,11 @@ int q2_mouse_is_interactive()
     // The latter condition automatically turns off interactive mouse
     // whenever the user goes into some kind of special Quake 2 mode.
     return (cls.interactivemouse && cls.key_dest == key_game);
+}
+
+void q2_enable_gui(int enable)
+{
+    cls.disable_gui = !enable;
 }
 
 #endif /* IML_Q2_EXTENSIONS */

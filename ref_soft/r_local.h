@@ -857,6 +857,7 @@ overlay_t *R_OverlayNew(int format, byte *data,
                         size_t left, size_t top,
                         size_t width, size_t height,
                         int stride);
+void R_OverlayShow(overlay_t *overlay, int show);
 void R_OverlayMove(overlay_t *overlay, size_t left, size_t top);
 void R_OverlayDirtyRect(overlay_t *overlay, size_t left, size_t top,
                         size_t width, size_t height);

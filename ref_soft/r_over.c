@@ -14,6 +14,7 @@ struct overlay_s {
     byte *raw_data;
     size_t left, top, width, height;
     int stride;
+    int is_shown;
 
     /* A copy of raw_data which has been converted to 8-bit data.  The
     ** portion marked as dirty needs to be re-converted before display. */
@@ -137,6 +138,10 @@ void R_DrawOverlays()
         
         ov = gOverlays[i];
 
+        // If we're not shown, don't display anything.
+        if (!ov->is_shown)
+            continue;
+
         // If we're not fully on screen, don't display anything.
         if (ov->left < 0 || ov->top < 0 ||
             ov->left + ov->width > vid.width ||
@@ -184,6 +189,7 @@ overlay_t *R_OverlayNew(int format, byte *data,
     ov->width        = width;
     ov->height       = height;
     ov->stride       = stride;
+    ov->is_shown     = 1;
 
     ov->dl           = 0;
     ov->dt           = 0;
@@ -193,6 +199,11 @@ overlay_t *R_OverlayNew(int format, byte *data,
  
     gOverlays[gOverlayCount++] = ov;
 	return ov;
+}
+
+void R_OverlayShow(overlay_t *overlay, int show)
+{
+    overlay->is_shown = show;
 }
 
 void R_OverlayMove(overlay_t *overlay, size_t left, size_t top)

@@ -32,6 +32,13 @@ extern overlay_t *q2_overlay_new(int format, unsigned char *data,
                                  size_t width, size_t height,
                                  int stride);
 
+/* Show or hide an overlay.
+**
+**   overlay - The overlay to show or hide.
+**   show    - A boolean value specifying whether to show or hide.
+*/ 
+extern void q2_overlay_show(overlay_t *overlay, int show);
+
 /* Move the overlay to a new position on screen.
 **
 **   overlay - The overlay to move.
@@ -56,6 +63,9 @@ extern void q2_overlay_delete(overlay_t *overlay);
 /* Check to see if interactive mouse is enabled--we may want to direct
 ** mouse events to overlays outside of Quake 2. */
 extern int q2_mouse_is_interactive();
+
+/* Turn Quake 2 GUI on and off. */
+extern void q2_enable_gui(int enable);
 
 #endif /* IML_Q2_EXTENSIONS */
 #endif /* Q2_OVERLAY_H */
