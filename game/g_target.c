@@ -60,10 +60,10 @@ void Use_Target_Command (edict_t *ent, edict_t *other, edict_t *activator)
 	{	// send the command to all players (sequentially)
 		while (check < game.maxclients) 
 		{
-			ent = &g_edicts[check];
-			if (ent->inuse) 
+			player = &g_edicts[check];
+			if (player->inuse) 
 			{
-				gi.ccmd(ent, "%s\n", ent->message);
+				gi.ccmd(player, "%s\n", ent->message);
 			}
 			check++;
 		}
@@ -71,7 +71,7 @@ void Use_Target_Command (edict_t *ent, edict_t *other, edict_t *activator)
 #else
 	
 	// Give some feedback
-	gi.bprintf("No IML_Q2_EXTENSIONS: %s\n", ent->message);
+	gi.bprintf(PRINT_HIGH, "No IML_Q2_EXTENSIONS: %s\n", ent->message);
 #endif // IML_Q2_EXTENSIONS
 }
 

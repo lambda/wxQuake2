@@ -187,7 +187,7 @@ spawn_t	spawns[] = {
 	{"trigger_monsterjump", SP_trigger_monsterjump},
 
 	{"target_temp_entity", SP_target_temp_entity},
-	("target_command", SP_target_command),
+	{"target_command", SP_target_command},
 	{"target_speaker", SP_target_speaker},
 	{"target_explosion", SP_target_explosion},
 	{"target_changelevel", SP_target_changelevel},

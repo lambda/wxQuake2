@@ -104,7 +104,7 @@ void PF_cprintf (edict_t *ent, int level, char *fmt, ...)
 		Com_Printf ("%s", msg);
 }
 
-#ifdef IML_Q2_EXTENSTIONS
+#ifdef IML_Q2_EXTENSIONS
 /*
 ===============
 PF_ccmd
@@ -134,7 +134,7 @@ void PF_ccmd(edict_t *ent, char *fmt, ...)
       else
                Com_Printf ("Tried to send %s", msg);
 }
-#endif // IML_Q2_EXTENSTIONS
+#endif // IML_Q2_EXTENSIONS
 /*
 ===============
 PF_centerprintf
