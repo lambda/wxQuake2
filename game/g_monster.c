@@ -635,7 +635,11 @@ void monster_start_go (edict_t *self)
 
 	if (self->target)
 	{
-		self->goalentity = self->movetarget = G_PickTarget(self->target);
+		// 18 Aug 2004 - IML - madhura - path_corner enhancements
+		// was: self->goalentity = self->movetarget = 
+		//          G_PickTarget(self->target);
+		self->movetarget = G_PickTarget(self->target);
+		self->goalentity = NULL;
 		if (!self->movetarget)
 		{
 			gi.dprintf ("%s can't find target %s at %s\n", self->classname, self->target, vtos(self->s.origin));
@@ -643,8 +647,13 @@ void monster_start_go (edict_t *self)
 			self->monsterinfo.pausetime = 100000000;
 			self->monsterinfo.stand (self);
 		}
-		else if (strcmp (self->movetarget->classname, "path_corner") == 0)
+		else if (strcmp (self->movetarget->classname, "path_corner") == 0
+				 // 18 Aug 2004 - IML - madhura - path_corner enhancements
+				 && ai_movetarget_is_active(self))
 		{
+			// 18 Aug 2004 - IML - madhura - path_corner enhancements
+			// Set goal_entity here instead of above.
+			self->goalentity = self->movetarget;
 			VectorSubtract (self->goalentity->s.origin, self->s.origin, v);
 			self->ideal_yaw = self->s.angles[YAW] = vectoyaw(v);
 			self->monsterinfo.walk (self);
@@ -652,7 +661,10 @@ void monster_start_go (edict_t *self)
 		}
 		else
 		{
-			self->goalentity = self->movetarget = NULL;
+            // 18 Aug 2004 - IML - madhura - path_corner enhancements
+			// was: self->goalentity = self->movetarget = NULL;
+			if (strcmp (self->movetarget->classname, "path_corner") != 0)
+				self->goalentity = self->movetarget = NULL;
 			self->monsterinfo.pausetime = 100000000;
 			self->monsterinfo.stand (self);
 		}

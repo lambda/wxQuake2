@@ -205,7 +205,10 @@ MOVETYPE_FLYMISSILE,	// extra size to monsters
 MOVETYPE_BOUNCE
 } movetype_t;
 
-
+#ifdef IML_Q2_EXTENSIONS
+#define PATH_CORNER_TELEPORT (1) // ...some kind of teleport behavior
+#define PATH_CORNER_INACTIVE (2) // do not walk to this path_corner
+#endif // IML_Q2_EXTENSIONS
 
 typedef struct
 {
@@ -737,6 +740,9 @@ void FoundTarget (edict_t *self);
 qboolean infront (edict_t *self, edict_t *other);
 qboolean visible (edict_t *self, edict_t *other);
 qboolean FacingIdeal(edict_t *self);
+
+// 18 Aug 2004 - IML - madhura - path_corner enhancements
+qboolean ai_movetarget_is_active(edict_t *ent);
 
 //
 // g_weapon.c

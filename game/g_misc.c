@@ -346,7 +346,7 @@ void SendBinMsg(edict_t *ent, unsigned char *buffer, unsigned int size)
 
 #endif // IML_Q2_EXTENSIONS
 
-/*QUAKED path_corner (.5 .3 0) (-8 -8 -8) (8 8 8) TELEPORT
+/*QUAKED path_corner (.5 .3 0) (-8 -8 -8) (8 8 8) TELEPORT INACTIVE
 Target: next path corner
 Pathtarget: gets used when an entity that has
 	this path_corner targeted touches it
@@ -363,6 +363,11 @@ void path_corner_touch (edict_t *self, edict_t *other, cplane_t *plane, csurface
 	if (other->enemy)
 		return;
 
+#ifdef IML_Q2_EXTENSIONS
+	if (!ai_movetarget_is_active(other))
+		return;
+#endif
+
 	if (self->pathtarget)
 	{
 		char *savetarget;
@@ -378,7 +383,7 @@ void path_corner_touch (edict_t *self, edict_t *other, cplane_t *plane, csurface
 	else
 		next = NULL;
 
-	if ((next) && (next->spawnflags & 1))
+	if ((next) && (next->spawnflags & PATH_CORNER_TELEPORT))
 	{
 		VectorCopy (next->s.origin, v);
 		v[2] += next->mins[2];
@@ -388,7 +393,12 @@ void path_corner_touch (edict_t *self, edict_t *other, cplane_t *plane, csurface
 		other->s.event = EV_OTHER_TELEPORT;
 	}
 
-	other->goalentity = other->movetarget = next;
+	// 18 Aug 2004 - IML - madhura - path_corner enhancements
+	// was: other->goalentity = other->movetarget = next;
+	other->movetarget = next;
+	other->goalentity = NULL;
+	if (ai_movetarget_is_active(other))
+		other->goalentity = other->movetarget;
 
 	if (self->wait)
 	{
@@ -397,7 +407,9 @@ void path_corner_touch (edict_t *self, edict_t *other, cplane_t *plane, csurface
 		return;
 	}
 
-	if (!other->movetarget)
+	// 18 Aug 2004 - IML - madhura - path_corner enhancements
+	// was: if (!other->movetarget)
+	if (!other->goalentity)
 	{
 		other->monsterinfo.pausetime = level.time + 100000000;
 		other->monsterinfo.stand (other);
@@ -408,6 +420,16 @@ void path_corner_touch (edict_t *self, edict_t *other, cplane_t *plane, csurface
 		other->ideal_yaw = vectoyaw (v);
 	}
 }
+
+#ifdef IML_Q2_EXTENSIONS
+
+void path_corner_use (edict_t *ent, edict_t *other, edict_t *activator)
+{
+	ent->spawnflags = ent->spawnflags ^ PATH_CORNER_INACTIVE;
+	//gi.bprintf(PRINT_MEDIUM, "path_corner flags: %d\n", ent->spawnflags);
+}
+
+#endif // IML_Q2_EXTENSIONS
 
 void SP_path_corner (edict_t *self)
 {
@@ -420,6 +442,9 @@ void SP_path_corner (edict_t *self)
 
 	self->solid = SOLID_TRIGGER;
 	self->touch = path_corner_touch;
+#ifdef IML_Q2_EXTENSIONS
+	self->use   = path_corner_use;
+#endif // IML_Q2_EXTENSIONS
 	VectorSet (self->mins, -8, -8, -8);
 	VectorSet (self->maxs, 8, 8, 8);
 	self->svflags |= SVF_NOCLIENT;

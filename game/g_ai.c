@@ -389,6 +389,50 @@ void FoundTarget (edict_t *self)
 
 /*
 ===========
+MaybeFindPatrolTarget
+
+If we're just standing around board, consider copying our
+movetarget to our goalentity. We needed to add this because the
+original Quake code only copied movetarget to goalentity in the
+combat code and various other specialized routines, and we now
+need to check more often.
+============
+*/
+#ifdef IML_Q2_EXTENSIONS
+
+static qboolean MaybeFindPatrolTarget (edict_t *self)
+{
+	// If there's anything going on, or we don't have a movetarget,
+	// bail out as quickly as possible. It appears that FindTarget can
+	// be called under all sorts of messy movement circumstances
+	// (walking to a point_combat, attacking enemies, etc.) and we
+	// *just don't want to know*.
+	if (self->enemy || self->goalentity || !self->movetarget)
+		return false;
+
+	// If we've got a movetarget, start walking towards it again.
+	if (ai_movetarget_is_active(self))
+	{
+		self->goalentity = self->movetarget;
+		self->monsterinfo.walk (self);
+		return true;
+	}
+	
+	// Otherwise, we haven't found anything.
+	return false;
+}
+
+#else // !IML_Q2_EXTENSIONS
+
+static qboolean MaybeFindPatrolTarget (edict_t *self)
+{
+	return false;
+}
+
+#endif // !IML_Q2_EXTENSIONS
+
+/*
+===========
 FindTarget
 
 Self is currently not attacking anything, so try to find a target
@@ -402,6 +446,14 @@ player.
 To avoid spending too much time, only a single client (or fakeclient) is
 checked each frame.  This means multi player games will have slightly
 slower noticing monsters.
+
+18 Aug 2004 - IML - madhura - path_corner enhancements
+
+We replaced a lot of 'return false' lines with 'return
+MaybeFindPatrolTarget(self)'.  The intent of this code is to make the
+monster resume patroling its path_corners if there's nothing better to
+do.  But because this routine is insanely complicated, we may have
+overridden a few obscure behaviors with a premature return to patrol.
 ============
 */
 qboolean FindTarget (edict_t *self)
@@ -419,7 +471,7 @@ qboolean FindTarget (edict_t *self)
 		}
 
 		//FIXME look for monsters?
-		return false;
+		return MaybeFindPatrolTarget(self);
 	}
 
 	// if we're going to a combat point, just proceed
@@ -456,12 +508,12 @@ qboolean FindTarget (edict_t *self)
 	{
 		client = level.sight_client;
 		if (!client)
-			return false;	// no clients to get mad at
+			return MaybeFindPatrolTarget(self);	// no clients to get mad at
 	}
 
 	// if the entity went away, forget it
 	if (!client->inuse)
-		return false;
+		return MaybeFindPatrolTarget(self);
 
 	if (client == self->enemy)
 		return true;	// JDC false;
@@ -469,53 +521,53 @@ qboolean FindTarget (edict_t *self)
 	if (client->client)
 	{
 		if (client->flags & FL_NOTARGET)
-			return false;
+			return MaybeFindPatrolTarget(self);
 	}
 	else if (client->svflags & SVF_MONSTER)
 	{
 		if (!client->enemy)
-			return false;
+			return MaybeFindPatrolTarget(self);
 		if (client->enemy->flags & FL_NOTARGET)
-			return false;
+			return MaybeFindPatrolTarget(self);
 	}
 	else if (heardit)
 	{
 		if (client->owner->flags & FL_NOTARGET)
-			return false;
+			return MaybeFindPatrolTarget(self);
 	}
 	else
-		return false;
+		return MaybeFindPatrolTarget(self);
 
 	if (!heardit)
 	{
 		r = range (self, client);
 
 		if (r == RANGE_FAR)
-			return false;
+			return MaybeFindPatrolTarget(self);
 
 // this is where we would check invisibility
 
 		// is client in an spot too dark to be seen?
 		if (client->light_level <= 5)
-			return false;
+			return MaybeFindPatrolTarget(self);
 
 		if (!visible (self, client))
 		{
-			return false;
+			return MaybeFindPatrolTarget(self);
 		}
 
 		if (r == RANGE_NEAR)
 		{
 			if (client->show_hostile < level.time && !infront (self, client))
 			{
-				return false;
+				return MaybeFindPatrolTarget(self);
 			}
 		}
 		else if (r == RANGE_MID)
 		{
 			if (!infront (self, client))
 			{
-				return false;
+				return MaybeFindPatrolTarget(self);
 			}
 		}
 
@@ -531,7 +583,7 @@ qboolean FindTarget (edict_t *self)
 				if (!self->enemy->client)
 				{
 					self->enemy = NULL;
-					return false;
+					return MaybeFindPatrolTarget(self);
 				}
 			}
 		}
@@ -543,25 +595,25 @@ qboolean FindTarget (edict_t *self)
 		if (self->spawnflags & 1)
 		{
 			if (!visible (self, client))
-				return false;
+				return MaybeFindPatrolTarget(self);
 		}
 		else
 		{
 			if (!gi.inPHS(self->s.origin, client->s.origin))
-				return false;
+				return MaybeFindPatrolTarget(self);
 		}
 
 		VectorSubtract (client->s.origin, self->s.origin, temp);
 
 		if (VectorLength(temp) > 1000)	// too far to hear
 		{
-			return false;
+			return MaybeFindPatrolTarget(self);
 		}
 
 		// check area portals - if they are different and not connected then we can't hear it
 		if (client->areanum != self->areanum)
 			if (!gi.AreasConnected(self->areanum, client->areanum))
-				return false;
+				return MaybeFindPatrolTarget(self);
 
 		self->ideal_yaw = vectoyaw(temp);
 		M_ChangeYaw (self);
@@ -762,6 +814,39 @@ void ai_run_slide(edict_t *self, float distance)
 
 /*
 =============
+ai_movetarget_is_active
+
+Returns true if and only if our movetarget is active. This whole function
+is an IML_Q2_EXTENSIONS add-on, but we provide a version with
+backwards-compatible behavior.
+=============
+*/
+
+#ifdef IML_Q2_EXTENSIONS
+
+qboolean ai_movetarget_is_active(edict_t *ent)
+{
+   if (!ent->movetarget)
+	  return false;
+   else if (strcmp(ent->movetarget->classname, "path_corner") == 0
+			&& (ent->movetarget->spawnflags & PATH_CORNER_INACTIVE))
+	  return false;
+   else
+	  return true;
+}
+
+#else // !IML_Q2_EXTENSIONS
+
+qboolean ai_movetarget_is_active(edict_t *ent)
+{
+   return (ent->movetarget != NULL);
+}
+
+#endif // !IML_Q2_EXTENSIONS
+
+
+/*
+=============
 ai_checkattack
 
 Decides if we're going to attack or do something else
@@ -784,7 +869,9 @@ qboolean ai_checkattack (edict_t *self, float dist)
 			if ((level.time - self->enemy->teleport_time) > 5.0)
 			{
 				if (self->goalentity == self->enemy)
-					if (self->movetarget)
+					// 18 Aug 2004 - IML - madhura - path_corner enhancements
+					// was: if (self->movetarget)
+					if (ai_movetarget_is_active(self))
 						self->goalentity = self->movetarget;
 					else
 						self->goalentity = NULL;
@@ -842,7 +929,9 @@ qboolean ai_checkattack (edict_t *self, float dist)
 		}
 		else
 		{
-			if (self->movetarget)
+			// 18 Aug 2004 - IML - madhura - path_corner enhancements
+			// was: if (self->movetarget)
+			if (ai_movetarget_is_active(self))
 			{
 				self->goalentity = self->movetarget;
 				self->monsterinfo.walk (self);
