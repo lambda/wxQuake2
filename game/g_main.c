@@ -371,6 +371,65 @@ void ExitLevel (void)
 
 }
 
+#ifdef IML_Q2_EXTENSIONS
+
+/*
+================
+CheckPlayerLookTargets
+
+Advances the world by 0.1 seconds
+================
+*/
+
+// Limit visibility to about 500 meters for now.
+enum { VIEW_DISTANCE = 32 * 500 };
+
+void CheckPlayerLookTargets (void)
+{
+    cvar_t *show_look;
+    int i;
+	edict_t	*ent;
+    player_state_t *ps;
+	vec3_t view_origin, forward, right, distance, view_target;
+	trace_t trace;
+
+    // Set this console variable to display information about what the
+    // player is looking at.  For debugging purposes.
+    show_look = gi.cvar("show_look", "0", CVAR_SERVERINFO);
+
+    // Iterate over all the active players.
+    for (i=0 ; i<maxclients->value ; i++)
+    {
+		ent = g_edicts + 1 + i;
+		if (!ent->inuse)
+			continue;
+        
+        // Calculate the player's line of sight, beginning at view_origin
+        // and extending to view_target a fair distance away.
+        ps = &ent->client->ps;
+        VectorAdd(ent->s.origin, ps->viewoffset, view_origin);
+        AngleVectors(ps->viewangles, forward, right, NULL);
+        VectorSet(distance, VIEW_DISTANCE, 0, 0);
+        G_ProjectSource(view_origin, distance, forward, right, view_target);
+
+        // Trace the player's line of sight and see what we hit.  We begin
+        // the trace at view_origin, use a size zero bounding box (NULL,
+        // NULL), end the trace at view_target, ignore the player 'ent', and
+        // stop when we hit any of the specified object types.
+        trace = gi.trace(view_origin, NULL, NULL, view_target, ent,
+                         MASK_OPAQUE|CONTENTS_WINDOW|CONTENTS_MONSTER|
+                         CONTENTS_DEADMONSTER);
+
+        // If show_look is true, report what the player is currently
+        // looking at for debugging purposes
+        if (show_look->value && trace.ent && trace.ent->classname)
+            gi.cprintf(ent, PRINT_HIGH, "Looking at: %s %x\n",
+                       trace.ent->classname, trace.ent);
+    }
+}
+
+#endif // IML_Q2_EXTENSIONS
+
 /*
 ================
 G_RunFrame
@@ -429,6 +488,11 @@ void G_RunFrame (void)
 
 		G_RunEntity (ent);
 	}
+
+#ifdef IML_Q2_EXTENSIONS
+    // find out what the players are looking at
+    CheckPlayerLookTargets();
+#endif // IML_Q2_EXTENSIONS
 
 	// see if it is time to end a deathmatch
 	CheckDMRules ();
