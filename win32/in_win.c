@@ -142,7 +142,7 @@ Called when the window gains focus or changes in some way
 */
 void IN_ActivateMouse (void)
 {
-	int		width, height;
+	int		left, top, width, height;
 
 	if (!mouseinitialized)
 		return;
@@ -159,23 +159,35 @@ void IN_ActivateMouse (void)
 	if (mouseparmsvalid)
 		restore_spi = SystemParametersInfo (SPI_SETMOUSE, 0, newmouseparms, 0);
 
-	width = GetSystemMetrics (SM_CXSCREEN);
-	height = GetSystemMetrics (SM_CYSCREEN);
+    // 21 Sep 2004 - IML - emk - Clip-to-screen code modified to use use
+    // virtual screen size functions instead of CM_CXSCREEN, CM_CYSCREEN,
+    // which only know about one monitor.  Does not work on Windows 95 or
+    // NT.  This will still produce odd results if the center of the window
+    // is located somewhere within the virtual screen rect, but off of any
+    // actual screens--the likely symptom would be continuous spinning.
+    left = GetSystemMetrics (SM_XVIRTUALSCREEN);
+    top = GetSystemMetrics (SM_YVIRTUALSCREEN);
+	width = GetSystemMetrics (SM_CXVIRTUALSCREEN);
+	height = GetSystemMetrics (SM_CYVIRTUALSCREEN);
 
 	GetWindowRect ( cl_hwnd, &window_rect);
-	if (window_rect.left < 0)
-		window_rect.left = 0;
-	if (window_rect.top < 0)
-		window_rect.top = 0;
-	if (window_rect.right >= width)
-		window_rect.right = width-1;
-	if (window_rect.bottom >= height-1)
-		window_rect.bottom = height-1;
+	if (window_rect.left < left)
+		window_rect.left = left;
+	if (window_rect.top < top)
+		window_rect.top = top;
+	if (window_rect.right >= left+width)
+		window_rect.right = left+width-1;
+	if (window_rect.bottom >= top+height-1)
+		window_rect.bottom = top+height-1;
 
 	window_center_x = (window_rect.right + window_rect.left)/2;
 	window_center_y = (window_rect.top + window_rect.bottom)/2;
 
 	SetCursorPos (window_center_x, window_center_y);
+
+    // 21 Sep 2004 - IML - emk - Calling GetCursorPos here doesn't fix the
+    // spinning problem, and introduces a nasty race condition if the user
+    // is moving the mouse.  Be warned!
 
 	old_x = window_center_x;
 	old_y = window_center_y;
