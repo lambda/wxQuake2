@@ -1842,3 +1842,22 @@ void CL_Shutdown(void)
 }
 
 
+/*
+===============
+CL_SetWindowHidden
+
+This is used to notify Quake 2 of whether the containing wxQuake2Window is
+hidden.
+===============
+*/
+
+#ifdef __WXWINDOWS__
+
+void CL_SetWindowHidden(int hidden)
+{
+    // We take an int as an argument because it makes it slightly easier
+    // to call us from C++ at the moment.
+    cls.window_hidden = hidden ? true : false;
+}
+
+#endif __WXWINDOWS__

@@ -429,6 +429,9 @@ void IN_Frame (void)
 	}
 
 	if ( !cl.refresh_prepped
+#ifdef __WXWINDOWS__
+        || cls.window_hidden
+#endif /// __WXWINDOWS__
 #ifdef IML_Q2_EXTENSIONS
 		// 1 February 2004 - IML - emk - Interactive mouse support.
 		|| cls.interactivemouse

@@ -88,6 +88,8 @@ extern "C"
     extern int g_isRunningWxQuake;
     extern int g_errorInWxQuake;
 
+    void CL_SetWindowHidden(int hidden);
+
 #ifdef IML_Q2_EXTENSIONS
     extern void CL_SetBinMsgHandler(void (*handler)(binmsg_byte *, size_t));
 #endif // IML_Q2_EXTENSIONS
@@ -552,6 +554,7 @@ bool wxQuake2Window::Show(bool show)
         Resume();
     else
         Suspend();
+	CL_SetWindowHidden(show ? 0 : 1);
 
     if ( show )
         SetFocus();

@@ -203,6 +203,11 @@ typedef struct
 	connstate_t	state;
 	keydest_t	key_dest;
 
+#ifdef __WXWINDOWS__
+    // 18 September 2004 - IML - emk - Releasing mouse in background.
+    qboolean    window_hidden;
+#endif // __WXWINDOWS__
+
 #ifdef IML_Q2_EXTENSIONS
 	// 1 February 2004 - IML - emk - Interactive mouse support.
 	qboolean    interactivemouse;   // Pass mouse events to wxWindows.
@@ -471,6 +476,9 @@ void CL_GetChallengePacket (void);
 void CL_PingServers_f (void);
 void CL_Snd_Restart_f (void);
 void CL_RequestNextDownload (void);
+#ifdef __WXWINDOWS__
+void CL_SetWindowHidden(int hidden);
+#endif //__WXWINDOWS__
 
 //
 // cl_input
