@@ -3,7 +3,7 @@
 #include "client.h"
 #include "qoverlay.h"
 
-#define MAX_OVERLAYS (128)
+#define MAX_OVERLAYS (1024)
 
 // We keep a list of all active overlays so we can draw them.
 static size_t gOverlayCount = 0;
@@ -18,7 +18,7 @@ overlay_t *q2_overlay_new(int format, unsigned char *data,
 
     if (gOverlayCount == MAX_OVERLAYS)
     {
-        Sys_Error(ERR_FATAL, "Too many overlays.");
+        Com_Error(ERR_FATAL, "Too many overlays.");
         return NULL;
     }
 
