@@ -319,7 +319,7 @@
 				InlineFunctionExpansion="1"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;WINVER=0x0400;STRICT;__WXWINDOWS__;IML_Q2_EXTENSIONS"
 				StringPooling="TRUE"
-				RuntimeLibrary="0"
+				RuntimeLibrary="1"
 				EnableFunctionLevelLinking="TRUE"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderFile=".\release/ref_soft.pch"
