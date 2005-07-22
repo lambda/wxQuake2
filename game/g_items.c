@@ -1536,7 +1536,11 @@ always owned, never in the world
 		WEAP_BFG,
 		NULL,
 		0,
+#ifndef IML_Q2_TOTAL_CONVERSION
 /* precache */ "sprites/s_bfg1.sp2 sprites/s_bfg2.sp2 sprites/s_bfg3.sp2 weapons/bfg__f1y.wav weapons/bfg__l1a.wav weapons/bfg__x1b.wav weapons/bfg_hum.wav"
+#else
+               ""
+#endif
 	},
 
 	//

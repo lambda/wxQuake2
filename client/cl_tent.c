@@ -178,7 +178,9 @@ void CL_RegisterTEntModels (void)
 	cl_mod_grapple_cable = re.RegisterModel ("models/ctf/segment/tris.md2");
 	cl_mod_parasite_tip = re.RegisterModel ("models/monsters/parasite/tip/tris.md2");
 	cl_mod_explo4 = re.RegisterModel ("models/objects/r_explode/tris.md2");
+#ifndef IML_Q2_TOTAL_CONVERSION
 	cl_mod_bfg_explo = re.RegisterModel ("sprites/s_bfg2.sp2");
+#endif // IML_Q2_TOTAL_CONVERSION
 	cl_mod_powerscreen = re.RegisterModel ("models/items/armor/effect/tris.md2");
 
 re.RegisterModel ("models/objects/laser/tris.md2");
