@@ -648,6 +648,7 @@ void	G_UseTargets (edict_t *ent, edict_t *activator);
 #ifdef IML_Q2_EXTENSIONS
 void    G_UseTargetsByName (edict_t *trigger, char *target_name,
 							edict_t *activator);
+void    G_Freeze(edict_t *ent, qboolean freeze);
 #endif // IML_Q2_EXTENSIONS
 void	G_SetMovedir (vec3_t angles, vec3_t movedir);
 
@@ -1055,6 +1056,7 @@ struct edict_s
     char        *region_name;        // name of trigger_region
     char        *enter_target;       // run when player enters region
     char        *exit_target;        // run when player leaves region
+    int         frozen;              // true if player frozen in place
 #endif // IML_Q2_EXTENSIONS
 	char		*killtarget;
 	char		*team;

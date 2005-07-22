@@ -282,6 +282,22 @@ void G_UseTargetsByName(edict_t *trigger, char *target_name,
 	G_FreeEdict(temp);
 }
 
+/*
+================
+G_Freeze
+
+Freeze or unfreeze a player in place.  When freezing, remove any existing
+velocity.
+================
+*/
+
+void G_Freeze(edict_t *ent, qboolean freeze)
+{
+    ent->frozen = freeze ? true : false;
+    if (freeze)
+        VectorClear(ent->velocity);
+}
+
 #endif // IML_Q2_EXTENSIONS
 
 

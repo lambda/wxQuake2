@@ -1019,6 +1019,45 @@ void Cmd_Reticle_f(edict_t *ent)
 	}
 }
 
+/*
+==================
+Cmd_Freeze_f
+
+Freezes or unfreezes the player's movement.
+==================
+*/
+
+void Cmd_Freeze_f(edict_t *ent)
+{
+    int show_usage;
+    char *arg;
+
+    show_usage = 1;
+    if (gi.argc() == 2)
+    {
+        // We've been given an explicit argument, so handle it silently.
+        show_usage = 0;
+        arg = gi.argv(1);
+        if (Q_stricmp(arg, "on") == 0)
+            G_Freeze(ent, true);
+        else if (Q_stricmp(arg, "off") == 0)
+            G_Freeze(ent, false);
+        else
+            show_usage = 1;
+    }
+    else if (gi.argc() == 1)
+    {
+        // Toggle the current freeze state and notify the user.
+        show_usage = 0;
+        G_Freeze(ent, !ent->frozen);
+        gi.cprintf (ent, PRINT_HIGH,
+                    "freeze %s\n", ent->frozen ? "ON" : "OFF");
+    }
+
+    if (show_usage)
+        gi.cprintf (ent, PRINT_HIGH, "Usage: freeze [on|off]\n");
+}
+
 #endif // IML_Q2_EXTENSIONS
 
 /*
@@ -1113,6 +1152,8 @@ void ClientCommand (edict_t *ent)
 		Cmd_Trigger_f(ent);
 	else if (Q_stricmp(cmd, "reticle") == 0)
 		Cmd_Reticle_f(ent);
+	else if (Q_stricmp (cmd, "freeze") == 0)
+		Cmd_Freeze_f (ent);
 	else if (Q_stricmp (cmd, "killentity") == 0)
 		Cmd_Kill_Entity_f (ent);
 #endif // IML_Q2_EXTENSIONS

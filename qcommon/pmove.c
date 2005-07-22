@@ -1282,11 +1282,23 @@ void Pmove (pmove_t *pmove)
 		pm->cmd.upmove = 0;
 	}
 
+#ifdef IML_Q2_EXTENSIONS
+	// Set mins, maxs, and viewheight.  When we have IML_Q2_EXTENSIONS, do
+    // this *before* we process PM_FREEZE.  This will keep the player from
+    // "half-crouching" when frozen.  Unfortunately, since the player has
+    // no downwards movement when frozen, they will automatically uncrouch
+    // if there is room--crouching is dependent on constant downwards
+    // movement.
+	PM_CheckDuck ();
+#endif // IML_Q2_EXTENSIONS
+
 	if (pm->s.pm_type == PM_FREEZE)
 		return;		// no movement at all
 
+#ifndef IML_Q2_EXTENSIONS
 	// set mins, maxs, and viewheight
 	PM_CheckDuck ();
+#endif // IML_Q2_EXTENSIONS
 
 	if (pm->snapinitial)
 		PM_InitialSnapPosition ();

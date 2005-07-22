@@ -1616,6 +1616,10 @@ void ClientThink (edict_t *ent, usercmd_t *ucmd)
 			client->ps.pmove.pm_type = PM_GIB;
 		else if (ent->deadflag)
 			client->ps.pmove.pm_type = PM_DEAD;
+#ifdef IML_Q2_EXTENSIONS
+        else if (ent->frozen)
+            client->ps.pmove.pm_type = PM_FREEZE;
+#endif // IML_Q2_EXTENSIONS
 		else
 			client->ps.pmove.pm_type = PM_NORMAL;
 
