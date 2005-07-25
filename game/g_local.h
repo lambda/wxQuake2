@@ -1053,9 +1053,10 @@ struct edict_s
 	char        *r_text;             // text to display in reticle
 	char        *r_target;           // targeted when reticle clicked
 	char        *r_look_target;      // targeted when reticle first displayed
-    char        *region_name;        // name of trigger_region
+    char        *region_name;        // name of trigger_region (or func_wall)
     char        *enter_target;       // run when player enters region
     char        *exit_target;        // run when player leaves region
+    int         freezes;             // true if touching wall freezes player
     int         frozen;              // true if player frozen in place
 #endif // IML_Q2_EXTENSIONS
 	char		*killtarget;

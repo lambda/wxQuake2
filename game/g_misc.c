@@ -21,6 +21,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include "g_local.h"
 
+#ifdef IML_Q2_EXTENSIONS
+#include <stdio.h>
+#include "binmsg.h"
+#endif // IML_Q2_EXTENSIONS
 
 /*QUAKED func_group (0 0 0) ?
 Used to group brushes together just for editor convenience.
@@ -647,6 +651,44 @@ void func_wall_use (edict_t *self, edict_t *other, edict_t *activator)
 		self->use = NULL;
 }
 
+#ifdef IML_Q2_EXTENSIONS
+
+static void SendBinMsg_HitWall(edict_t *player, char *region_name)
+{
+    char key[MAX_STRING_CHARS];
+    binmsg_byte buffer[BINMSG_MAX_SIZE];
+    binmsg_message msg;
+
+    // Format our key name.
+    _snprintf(key, sizeof(key), "hit-wall?/%s", region_name);
+    key[MAX_STRING_CHARS-1] = '\0';
+
+    // Build and send the message.
+    if (!binmsg_build(&msg, buffer, BINMSG_MAX_SIZE, "state"))
+        return;
+    if (!binmsg_add_string(&msg.args, key))
+        return;
+    if (!binmsg_add_bool(&msg.args, true))
+        return;
+    if (!binmsg_build_done(&msg))
+        return;
+    SendBinMsg(player, msg.buffer, msg.buffer_size);
+}
+
+void func_wall_touch (edict_t *self, edict_t *other, cplane_t *plane,
+                      csurface_t *surf)
+{
+    if (other->client)
+    {
+        if (self->freezes)
+            G_Freeze(other, true);
+        if (self->region_name)
+            SendBinMsg_HitWall(other, self->region_name);
+    }
+}
+
+#endif // IML_Q2_EXTENSIONS
+
 void SP_func_wall (edict_t *self)
 {
 	self->movetype = MOVETYPE_PUSH;
@@ -683,6 +725,9 @@ void SP_func_wall (edict_t *self)
 	}
 
 	self->use = func_wall_use;
+#ifdef IML_Q2_EXTENSIONS
+    self->touch = func_wall_touch;
+#endif // IML_Q2_EXTENSIONS
 	if (self->spawnflags & 4)
 	{
 		self->solid = SOLID_BSP;

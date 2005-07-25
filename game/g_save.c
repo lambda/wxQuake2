@@ -42,6 +42,7 @@ field_t fields[] = {
 	{"region_name", FOFS(region_name), F_LSTRING},
 	{"enter_target", FOFS(enter_target), F_LSTRING},
 	{"exit_target", FOFS(exit_target), F_LSTRING},
+	{"freezes", FOFS(freezes), F_INT},
 	{"frozen", FOFS(frozen), F_INT},
 #endif //IML_Q2_EXTENSIONS
 	{"pathtarget", FOFS(pathtarget), F_LSTRING},
