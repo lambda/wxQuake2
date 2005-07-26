@@ -315,6 +315,19 @@ void Cmd_God_f (edict_t *ent)
 		return;
 	}
 
+#ifdef IML_Q2_EXTENSIONS
+    if (gi.argc() == 2 && !Q_stricmp(gi.argv(1), "on"))
+    {
+        ent->flags |= FL_GODMODE;
+        return;
+    }
+    if (gi.argc() == 2 && !Q_stricmp(gi.argv(1), "off"))
+    {
+        ent->flags &= ~FL_GODMODE;
+        return;
+    }
+#endif // IML_Q2_EXTENSIONS
+
 	ent->flags ^= FL_GODMODE;
 	if (!(ent->flags & FL_GODMODE) )
 		msg = "godmode OFF\n";
@@ -343,6 +356,19 @@ void Cmd_Notarget_f (edict_t *ent)
 		gi.cprintf (ent, PRINT_HIGH, "You must run the server with '+set cheats 1' to enable this command.\n");
 		return;
 	}
+
+#ifdef IML_Q2_EXTENSIONS
+    if (gi.argc() == 2 && !Q_stricmp(gi.argv(1), "on"))
+    {
+        ent->flags |= FL_NOTARGET;
+        return;
+    }
+    if (gi.argc() == 2 && !Q_stricmp(gi.argv(1), "off"))
+    {
+        ent->flags &= ~FL_NOTARGET;
+        return;
+    }
+#endif // IML_Q2_EXTENSIONS
 
 	ent->flags ^= FL_NOTARGET;
 	if (!(ent->flags & FL_NOTARGET) )
