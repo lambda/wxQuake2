@@ -1087,6 +1087,25 @@ void door_blocked  (edict_t *self, edict_t *other)
 		return;
 	}
 
+#ifdef IML_Q2_EXTENSIONS
+    if (self->movetype == MOVETYPE_STOP && other->client)
+    {
+        // Snap the doors to a full-open position instantly, and stop them.
+        if (self->spawnflags & DOOR_START_OPEN)
+            VectorCopy (self->pos1, self->s.origin);
+        else
+            VectorCopy (self->pos2, self->s.origin);
+        VectorClear (self->velocity);
+
+        // Mark the move as completed.
+        if (self->moveinfo.state == STATE_DOWN)
+            door_hit_bottom (self);
+        else if (self->moveinfo.state == STATE_UP)
+            door_hit_top (self);
+        return;
+    }
+#endif // IML_Q2_EXTENSIONS
+
 	T_Damage (other, self, self, vec3_origin, other->s.origin, vec3_origin, self->dmg, 1, 0, MOD_CRUSH);
 
 	if (self->spawnflags & DOOR_CRUSHER)
@@ -1147,7 +1166,14 @@ void SP_func_door (edict_t *ent)
 	}
 
 	G_SetMovedir (ent->s.angles, ent->movedir);
+#ifdef IML_Q2_EXTENSIONS
+    if (ent->nopush)
+        ent->movetype = MOVETYPE_STOP;
+    else
+        ent->movetype = MOVETYPE_PUSH;
+#else
 	ent->movetype = MOVETYPE_PUSH;
+#endif // IML_Q2_EXTENSIONS
 	ent->solid = SOLID_BSP;
 	gi.setmodel (ent, ent->model);
 

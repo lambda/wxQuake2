@@ -44,6 +44,7 @@ field_t fields[] = {
 	{"exit_target", FOFS(exit_target), F_LSTRING},
 	{"freezes", FOFS(freezes), F_INT},
 	{"frozen", FOFS(frozen), F_INT},
+	{"nopush", FOFS(nopush), F_INT},
 #endif //IML_Q2_EXTENSIONS
 	{"pathtarget", FOFS(pathtarget), F_LSTRING},
 	{"deathtarget", FOFS(deathtarget), F_LSTRING},

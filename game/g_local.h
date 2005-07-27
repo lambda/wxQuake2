@@ -1058,6 +1058,7 @@ struct edict_s
     char        *exit_target;        // run when player leaves region
     int         freezes;             // true if touching wall freezes player
     int         frozen;              // true if player frozen in place
+    int         nopush;              // true if a door won't push the player
 #endif // IML_Q2_EXTENSIONS
 	char		*killtarget;
 	char		*team;
