@@ -108,7 +108,8 @@ typedef struct
 struct overlay_s {
     int format;
     byte *raw_data;
-    size_t left, top, width, height;
+    int left, top;
+    size_t width, height;
     int stride;
     int is_shown;
 

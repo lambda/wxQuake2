@@ -10,7 +10,7 @@ static size_t gOverlayCount = 0;
 overlay_t *gOverlays[MAX_OVERLAYS];
 
 overlay_t *q2_overlay_new(int format, unsigned char *data,
-                          size_t left, size_t top,
+                          int left, int top,
                           size_t width, size_t height,
                           int stride)
 {
@@ -52,7 +52,7 @@ void q2_overlay_show(overlay_t *overlay, int show)
     overlay->is_shown = show;
 }
 
-void q2_overlay_move(overlay_t *overlay, size_t left, size_t top)
+void q2_overlay_move(overlay_t *overlay, int left, int top)
 {
     overlay->left = left;
     overlay->top  = top;
@@ -151,13 +151,6 @@ void q2_draw_overlays()
 
         // If we're not shown, don't display anything.
         if (!ov->is_shown)
-            continue;
-
-        // If we're not fully on screen, don't display anything.
-		// BUG - This works around a limitation in our graphics driver.
-        if (ov->left < 0 || ov->top < 0 ||
-            ov->left + ov->width > viddef.width ||
-            ov->top + ov->height > viddef.height)
             continue;
 
         UpdateDirtyRect(ov);

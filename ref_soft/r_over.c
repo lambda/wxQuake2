@@ -102,24 +102,72 @@ void R_OverlayUpdateDirtyRect(overlay_t *overlay)
     }
 }
 
+struct ovrect {
+    int x0;
+    int y0;
+    int x1;
+    int y1;
+};
+
+static int clamp_coord(int coord, int minimum, int maximum)
+{
+    if (coord < minimum)
+        return minimum;
+    else if (coord > maximum)
+        return maximum;
+    else
+        return coord;
+}
+
+static void intersect_rect(struct ovrect *ra, struct ovrect *rb)
+{
+    ra->x0 = clamp_coord(ra->x0, rb->x0, rb->x1);
+    ra->y0 = clamp_coord(ra->y0, rb->y0, rb->y1);
+    ra->x1 = clamp_coord(ra->x1, rb->x0, rb->x1);
+    ra->y1 = clamp_coord(ra->y1, rb->y0, rb->y1);
+}
+
 void R_OverlayDraw(overlay_t *overlay)
 {
+    struct ovrect overlay_rect;
+    struct ovrect screen_rect;
     byte *indexed_data;
     size_t x, y;
-    byte *dst, *src, b;
+    byte *dst, *src, *s, *d, b;
 
-    // This code is based very closely on Draw_Pic in r_draw.c.
+    // Figure out which part of the overlay we need to draw (in overlay
+    // coordinates, not screen coordinates).
+    overlay_rect.x0 = 0;
+    overlay_rect.y0 = 0;
+    overlay_rect.x1 = overlay->width;
+    overlay_rect.y1 = overlay->height;
+    screen_rect.x0  = 0          - overlay->left;
+    screen_rect.y0  = 0          - overlay->top;
+    screen_rect.x1  = vid.width  - overlay->left;
+    screen_rect.y1  = vid.height - overlay->top;
+    intersect_rect(&overlay_rect, &screen_rect);
+
+    // Give up now if we're not supposed to draw anything.
+    if (overlay_rect.x0>=overlay_rect.x1 || overlay_rect.y0>=overlay_rect.y1)
+        return;
+
+    // Set up some pointers into our source and destination buffers.
     indexed_data = (byte *) overlay->ref_data;
-    dst = vid.buffer + overlay->top * vid.rowbytes + overlay->left;
-    src = indexed_data;
-    for (y = 0; y < overlay->height; y++)
+    dst = (vid.buffer +
+           (overlay->top+overlay_rect.y0) * vid.rowbytes +
+           (overlay->left+overlay_rect.x0));
+    src = indexed_data + overlay_rect.y0*overlay->width + overlay_rect.x0;
+
+    // This code is based very closely on Draw_Pic in r_draw.c, and on
+    // the various blitters in wx/src/DrawingAreaOpt.cpp.
+    for (y = overlay_rect.y1 - overlay_rect.y0; y > 0; y--)
     {
-        // TODO - This could be faster.
         // TODO - Should we take advantage of overlays known to be
         // lacking transparency?
-        for (x = 0; x < overlay->width; x++)
-            if ((b=src[x]) != TRANSPARENT_COLOR)
-                dst[x] = b;
+        for (x = overlay_rect.x1 - overlay_rect.x0, s = src, d = dst;
+             x > 0; x--, s++, d++)
+            if ((b=*s) != TRANSPARENT_COLOR)
+                *d = b;
         dst += vid.rowbytes;
         src += overlay->width;
     }

@@ -28,7 +28,7 @@ typedef struct overlay_s overlay_t;
 **             Negative values are allowed.
 */
 extern overlay_t *q2_overlay_new(int format, unsigned char *data,
-                                 size_t left, size_t top,
+                                 int left, int top,
                                  size_t width, size_t height,
                                  int stride);
 
@@ -44,7 +44,7 @@ extern void q2_overlay_show(overlay_t *overlay, int show);
 **   overlay - The overlay to move.
 **   left, top - The new position for the overlay.
 */
-extern void q2_overlay_move(overlay_t *overlay, size_t left, size_t top);
+extern void q2_overlay_move(overlay_t *overlay, int left, int top);
 
 /* Notify Quake 2 that the data in the overlay has changed.  This allows
 ** Quake 2 to update any cached format conversions.
