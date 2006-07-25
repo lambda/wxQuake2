@@ -44,6 +44,15 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 //==================================================================
 
+#ifdef IML_Q2_EXTENSIONS
+typedef enum {
+    // Unknown must be zero, so initializing structures to zero selects it.
+    TRISTATE_UNKNOWN = 0,
+    TRISTATE_FALSE,
+    TRISTATE_TRUE
+} qtristate_t;
+#endif // IML_Q2_EXTENSIONS
+
 // view pitching times
 #define DAMAGE_TIME		0.5
 #define	FALL_TIME		0.3
@@ -779,6 +788,10 @@ void InitClientPersistant (gclient_t *client);
 void InitClientResp (gclient_t *client);
 void InitBodyQue (void);
 void ClientBeginServerFrame (edict_t *ent);
+#ifdef IML_Q2_EXTENSIONS
+void SetPlayerIsLookingInWatchedDirection(edict_t *player, qtristate_t value);
+void UpdatePlayerIsLookingInWatchedDirection(edict_t *player);
+#endif // IML_Q2_EXTENSIONS
 
 //
 // g_player.c
@@ -992,6 +1005,10 @@ struct gclient_s
     // The player may be in as many as MAX_REGIONS regions at once.
     edict_t     *in_regions[MAX_REGIONS];
     edict_t     *in_regions_old[MAX_REGIONS];
+
+    // Is the client looking in the watched direction? (See watchdir and
+    // unwatchdir.)
+    qtristate_t looking_in_watched_direction;
 #endif // IML_Q2_EXTENSIONS
 };
 
@@ -1059,6 +1076,11 @@ struct edict_s
     int         freezes;             // true if touching wall freezes player
     int         frozen;              // true if player frozen in place
     int         nopush;              // true if a door won't push the player
+    int         is_watchdir_active;  // Should we monitor look direction?
+    float       watchdir_yaw_min;    // Notify client if player looks this way,
+    float       watchdir_yaw_max;    // -180 to 180 (exclusive), counterclock
+    float       watchdir_pitch_min;  // -30 (up) to 30 (down)
+    float       watchdir_pitch_max;
 #endif // IML_Q2_EXTENSIONS
 	char		*killtarget;
 	char		*team;

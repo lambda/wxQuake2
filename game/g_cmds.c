@@ -1084,6 +1084,52 @@ void Cmd_Freeze_f(edict_t *ent)
         gi.cprintf (ent, PRINT_HIGH, "Usage: freeze [on|off]\n");
 }
 
+/*
+==================
+Cmd_WatchDirection_f
+
+Request a binmsg notification when the user looks in the specified direction.
+==================
+*/
+
+void Cmd_WatchDirection_f(edict_t *ent)
+{
+    if (gi.argc() != 5)
+    {
+        gi.cprintf (ent, PRINT_HIGH,
+                    "Usage: watchdir YAW_MIN YAW_MAX PITCH_MIN PITCH_MAX\n"
+                    "  Pitch runs from -180 inclusive, to 180 exclusive\n"
+                    "  in a counterclockwise direction.\n"
+                    "  Yaw runs from circa -30 (upwards) to 30 (downwards).\n"
+                    "  Current: %f (yaw) %f (pitch)\n"
+                    "  Use unwatchdir to end any active watchdir.\n",
+                    ent->s.angles[YAW], ent->s.angles[PITCH]);
+    }
+    else
+    {
+        ent->is_watchdir_active = 1;
+        ent->watchdir_yaw_min   = atof(gi.argv(1));
+        ent->watchdir_yaw_max   = atof(gi.argv(2));
+        ent->watchdir_pitch_min = atof(gi.argv(3));
+        ent->watchdir_pitch_max = atof(gi.argv(4));
+        UpdatePlayerIsLookingInWatchedDirection(ent);
+    }
+}
+
+/*
+==================
+Cmd_UnwatchDirection_f
+
+Cancel a monitor created by WatchDirection.
+==================
+*/
+
+void Cmd_UnwatchDirection_f(edict_t *ent)
+{
+    ent->is_watchdir_active = 0;
+    SetPlayerIsLookingInWatchedDirection(ent, TRISTATE_FALSE);
+}
+
 #endif // IML_Q2_EXTENSIONS
 
 /*
@@ -1180,6 +1226,10 @@ void ClientCommand (edict_t *ent)
 		Cmd_Reticle_f(ent);
 	else if (Q_stricmp (cmd, "freeze") == 0)
 		Cmd_Freeze_f (ent);
+	else if (Q_stricmp (cmd, "watchdir") == 0)
+		Cmd_WatchDirection_f (ent);
+	else if (Q_stricmp (cmd, "unwatchdir") == 0)
+		Cmd_UnwatchDirection_f (ent);
 	else if (Q_stricmp (cmd, "killentity") == 0)
 		Cmd_Kill_Entity_f (ent);
 #endif // IML_Q2_EXTENSIONS

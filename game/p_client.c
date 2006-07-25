@@ -20,6 +20,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "g_local.h"
 #include "m_player.h"
 
+#ifdef IML_Q2_EXTENSIONS
+#include "binmsg.h"
+#endif // IML_Q2_EXTENSIONS
+
 void ClientUserinfoChanged (edict_t *ent, char *userinfo);
 
 void SP_misc_teleporter_dest (edict_t *ent);
@@ -1569,6 +1573,80 @@ void PrintPmove (pmove_t *pm)
 	Com_Printf ("sv %3i:%i %i\n", pm->cmd.impulse, c1, c2);
 }
 
+#ifdef IML_Q2_EXTENSIONS
+
+void SendBinMsg_LookingInWatchedDirection(edict_t *player, qtristate_t value)
+{
+    binmsg_byte buffer[BINMSG_MAX_SIZE];
+    binmsg_message msg;
+
+    // If it's unknown, we shouldn't even be trying to send it.
+    if (value == TRISTATE_UNKNOWN)
+        return;
+
+    // Build and send the message.
+    if (!binmsg_build(&msg, buffer, BINMSG_MAX_SIZE, "state"))
+        return;
+    if (!binmsg_add_string(&msg.args, "looking-in-watched-direction?"))
+        return;
+    if (!binmsg_add_bool(&msg.args, value == TRISTATE_TRUE))
+        return;
+    if (!binmsg_build_done(&msg))
+        return;
+    SendBinMsg(player, msg.buffer, msg.buffer_size);    
+}
+
+void SetPlayerIsLookingInWatchedDirection(edict_t *player, qtristate_t value)
+{
+    // Decide whether to send an update to the client (these are
+    // expensive, so we only send them if needed).
+    if (player->client->looking_in_watched_direction != value)
+    {
+        player->client->looking_in_watched_direction = value;
+        SendBinMsg_LookingInWatchedDirection(player, value);
+    }
+}
+
+// Check to see if the player is looking in the watched direction, and
+// update the client state appropriately.
+void UpdatePlayerIsLookingInWatchedDirection(edict_t *player)
+{
+    float yaw, yaw_min, yaw_max, pitch, pitch_min, pitch_max;
+    qboolean within_yaw, within_pitch;
+    qtristate_t looking_in_watchdir;
+
+    yaw       = player->s.angles[YAW];
+    yaw_min   = player->watchdir_yaw_min;
+    yaw_max   = player->watchdir_yaw_max;
+    pitch     = player->s.angles[PITCH];
+    pitch_min = player->watchdir_pitch_min;
+    pitch_max = player->watchdir_pitch_max;
+    
+    // Case 1: min == max (matches any yaw)
+    within_yaw = (yaw_min == yaw_max
+                  // Case 2: min <= yaw <= max
+                  || (yaw_min <= yaw && yaw <= yaw_max)
+                  // Case 3: min > max, so we have wraparound.
+                  || (yaw_min > yaw_max
+                      // Case 3a: -inf < yaw <= max
+                      // Case 3b: min <= yaw < inf
+                      && (yaw <= yaw_max || yaw_min <= yaw)));
+    
+    // Case 1: min == max (matches any pitch)
+    within_pitch = ((pitch_min == pitch_max)
+                    // Case 2: min <= pitch <= max
+                    || (pitch_min <= pitch && pitch <= pitch_max));
+    
+    // Our result.
+    looking_in_watchdir =
+        (within_pitch && within_yaw) ? TRISTATE_TRUE : TRISTATE_FALSE;
+    SetPlayerIsLookingInWatchedDirection(player, looking_in_watchdir);
+}
+
+
+#endif // IML_Q2_EXTENSIONS
+
+
 /*
 ==============
 ClientThink
@@ -1708,6 +1786,11 @@ void ClientThink (edict_t *ent, usercmd_t *ucmd)
 		}
 
 	}
+
+#ifdef IML_Q2_EXTENSIONS
+    if (ent->is_watchdir_active)
+        UpdatePlayerIsLookingInWatchedDirection(ent);
+#endif // IML_Q2_EXTENSIONS
 
 	client->oldbuttons = client->buttons;
 	client->buttons = ucmd->buttons;

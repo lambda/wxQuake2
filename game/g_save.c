@@ -45,6 +45,11 @@ field_t fields[] = {
 	{"freezes", FOFS(freezes), F_INT},
 	{"frozen", FOFS(frozen), F_INT},
 	{"nopush", FOFS(nopush), F_INT},
+    {"is_watchdir_active", FOFS(is_watchdir_active), F_INT},
+	{"watchdir_yaw_min", FOFS(watchdir_yaw_min), F_FLOAT},
+	{"watchdir_yaw_max", FOFS(watchdir_yaw_max), F_FLOAT},
+	{"watchdir_pitch_min", FOFS(watchdir_pitch_min), F_FLOAT},
+	{"watchdir_pitch_max", FOFS(watchdir_pitch_max), F_FLOAT},
 #endif //IML_Q2_EXTENSIONS
 	{"pathtarget", FOFS(pathtarget), F_LSTRING},
 	{"deathtarget", FOFS(deathtarget), F_LSTRING},
