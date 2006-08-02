@@ -75,7 +75,20 @@ Slide off of the impacting object
 returns the blocked flags (1 = floor, 2 = step / wall)
 ==================
 */
+#ifdef IML_Q2_EXTENSIONS
+// Allow sliding along walls at lower-than-normal (i.e., realistic) walking
+// speeds.  This gets players unstuck when we use invisible barrier walls
+// to "guide" them along a path.
+//
+// Ideally, we'd like the convert a larger amount of their forward momentum
+// into sliding momentum, but since the engine has apparently already
+// decided what walls the player will hit, I'm deeply reluctant to do
+// anything which will change that decision--such as accelerating them in a
+// new direction.
+#define STOP_EPSILON	0.01
+#else
 #define	STOP_EPSILON	0.1
+#endif // IML_Q2_EXTENSIONS
 
 void PM_ClipVelocity (vec3_t in, vec3_t normal, vec3_t out, float overbounce)
 {
@@ -83,10 +96,13 @@ void PM_ClipVelocity (vec3_t in, vec3_t normal, vec3_t out, float overbounce)
 	float	change;
 	int		i;
 	
+    // Project _in_ onto _normal_, and multiply by a constant factor slightly
+    // greater than 1.  Gives motion straight into wall, plus a bit.
 	backoff = DotProduct (in, normal) * overbounce;
 
 	for (i=0 ; i<3 ; i++)
 	{
+        // Subtract off an amount proportial to the normal in this direction.
 		change = normal[i]*backoff;
 		out[i] = in[i] - change;
 		if (out[i] > -STOP_EPSILON && out[i] < STOP_EPSILON)
