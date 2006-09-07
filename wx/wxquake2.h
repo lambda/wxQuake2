@@ -192,6 +192,21 @@ private:
     // get our parent frame
     wxTopLevelWindow *GetTopLevelParent() const;
 
+    // Pass the values of is_active and is_iconized to Quake 2.
+    void SendAppActivate(bool is_active, bool is_iconized);
+
+    // Send the current frame's values for active/iconized to Quake 2.
+    void SendAppActivateFrameValues();
+
+    // Pass the values of is_active and is_iconized to Quake 2 if they
+    // have changed since the last time we sent them.
+    void SendAppActivateFrameValuesIfChanged();
+
+    // Returns true if the current frame is active.
+    bool IsFrameActive();
+
+    // Returns true if the current frame is iconized.
+    bool IsFrameIconized();
 
     // the engine stuff
     class Quake2Engine *m_engine;
@@ -207,6 +222,12 @@ private:
 
     // true if we have to restore our old size after switching from full screen
     bool m_restoreSize;
+
+    // true if m_isActive and m_isIconized have been initialized.
+    bool m_isActiveAndIconizedStateInitialized;
+
+    // true if the frame containing us is currently active
+    bool m_isActive;
 
     // true if the frame containing us is currently iconized
     bool m_isIconized;

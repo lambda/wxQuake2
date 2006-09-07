@@ -293,7 +293,7 @@ void wxQuake2Window::Init()
     m_nSuspend = 0;
 
     m_restoreSize = FALSE;
-	m_isIconized = FALSE;
+    m_isActiveAndIconizedStateInitialized = false;
     m_isFullScreen = FALSE;
     m_shouldRunGameInBackground = FALSE;
 
@@ -349,7 +349,7 @@ wxQuake2Window::Create(wxWindow *parent,
 	// FIXME - This doesn't seem to get called reliably, which means
 	// there's probably something wrong with our processing of
 	// WM_ACTIVATE events.
-	AppActivate(TRUE, FALSE);
+    SendAppActivateFrameValues();
 
     return TRUE;
 }
@@ -402,6 +402,43 @@ wxTopLevelWindow *wxQuake2Window::GetTopLevelParent() const
 
     return wxDynamicCast(parent, wxTopLevelWindow);
 }
+
+void wxQuake2Window::SendAppActivate(bool is_active, bool is_iconized)
+{
+    m_isActiveAndIconizedStateInitialized = true;
+    m_isActive = is_active;
+    m_isIconized = is_iconized;
+    AppActivate(m_isActive, m_isIconized);
+}
+
+void wxQuake2Window::SendAppActivateFrameValues()
+{
+    SendAppActivate(IsFrameActive(), IsFrameIconized());
+}
+
+void wxQuake2Window::SendAppActivateFrameValuesIfChanged()
+{
+    wxASSERT(m_isActiveAndIconizedStateInitialized);
+    bool is_active = IsFrameActive();
+    bool is_iconized = IsFrameIconized();
+    if (is_active != m_isActive || is_iconized != m_isIconized)
+        SendAppActivate(is_active, is_iconized);
+}
+
+bool wxQuake2Window::IsFrameActive()
+{
+    wxTopLevelWindow *parentTop = GetTopLevelParent();
+    wxASSERT(parentTop);
+    return !parentTop || parentTop->IsActive();
+}
+
+bool wxQuake2Window::IsFrameIconized()
+{
+    wxTopLevelWindow *parentTop = GetTopLevelParent();
+    wxASSERT(parentTop);
+    return parentTop && parentTop->IsIconized();
+}
+
 
 // ----------------------------------------------------------------------------
 // wxQuake2Window operations
@@ -571,7 +608,7 @@ void wxQuake2Window::SetFocus()
 {
     // it is necessary to do this here and not in OnFocus() because we won't
     // get the latter (WM_SETFOCUS message goes directly to Quake...)
-    AppActivate(TRUE, FALSE);
+    SendAppActivateFrameValues();
 
     wxWindow::SetFocus();
 }
@@ -649,14 +686,8 @@ void wxQuake2Window::OnIdle(wxIdleEvent& event)
     if ( !IsOk() )
         return;
 
-    // check if we weren't minimized/restored
-    wxTopLevelWindow *parentTop = GetTopLevelParent();
-    if ( parentTop && parentTop->IsIconized() != m_isIconized )
-    {
-        m_isIconized = !m_isIconized;
-
-        AppActivate(TRUE, m_isIconized);
-    }
+    // check if we weren't minimized/restored, (de)activated, or whatever.
+    SendAppActivateFrameValuesIfChanged();
 
     // Let Quake run now.  We used to check IsActive instead of IsRunning,
     // but that caused Quake to stop repainting the window when
@@ -677,6 +708,7 @@ void wxQuake2Window::OnIdle(wxIdleEvent& event)
     {
         m_restoreSize = FALSE;
 
+        wxTopLevelWindow *parentTop = GetTopLevelParent();
         if ( parentTop )
         {
             parentTop->SetSize(m_rectParentOld);
@@ -695,7 +727,8 @@ void wxQuake2Window::DeactivateQuake()
     if ( !m_isIconized )
     {
         // we lost focus, deactivate Quake
-        AppActivate(FALSE, FALSE);
+        // XXX - Not sure what role this still serves.
+        SendAppActivate(false, false);
 
         if ( m_engine )
         {
