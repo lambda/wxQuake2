@@ -418,6 +418,10 @@ void wxQuake2Window::SendAppActivateFrameValues()
 
 void wxQuake2Window::SendAppActivateFrameValuesIfChanged()
 {
+    // TODO - This may (or may not) be a useless duplicate of
+    // SendAppActivateFrameValues.  The SendAppActivate* family of
+    // functions was created by refactoring existing code, and we haven't
+    // yet checked the Quake 2 source to see which are
     wxASSERT(m_isActiveAndIconizedStateInitialized);
     bool is_active = IsFrameActive();
     bool is_iconized = IsFrameIconized();
@@ -427,6 +431,10 @@ void wxQuake2Window::SendAppActivateFrameValuesIfChanged()
 
 bool wxQuake2Window::IsFrameActive()
 {
+    // TODO - In at least some cases, this function is returning true when
+    // Quake 2 is backgrounded but not iconized (typically if the Quake 2
+    // window gets created or reactivated while the parent frame is in the
+    // background).  SetFocus may be involved with the problem.
     wxTopLevelWindow *parentTop = GetTopLevelParent();
     wxASSERT(parentTop);
     return !parentTop || parentTop->IsActive();
@@ -599,6 +607,9 @@ bool wxQuake2Window::Show(bool show)
 	CL_SetWindowHidden(show ? 0 : 1);
 
     if ( show )
+        // TODO - We may not want to do this here if we're in an inactive
+        // frame, and we may want to add code to this automatically when our
+        // frame becomes active.  More investigation is required.
         SetFocus();
 
     return TRUE;
