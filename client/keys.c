@@ -775,6 +775,7 @@ void Key_Event (int key, qboolean down, unsigned time)
 		shift_down = down;
 
 	// console key is hardcoded, so the user can never unbind it
+#ifndef IML_Q2_EXTENSIONS
 	if (key == '`' || key == '~')
 	{
 		if (!down)
@@ -782,6 +783,7 @@ void Key_Event (int key, qboolean down, unsigned time)
 		Con_ToggleConsole_f ();
 		return;
 	}
+#endif
 
 	// any key during the attract mode will bring up the menu
 	if (cl.attractloop && cls.key_dest != key_menu &&
