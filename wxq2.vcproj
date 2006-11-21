@@ -1,22 +1,47 @@
-<?xml version="1.0" encoding = "Windows-1252"?>
+<?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="7.00"
+	Version="8.00"
 	Name="wxq2"
-	SccProjectName=""
-	SccLocalPath="">
+	ProjectGUID="{96606A8A-AB00-4DA9-8AF3-BAD7F8AF4406}"
+	>
 	<Platforms>
 		<Platform
-			Name="Win32"/>
+			Name="Win32"
+		/>
 	</Platforms>
+	<ToolFiles>
+	</ToolFiles>
 	<Configurations>
 		<Configuration
 			Name="Debug DLL|Win32"
 			OutputDirectory=".\DebugDll"
 			IntermediateDirectory=".\wx\DebugDll"
 			ConfigurationType="2"
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC70.vsprops"
 			UseOfMFC="0"
-			ATLMinimizesCRunTimeLibraryUsage="FALSE">
+			ATLMinimizesCRunTimeLibraryUsage="false"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+				PreprocessorDefinitions="_DEBUG"
+				MkTypLibCompatible="true"
+				SuppressStartupBanner="true"
+				TargetEnvironment="1"
+				TypeLibraryName=".\DebugDll/wxq2.tlb"
+			/>
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
@@ -27,390 +52,562 @@
 				AssemblerListingLocation=".\wx\DebugDll/"
 				ObjectFile=".\wx\DebugDll/"
 				ProgramDataBaseFileName=".\wx\DebugDll/"
-				SuppressStartupBanner="TRUE"
+				SuppressStartupBanner="true"
 				DebugInformationFormat="3"
-				CompileAs="0"/>
+				CompileAs="0"
+			/>
 			<Tool
-				Name="VCCustomBuildTool"/>
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="_DEBUG"
+				Culture="1033"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
 				AdditionalDependencies="odbc32.lib rpcrt4.lib comctl32.lib wsock32.lib winmm.lib $(WXWIN)\lib\wxmsw250d.lib"
 				OutputFile="DebugDll/wxq2d.dll"
 				LinkIncremental="2"
-				SuppressStartupBanner="TRUE"
-				GenerateDebugInformation="TRUE"
+				SuppressStartupBanner="true"
+				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\DebugDll/wxq2d.pdb"
-				ImportLibrary=".\DebugDll/wxq2d.lib"/>
+				ImportLibrary=".\DebugDll/wxq2d.lib"
+			/>
 			<Tool
-				Name="VCMIDLTool"
-				PreprocessorDefinitions="_DEBUG"
-				MkTypLibCompatible="TRUE"
-				SuppressStartupBanner="TRUE"
-				TargetEnvironment="1"
-				TypeLibraryName=".\DebugDll/wxq2.tlb"/>
+				Name="VCALinkTool"
+			/>
 			<Tool
-				Name="VCPostBuildEventTool"/>
+				Name="VCManifestTool"
+			/>
 			<Tool
-				Name="VCPreBuildEventTool"/>
+				Name="VCXDCMakeTool"
+			/>
 			<Tool
-				Name="VCPreLinkEventTool"/>
+				Name="VCBscMakeTool"
+			/>
 			<Tool
-				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="_DEBUG"
-				Culture="1033"/>
+				Name="VCFxCopTool"
+			/>
 			<Tool
-				Name="VCWebServiceProxyGeneratorTool"/>
+				Name="VCAppVerifierTool"
+			/>
 			<Tool
-				Name="VCWebDeploymentTool"/>
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
 			OutputDirectory=".\Release"
 			IntermediateDirectory=".\wx\Release"
 			ConfigurationType="4"
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC70.vsprops"
 			UseOfMFC="0"
-			ATLMinimizesCRunTimeLibraryUsage="FALSE">
+			ATLMinimizesCRunTimeLibraryUsage="false"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="1"
-				GlobalOptimizations="TRUE"
-				EnableIntrinsicFunctions="TRUE"
+				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="0"
 				AdditionalIncludeDirectories="$(WXWIN)/include,$(WXWIN)\lib\msw"
 				PreprocessorDefinitions="WIN32;NDEBUG;WINVER=0x0500;STRICT;__WXWINDOWS__;IML_Q2_EXTENSIONS;IML_Q2_TOTAL_CONVERSION"
 				RuntimeLibrary="0"
-				RuntimeTypeInfo="TRUE"
+				RuntimeTypeInfo="true"
 				PrecompiledHeaderFile=".\wx\Release/wxq2.pch"
 				AssemblerListingLocation=".\wx\Release/"
 				ObjectFile=".\wx\Release/"
 				ProgramDataBaseFileName=".\wx\Release/"
-				SuppressStartupBanner="TRUE"
+				SuppressStartupBanner="true"
 				DebugInformationFormat="3"
-				CompileAs="0"/>
+				CompileAs="0"
+			/>
 			<Tool
-				Name="VCCustomBuildTool"/>
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				Culture="1033"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
 			<Tool
 				Name="VCLibrarianTool"
 				OutputFile=".\Release\wxq2.lib"
-				SuppressStartupBanner="TRUE"/>
+				SuppressStartupBanner="true"
+			/>
 			<Tool
-				Name="VCMIDLTool"/>
+				Name="VCALinkTool"
+			/>
 			<Tool
-				Name="VCPostBuildEventTool"/>
+				Name="VCXDCMakeTool"
+			/>
 			<Tool
-				Name="VCPreBuildEventTool"/>
+				Name="VCBscMakeTool"
+			/>
 			<Tool
-				Name="VCPreLinkEventTool"/>
+				Name="VCFxCopTool"
+			/>
 			<Tool
-				Name="VCResourceCompilerTool"
-				Culture="1033"/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"/>
+				Name="VCPostBuildEventTool"
+			/>
 		</Configuration>
 		<Configuration
 			Name="Debug|Win32"
 			OutputDirectory=".\Debug"
 			IntermediateDirectory=".\wx\Debug"
 			ConfigurationType="4"
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC70.vsprops"
 			UseOfMFC="0"
-			ATLMinimizesCRunTimeLibraryUsage="FALSE">
+			ATLMinimizesCRunTimeLibraryUsage="false"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="$(WXWIN)/include,$(WXWIN)\lib\mswd"
 				PreprocessorDefinitions="WIN32;_DEBUG;__WXDEBUG__;WINVER=0x0500;STRICT;__WXWINDOWS__;IML_Q2_EXTENSIONS;IML_Q2_TOTAL_CONVERSION"
 				RuntimeLibrary="1"
-				RuntimeTypeInfo="TRUE"
+				RuntimeTypeInfo="true"
 				PrecompiledHeaderFile=".\wx\Debug/wxq2.pch"
 				AssemblerListingLocation=".\wx\Debug/"
 				ObjectFile=".\wx\Debug/"
 				ProgramDataBaseFileName=".\wx\Debug/"
-				SuppressStartupBanner="TRUE"
+				SuppressStartupBanner="true"
 				DebugInformationFormat="3"
-				CompileAs="0"/>
+				CompileAs="0"
+			/>
 			<Tool
-				Name="VCCustomBuildTool"/>
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				Culture="1033"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
 			<Tool
 				Name="VCLibrarianTool"
 				OutputFile="Debug\wxq2d.lib"
-				SuppressStartupBanner="TRUE"/>
+				SuppressStartupBanner="true"
+			/>
 			<Tool
-				Name="VCMIDLTool"/>
+				Name="VCALinkTool"
+			/>
 			<Tool
-				Name="VCPostBuildEventTool"/>
+				Name="VCXDCMakeTool"
+			/>
 			<Tool
-				Name="VCPreBuildEventTool"/>
+				Name="VCBscMakeTool"
+			/>
 			<Tool
-				Name="VCPreLinkEventTool"/>
+				Name="VCFxCopTool"
+			/>
 			<Tool
-				Name="VCResourceCompilerTool"
-				Culture="1033"/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"/>
+				Name="VCPostBuildEventTool"
+			/>
 		</Configuration>
 		<Configuration
 			Name="Release DLL|Win32"
 			OutputDirectory=".\ReleaseDll"
 			IntermediateDirectory=".\wx\ReleaseDll"
 			ConfigurationType="2"
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC70.vsprops"
 			UseOfMFC="0"
-			ATLMinimizesCRunTimeLibraryUsage="FALSE">
+			ATLMinimizesCRunTimeLibraryUsage="false"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+				PreprocessorDefinitions="NDEBUG"
+				MkTypLibCompatible="true"
+				SuppressStartupBanner="true"
+				TargetEnvironment="1"
+				TypeLibraryName=".\ReleaseDll/wxq2.tlb"
+			/>
 			<Tool
 				Name="VCCLCompilerTool"
 				InlineFunctionExpansion="1"
 				AdditionalIncludeDirectories="$(WXWIN)/include,$(WXWIN)\lib\mswdll"
 				PreprocessorDefinitions="_USRDLL;WINVER=0x0400;STRICT;__WXWINDOWS__;REF_HARD_LINKED;WXQ2_EXPORTS;NDEBUG;WIN32;IML_Q2_EXTENSIONS"
-				StringPooling="TRUE"
+				StringPooling="true"
 				RuntimeLibrary="2"
-				EnableFunctionLevelLinking="TRUE"
+				EnableFunctionLevelLinking="true"
 				PrecompiledHeaderFile=".\wx\ReleaseDll/wxq2.pch"
 				AssemblerListingLocation=".\wx\ReleaseDll/"
 				ObjectFile=".\wx\ReleaseDll/"
 				ProgramDataBaseFileName=".\wx\ReleaseDll/"
-				SuppressStartupBanner="TRUE"
-				CompileAs="0"/>
+				SuppressStartupBanner="true"
+				CompileAs="0"
+			/>
 			<Tool
-				Name="VCCustomBuildTool"/>
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="NDEBUG"
+				Culture="1033"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
 				AdditionalDependencies="odbc32.lib rpcrt4.lib comctl32.lib wsock32.lib winmm.lib $(WXWIN)\lib\wxmsw250.lib"
 				OutputFile=".\ReleaseDll/wxq2.dll"
 				LinkIncremental="1"
-				SuppressStartupBanner="TRUE"
+				SuppressStartupBanner="true"
 				ProgramDatabaseFile=".\ReleaseDll/wxq2.pdb"
-				ImportLibrary=".\ReleaseDll/wxq2.lib"/>
+				ImportLibrary=".\ReleaseDll/wxq2.lib"
+			/>
 			<Tool
-				Name="VCMIDLTool"
-				PreprocessorDefinitions="NDEBUG"
-				MkTypLibCompatible="TRUE"
-				SuppressStartupBanner="TRUE"
-				TargetEnvironment="1"
-				TypeLibraryName=".\ReleaseDll/wxq2.tlb"/>
+				Name="VCALinkTool"
+			/>
 			<Tool
-				Name="VCPostBuildEventTool"/>
+				Name="VCManifestTool"
+			/>
 			<Tool
-				Name="VCPreBuildEventTool"/>
+				Name="VCXDCMakeTool"
+			/>
 			<Tool
-				Name="VCPreLinkEventTool"/>
+				Name="VCBscMakeTool"
+			/>
 			<Tool
-				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="NDEBUG"
-				Culture="1033"/>
+				Name="VCFxCopTool"
+			/>
 			<Tool
-				Name="VCWebServiceProxyGeneratorTool"/>
+				Name="VCAppVerifierTool"
+			/>
 			<Tool
-				Name="VCWebDeploymentTool"/>
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
 		</Configuration>
 	</Configurations>
+	<References>
+	</References>
 	<Files>
 		<Filter
 			Name="quake"
-			Filter="">
+			>
 			<Filter
 				Name="common"
-				Filter="">
+				>
 				<File
-					RelativePath=".\game\binmsg.c">
+					RelativePath=".\game\binmsg.c"
+					>
 				</File>
 				<File
-					RelativePath=".\qcommon\cmd.c">
+					RelativePath=".\qcommon\cmd.c"
+					>
 				</File>
 				<File
-					RelativePath=".\qcommon\cmodel.c">
+					RelativePath=".\qcommon\cmodel.c"
+					>
 				</File>
 				<File
-					RelativePath=".\qcommon\common.c">
+					RelativePath=".\qcommon\common.c"
+					>
 				</File>
 				<File
-					RelativePath=".\qcommon\crc.c">
+					RelativePath=".\qcommon\crc.c"
+					>
 				</File>
 				<File
-					RelativePath=".\qcommon\cvar.c">
+					RelativePath=".\qcommon\cvar.c"
+					>
 				</File>
 				<File
-					RelativePath=".\qcommon\files.c">
+					RelativePath=".\qcommon\files.c"
+					>
 				</File>
 				<File
-					RelativePath=".\game\m_flash.c">
+					RelativePath=".\game\m_flash.c"
+					>
 				</File>
 				<File
-					RelativePath=".\qcommon\md4.c">
+					RelativePath=".\qcommon\md4.c"
+					>
 				</File>
 				<File
-					RelativePath=".\qcommon\net_chan.c">
+					RelativePath=".\qcommon\net_chan.c"
+					>
 				</File>
 				<File
-					RelativePath=".\qcommon\pmove.c">
+					RelativePath=".\qcommon\pmove.c"
+					>
 				</File>
 				<File
-					RelativePath=".\game\q_shared.c">
+					RelativePath=".\game\q_shared.c"
+					>
 				</File>
 			</Filter>
 			<Filter
 				Name="client"
-				Filter="*.c">
+				Filter="*.c"
+				>
 				<File
-					RelativePath=".\client\cl_cin.c">
+					RelativePath=".\client\cl_cin.c"
+					>
 				</File>
 				<File
-					RelativePath=".\client\cl_ents.c">
+					RelativePath=".\client\cl_ents.c"
+					>
 				</File>
 				<File
-					RelativePath=".\client\cl_fx.c">
+					RelativePath=".\client\cl_fx.c"
+					>
 				</File>
 				<File
-					RelativePath=".\client\cl_input.c">
+					RelativePath=".\client\cl_input.c"
+					>
 				</File>
 				<File
-					RelativePath=".\client\cl_inv.c">
+					RelativePath=".\client\cl_inv.c"
+					>
 				</File>
 				<File
-					RelativePath=".\client\cl_main.c">
+					RelativePath=".\client\cl_main.c"
+					>
 				</File>
 				<File
-					RelativePath=".\client\cl_newfx.c">
+					RelativePath=".\client\cl_newfx.c"
+					>
 				</File>
 				<File
-					RelativePath=".\client\cl_parse.c">
+					RelativePath=".\client\cl_parse.c"
+					>
 				</File>
 				<File
-					RelativePath=".\client\cl_pred.c">
+					RelativePath=".\client\cl_pred.c"
+					>
 				</File>
 				<File
-					RelativePath=".\client\cl_scrn.c">
+					RelativePath=".\client\cl_scrn.c"
+					>
 				</File>
 				<File
-					RelativePath=".\client\cl_tent.c">
+					RelativePath=".\client\cl_tent.c"
+					>
 				</File>
 				<File
-					RelativePath=".\client\cl_view.c">
+					RelativePath=".\client\cl_view.c"
+					>
 				</File>
 				<File
-					RelativePath=".\client\console.c">
+					RelativePath=".\client\console.c"
+					>
 				</File>
 				<File
-					RelativePath=".\client\keys.c">
+					RelativePath=".\client\keys.c"
+					>
 				</File>
 				<File
-					RelativePath=".\client\menu.c">
+					RelativePath=".\client\menu.c"
+					>
 				</File>
 				<File
-					RelativePath=".\client\qmenu.c">
+					RelativePath=".\client\qmenu.c"
+					>
 				</File>
 				<File
-					RelativePath=".\client\qoverlay.c">
+					RelativePath=".\client\qoverlay.c"
+					>
 				</File>
 				<File
-					RelativePath=".\client\snd_dma.c">
+					RelativePath=".\client\snd_dma.c"
+					>
 				</File>
 				<File
-					RelativePath=".\client\snd_mem.c">
+					RelativePath=".\client\snd_mem.c"
+					>
 				</File>
 				<File
-					RelativePath=".\client\snd_mix.c">
+					RelativePath=".\client\snd_mix.c"
+					>
 				</File>
 				<File
-					RelativePath=".\client\x86.c">
+					RelativePath=".\client\x86.c"
+					>
 				</File>
 			</Filter>
 			<Filter
 				Name="server"
-				Filter="">
+				>
 				<File
-					RelativePath=".\server\sv_ccmds.c">
+					RelativePath=".\server\sv_ccmds.c"
+					>
 				</File>
 				<File
-					RelativePath=".\server\sv_ents.c">
+					RelativePath=".\server\sv_ents.c"
+					>
 				</File>
 				<File
-					RelativePath=".\server\sv_game.c">
+					RelativePath=".\server\sv_game.c"
+					>
 				</File>
 				<File
-					RelativePath=".\server\sv_init.c">
+					RelativePath=".\server\sv_init.c"
+					>
 				</File>
 				<File
-					RelativePath=".\server\sv_main.c">
+					RelativePath=".\server\sv_main.c"
+					>
 				</File>
 				<File
-					RelativePath=".\server\sv_send.c">
+					RelativePath=".\server\sv_send.c"
+					>
 				</File>
 				<File
-					RelativePath=".\server\sv_user.c">
+					RelativePath=".\server\sv_user.c"
+					>
 				</File>
 				<File
-					RelativePath=".\server\sv_world.c">
+					RelativePath=".\server\sv_world.c"
+					>
 				</File>
 			</Filter>
 			<Filter
 				Name="win32"
-				Filter="">
+				>
 				<File
-					RelativePath=".\win32\cd_win.c">
+					RelativePath=".\win32\cd_win.c"
+					>
 				</File>
 				<File
-					RelativePath=".\win32\conproc.c">
+					RelativePath=".\win32\conproc.c"
+					>
 				</File>
 				<File
-					RelativePath=".\win32\in_win.c">
+					RelativePath=".\win32\in_win.c"
+					>
 				</File>
 				<File
-					RelativePath=".\win32\net_wins.c">
+					RelativePath=".\win32\net_wins.c"
+					>
 				</File>
 				<File
-					RelativePath=".\win32\q_shwin.c">
+					RelativePath=".\win32\q_shwin.c"
+					>
 				</File>
 				<File
-					RelativePath=".\win32\rw_ddraw.c">
+					RelativePath=".\win32\rw_ddraw.c"
+					>
 				</File>
 				<File
-					RelativePath=".\win32\rw_dib.c">
+					RelativePath=".\win32\rw_dib.c"
+					>
 				</File>
 				<File
-					RelativePath=".\win32\rw_imp.c">
+					RelativePath=".\win32\rw_imp.c"
+					>
 				</File>
 				<File
-					RelativePath=".\win32\snd_win.c">
+					RelativePath=".\win32\snd_win.c"
+					>
 				</File>
 				<File
-					RelativePath=".\win32\sys_win.c">
+					RelativePath=".\win32\sys_win.c"
+					>
 				</File>
 				<File
-					RelativePath=".\win32\vid_dll.c">
+					RelativePath=".\win32\vid_dll.c"
+					>
 				</File>
 				<File
-					RelativePath=".\win32\vid_menu.c">
+					RelativePath=".\win32\vid_menu.c"
+					>
 				</File>
 			</Filter>
 		</Filter>
 		<File
-			RelativePath=".\wx\wxquake2.cpp">
+			RelativePath=".\wx\wxquake2.cpp"
+			>
 			<FileConfiguration
-				Name="Debug DLL|Win32">
+				Name="Debug DLL|Win32"
+				>
 				<Tool
 					Name="VCCLCompilerTool"
 					PreprocessorDefinitions="_USRDLL;__WXDEBUG__;WINVER=0x0400;STRICT;__WXWINDOWS__;REF_HARD_LINKED;WXQ2_EXPORTS;WIN32;_DEBUG;IML_Q2_EXTENSIONS;WXUSINGDLL;$(NoInherit)"
-					WarningLevel="4"/>
+					WarningLevel="4"
+				/>
 			</FileConfiguration>
 			<FileConfiguration
-				Name="Release|Win32">
+				Name="Release|Win32"
+				>
 				<Tool
 					Name="VCCLCompilerTool"
-					WarningLevel="4"/>
+					WarningLevel="4"
+				/>
 			</FileConfiguration>
 			<FileConfiguration
-				Name="Debug|Win32">
+				Name="Debug|Win32"
+				>
 				<Tool
 					Name="VCCLCompilerTool"
-					WarningLevel="4"/>
+					WarningLevel="4"
+				/>
 			</FileConfiguration>
 			<FileConfiguration
-				Name="Release DLL|Win32">
+				Name="Release DLL|Win32"
+				>
 				<Tool
 					Name="VCCLCompilerTool"
 					PreprocessorDefinitions="_USRDLL;WINVER=0x0400;STRICT;__WXWINDOWS__;REF_HARD_LINKED;WXQ2_EXPORTS;NDEBUG;WIN32;IML_Q2_EXTENSIONS;WXUSINGDLL;$(NoInherit)"
-					WarningLevel="4"/>
+					WarningLevel="4"
+				/>
 			</FileConfiguration>
 		</File>
 	</Files>
