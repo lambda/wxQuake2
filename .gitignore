@@ -2,3 +2,7 @@ debug
 release
 Debug (wxWindows)
 Release (wxWindows)
+*.vcproj.*.user
+Debug
+Release
+*~
