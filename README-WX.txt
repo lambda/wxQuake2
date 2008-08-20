@@ -1,8 +1,8 @@
 wxQuake2 - Support for embedding Quake2 in a wxWindows application
-Copyright 2002 Trustees of Dartmouth College
+Copyright 2002-2008 Trustees of Dartmouth College
 
-Author:      Vadim Zeitlin <vadim@tt-solutions.com>
-Maintainer:  Eric Kidd <eric.kidd@pobox.com>
+Author:      id Software, Vadim Zeitlin <vadim@tt-solutions.com>
+Maintainer:  Eric Kidd <eric.m.kidd@dartmouth.edu>
 License:     wxWindows License[*]
 
 [*] The wxWindows license only applies to the new wxQuake2 code, not to the
