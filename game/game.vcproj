@@ -325,7 +325,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				InlineFunctionExpansion="1"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;IML_Q2_EXTENSIONS;IML_Q2_TOTAL_CONVERSION"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;BUILDING_REF_GL;IML_Q2_EXTENSIONS;IML_Q2_TOTAL_CONVERSION"
 				StringPooling="true"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
