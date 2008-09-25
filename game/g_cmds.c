@@ -1098,9 +1098,9 @@ void Cmd_WatchDirection_f(edict_t *ent)
     {
         gi.cprintf (ent, PRINT_HIGH,
                     "Usage: watchdir YAW_MIN YAW_MAX PITCH_MIN PITCH_MAX\n"
-                    "  Pitch runs from -180 inclusive, to 180 exclusive\n"
+                    "  Yaw runs from -180 inclusive, to 180 exclusive\n"
                     "  in a counterclockwise direction.\n"
-                    "  Yaw runs from circa -30 (upwards) to 30 (downwards).\n"
+                    "  Pitch runs from circa -30 (upwards) to 30 (downwards).\n"
                     "  Current: %f (yaw) %f (pitch)\n"
                     "  Use unwatchdir to end any active watchdir.\n",
                     ent->s.angles[YAW], ent->s.angles[PITCH]);
@@ -1128,6 +1128,94 @@ void Cmd_UnwatchDirection_f(edict_t *ent)
 {
     ent->is_watchdir_active = 0;
     SetPlayerIsLookingInWatchedDirection(ent, TRISTATE_FALSE);
+}
+
+/*
+==================
+Cmd_Pos_f
+
+Print out the player's current position.
+==================
+*/
+
+void Cmd_Pos_f(edict_t *ent)
+{
+    Com_Printf ("(%i %i %i) : %i\n", (int)ent->s.origin[0],
+                (int)ent->s.origin[1], (int)ent->s.origin[2],
+                (int)ent->s.angles[YAW]);
+}
+
+/*
+==================
+Cmd_Telport_f
+
+Teleport the player to the specified location.
+
+This teleport command is for debugging purposes only--it includes visual
+distortions and sound effects, and we don't understand all the details of
+how it interacts with the underlying system.
+==================
+*/
+
+void Cmd_Teleport_f(edict_t *ent)
+{
+	char *dest_str;
+    float x, y, z, yaw;
+    vec3_t dest_angles;
+    int i;
+
+	if (gi.argc() != 5)
+    {
+        gi.cprintf (ent, PRINT_HIGH, "Usage: teleport X Y Z YAW\n");
+    }
+    else
+    {
+        x   = atof(gi.argv(1));
+        y   = atof(gi.argv(2));
+        z   = atof(gi.argv(3));
+        yaw = atof(gi.argv(4));
+
+        // The following code is more or less the important part of
+        // teleporter_touch, taken from g_misc.c.
+        
+        // unlink to make sure it can't possibly interfere with KillBox
+        gi.unlinkentity (ent);
+
+        ent->s.origin[0] = x;
+        ent->s.origin[1] = y;
+        ent->s.origin[2] = z;
+        VectorCopy (ent->s.origin, ent->s.old_origin);
+
+        // clear the velocity and hold them in place briefly
+        VectorClear (ent->velocity);
+        ent->client->ps.pmove.pm_time = 160>>3;		// hold time
+        ent->client->ps.pmove.pm_flags |= PMF_TIME_TELEPORT;
+
+        // draw the teleport splash at source and on the player
+        ent->s.event = EV_PLAYER_TELEPORT;
+
+        // This it the direction we want to be looking in.  The following
+        // angle code is mysterious stuff from teleporter_touch, and we don't
+        // understand it.
+        VectorClear (dest_angles);
+        dest_angles[YAW] = yaw;
+
+        // set angles
+        for (i=0 ; i<3 ; i++)
+        {
+            ent->client->ps.pmove.delta_angles[i] =
+                ANGLE2SHORT(dest_angles[i] - ent->client->resp.cmd_angles[i]);
+        }
+
+        VectorClear (ent->s.angles);
+        VectorClear (ent->client->ps.viewangles);
+        VectorClear (ent->client->v_angle);
+
+        // kill anything at the destination
+        KillBox (ent);
+
+        gi.linkentity (ent);
+    }
 }
 
 #endif // IML_Q2_EXTENSIONS
@@ -1232,6 +1320,10 @@ void ClientCommand (edict_t *ent)
 		Cmd_UnwatchDirection_f (ent);
 	else if (Q_stricmp (cmd, "killentity") == 0)
 		Cmd_Kill_Entity_f (ent);
+	else if (Q_stricmp (cmd, "pos") == 0)
+		Cmd_Pos_f (ent);
+	else if (Q_stricmp (cmd, "teleport") == 0)
+		Cmd_Teleport_f (ent);
 #endif // IML_Q2_EXTENSIONS
 	else	// anything that doesn't match a command will be a chat
 		Cmd_Say_f (ent, false, true);
