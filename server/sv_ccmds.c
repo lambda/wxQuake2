@@ -500,6 +500,9 @@ void SV_GameMap_f (void)
 
 	Com_DPrintf("SV_GameMap(%s)\n", Cmd_Argv(1));
 
+	// We can't write to "C:\Program Files" on Vista, so we skip this
+	// if IML_Q2_EXTENSIONS is defined.
+#ifndef IML_Q2_EXTENSIONS
 	FS_CreatePath (va("%s/save/current/", FS_Gamedir()));
 
 	// check for clearing the current savegame
@@ -531,6 +534,7 @@ void SV_GameMap_f (void)
 			free (savedInuse);
 		}
 	}
+#endif
 
 	// start up the next map
 	SV_Map (false, Cmd_Argv(1), false );
@@ -538,12 +542,16 @@ void SV_GameMap_f (void)
 	// archive server state
 	strncpy (svs.mapcmd, Cmd_Argv(1), sizeof(svs.mapcmd)-1);
 
+	// We can't write to "C:\Program Files" on Vista, so we skip this
+	// if IML_Q2_EXTENSIONS is defined.
+#ifndef IML_Q2_EXTENSIONS
 	// copy off the level to the autosave slot
 	if (!dedicated->value)
 	{
 		SV_WriteServerFile (true);
 		SV_CopySaveGame ("current", "save0");
 	}
+#endif
 }
 
 /*
@@ -572,7 +580,11 @@ void SV_Map_f (void)
 	}
 
 	sv.state = ss_dead;		// don't save current level when changing
+	// We can't write to "C:\Program Files" on Vista, so we skip this
+	// if IML_Q2_EXTENSIONS is defined.
+#ifndef IML_Q2_EXTENSIONS
 	SV_WipeSavegame("current");
+#endif
 	SV_GameMap_f ();
 }
 

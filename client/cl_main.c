@@ -1833,7 +1833,11 @@ void CL_Shutdown(void)
 	}
 	isdown = true;
 
+	// We can't write to "C:\Program Files" on Vista, so we skip this
+	// if IML_Q2_EXTENSIONS is defined.
+#ifndef IML_Q2_EXTENSIONS
 	CL_WriteConfiguration (); 
+#endif
 
 	CDAudio_Shutdown ();
 	S_Shutdown();
