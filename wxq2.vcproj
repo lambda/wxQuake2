@@ -132,7 +132,7 @@
 				Optimization="1"
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="0"
-				AdditionalIncludeDirectories="../wxWidgets/include,../wxWidgets/lib/msw"
+				AdditionalIncludeDirectories="../wxWidgets/include;../wxWidgets/lib/vc_lib/mswu"
 				PreprocessorDefinitions="WIN32;NDEBUG;WINVER=0x0500;STRICT;__WXWINDOWS__;IML_Q2_EXTENSIONS;IML_Q2_TOTAL_CONVERSION"
 				RuntimeLibrary="0"
 				RuntimeTypeInfo="true"
@@ -202,7 +202,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../wxWidgets/include,../wxWidgets/lib/mswd"
+				AdditionalIncludeDirectories="../wxWidgets/include;../wxWidgets/lib/vc_lib/mswud"
 				PreprocessorDefinitions="WIN32;_DEBUG;__WXDEBUG__;WINVER=0x0500;STRICT;__WXWINDOWS__;IML_Q2_EXTENSIONS;IML_Q2_TOTAL_CONVERSION"
 				RuntimeLibrary="1"
 				RuntimeTypeInfo="true"

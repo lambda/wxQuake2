@@ -176,11 +176,12 @@ Quake2Engine::Quake2Engine(HWND hwnd, int videoMode,
     argv[argc++] = "exe";
 
 	// if we've been supplied with a basedir, pass it to Quake.
+	wxWritableCharBuffer quoted_basedir_buf(quoted_basedir.char_str());
 	if (basedir != "")
 	{
 		argv[argc++] = "+set";
 		argv[argc++] = "basedir";
-		argv[argc++] = const_cast<char *>(quoted_basedir.mb_str());
+		argv[argc++] = quoted_basedir_buf;
 	}
 
     // set the mode
@@ -197,7 +198,8 @@ Quake2Engine::Quake2Engine(HWND hwnd, int videoMode,
     // Specify our "refresh" (a.k.a. video) driver.
     argv[argc++] = "+set";
     argv[argc++] = "vid_ref";
-    argv[argc++] = const_cast<char *>(ref.mb_str());
+	wxWritableCharBuffer ref_buf(ref.char_str());
+    argv[argc++] = ref_buf;
 
     // don't show full screen initially
     argv[argc++] = "+set";
@@ -210,10 +212,11 @@ Quake2Engine::Quake2Engine(HWND hwnd, int videoMode,
     argv[argc++] = "1";
 
     // if a game mod was specified, load it
+	wxWritableCharBuffer quoted_game_buf(quoted_game.char_str());
 	if (game != "")
 	{
 		argv[argc++] = "+game";
-		argv[argc++] = const_cast<char *>(quoted_game.mb_str());
+		argv[argc++] = quoted_game_buf;
 	}
     argv[argc++] = NULL;
 
@@ -458,7 +461,7 @@ void wxQuake2Window::ExecCommand(const wxString& cmd)
 				 _T("can't exec commands without engine running") );
 
     wxString terminated = cmd + "\n";
-    Cbuf_AddText(const_cast<char *>(terminated.mb_str()));
+    Cbuf_AddText(terminated.char_str());
     Cbuf_Execute();
 }
 
@@ -471,30 +474,29 @@ void wxQuake2Window::ExecBackgroundLoadCommand(const wxString& cmd)
 
 void wxQuake2Window::Print(const wxString& message)
 {
-	::Com_Printf("%s", const_cast<char *>(message.mb_str()));
+	::Com_Printf("%s", message.char_str());
 }
 
 void wxQuake2Window::SetVariable(const wxString& name, const wxString &value)
 {
-    Cvar_Set(const_cast<char *>(name.mb_str()),
-			 const_cast<char *>(value.mb_str()));
+    Cvar_Set(name.char_str(), value.char_str());
 }
 
 void wxQuake2Window::GetVariable(const wxString& name, wxString &out_value)
 {
-    cvar_t *var = Cvar_Get(const_cast<char *>(name.mb_str()), "0", 0);
+    cvar_t *var = Cvar_Get(name.char_str(), "0", 0);
 	wxASSERT(var != NULL && var->string != NULL);
 	out_value = var->string;
 }
 
 void wxQuake2Window::SetVariable(const wxString& name, float value)
 {
-    Cvar_SetValue(const_cast<char *>(name.mb_str()), value);
+    Cvar_SetValue(name.char_str(), value);
 }
 
 void wxQuake2Window::GetVariable(const wxString& name, float &out_value)
 {
-    out_value = Cvar_VariableValue(const_cast<char *>(name.mb_str()));
+    out_value = Cvar_VariableValue(name.char_str());
 }
 
 void wxQuake2Window::Suspend()
@@ -634,13 +636,13 @@ bool wxQuake2Window::RegisterCommand(const wxString &cmdName)
 	// FIXME - This doesn't match the logic in Cmd_AddCommand,
 	// which also considers variables.  This may cause us to leak
 	// the specially-allocated string below.
-	if (::Cmd_Exists(const_cast<char*>(cmdName.mb_str())))
+	if (::Cmd_Exists(cmdName.char_str()))
 		return false;
 
 	// Ask Quake 2 to send cmdName to us in the future.  We need to
 	// allocate a string on the heap, because Quake 2 requires this string
 	// to be permanent.  Quake 2 will not attempt to free this string.
-	char *str = CopyString(const_cast<char*>(cmdName.mb_str()));
+	char *str = CopyString(cmdName.char_str());
 	::Cmd_AddCommand(str, &DoQuake2Command);
 	return true;
 }
