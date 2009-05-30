@@ -14,6 +14,9 @@ typedef struct overlay_s overlay_t;
 ** opaque. */ 
 #define Q2_FORMAT_BGRA_PREMUL 2
 
+/* 24-bit RGB color stored in a 32-bit value, with the last byte unused. */
+#define Q2_FORMAT_BGRX        3
+
 /* Create a new overlay.  Overlays are drawn over the regular Quake 2
 ** graphics, but below the console.
 **

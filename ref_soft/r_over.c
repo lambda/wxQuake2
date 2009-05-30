@@ -93,6 +93,11 @@ void R_OverlayUpdateDirtyRect(overlay_t *overlay)
 						dst[x] = TRANSPARENT_COLOR;
                 break;
 
+            case Q2_FORMAT_BGRX:
+                for (x = 0; x < dw; x++)
+                    dst[x] = ICLUT(src[4*x+2], src[4*x+1], src[4*x+0]);
+                break;
+
             //default:
                 // TODO - What should we do for unknown formats?
         }
