@@ -261,9 +261,16 @@ void Quake2Engine::ShowNextFrame()
 {
     int timeCur = Sys_Milliseconds();
 
-    Qcommon_Frame(timeCur - m_timeLast);
-
-    m_timeLast = timeCur;
+    // Bug #18070: Don't call into Quake 2 more than once every 10
+    // milliseconds, because we want to keep Quake from exceeding 100
+    // frames/second.  We believe that Quake behaves poorly once the frame
+    // rate gets too high.  This seems to occur when we're running Quake 2
+    // in background.
+    int delta = timeCur - m_timeLast;
+    if (delta >= 10) {
+        Qcommon_Frame(delta);
+        m_timeLast = timeCur;
+    }
 }
 
 void Quake2Engine::UpdateInput()
